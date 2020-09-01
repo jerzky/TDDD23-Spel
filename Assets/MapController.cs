@@ -11,7 +11,8 @@ public class MapController : MonoBehaviour
     {
         public int Index { get; set; }
         public string Name { get; set; }
-        public string Texture { get; set; }
+        [JsonProperty("Texture")]
+        public string Path { get; set; }
         public int R { get; set; }
         public int G { get; set; }
         public int B { get; set; }
@@ -35,7 +36,11 @@ public class MapController : MonoBehaviour
  
         ColorOrder = new SortedDictionary<string, MapTileData>();
         ReadColorOrder();
-        ReadImageToMap("Textures/newmap");
+        foreach(var v in ColorOrder)
+        {
+            Debug.Log(v.Value.Name + " " + v.Key);
+        }
+        ReadImageToMap("Textures/maptest");
     }
 
     // Update is called once per frame
@@ -54,7 +59,7 @@ public class MapController : MonoBehaviour
         foreach(var tile in tiles)
         {
             Debug.Log(tile);
-            var colorString = new Color((float)tile.R / 255, (float)tile.B / 255, (float)tile.G / 255).ToString();
+            var colorString = new Color((float)tile.R / 255, (float)tile.G / 255, (float)tile.B / 255).ToString();
             Debug.Log(colorString);
             ColorOrder.Add(colorString,  tile);
         }
@@ -68,8 +73,6 @@ public class MapController : MonoBehaviour
             return;
         }
 
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/BuildingSpriteSheet");
-
         for (int x = 0; x < bitMap.width; x++)
         {
             for (int y = 0; y < bitMap.height; y++)
@@ -79,17 +82,27 @@ public class MapController : MonoBehaviour
 
                 if (ColorOrder.TryGetValue(pixelColor.ToString(), out MapTileData tile))
                 {
-                    Sprite sprite = sprites[tile.Index];
+                    Debug.Log(tile.Name);
+                    Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
+
                     if (sprite == null) Debug.Log("sprite is null");
-                    GameObject temp = new GameObject("mapObject(" + x + ", " + y + ")");
+                    GameObject temp = new GameObject(tile.Name);
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
+                    temp.layer = tile.LayerMask;
                     if (tile.Components != null)
                     {
                         foreach (var str in tile.Components)
                         {
-                            if (str.Equals("BoxCollider", StringComparison.CurrentCultureIgnoreCase))
-                                temp.AddComponent<BoxCollider2D>();
+                            switch(str.ToLower())
+                            {
+                                case "boxcollider":
+                                    temp.AddComponent<BoxCollider2D>();
+                                    break;
+                                case "door":
+                                    temp.AddComponent<Door>();
+                                    break;
+                            }
                         }
                     }
                     
@@ -105,7 +118,7 @@ public class MapController : MonoBehaviour
         var maptile = new MapTileData
         {
             Index = 0,
-            Texture = "Grass",
+            Path = "Grass",
             R = 255,
             G = 255,
             B = 112,

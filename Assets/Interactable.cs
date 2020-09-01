@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
@@ -16,5 +17,9 @@ public abstract class Interactable : MonoBehaviour
         
     }
 
+    public void Constructor() 
+    {
+        tag = "interactable";
+    }
     public abstract void Interact(int itemIndex);
 }

@@ -12,11 +12,18 @@ public class Door : Interactable
     bool open = false;
     Vector3 originalPosition;
     Vector2 openingDir = Vector2.left;
+    float doorSpeed = 1f;
 
     // Start is called before the first frame update
     void Start()
     {
+        base.Constructor();
+        transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
+        if(GetComponent<SpriteRenderer>().sprite.name == "Doors_20")
+        {
+            openingDir = Vector2.up;
+        }
     }
 
     // Update is called once per frame
@@ -28,7 +35,7 @@ public class Door : Interactable
 
         if (moving)
         {
-            transform.position += dir * 0.5f * Time.deltaTime;
+            transform.position += dir * doorSpeed * Time.deltaTime;
             if (Mathf.Abs((transform.position - originalPosition).magnitude) > 1)
             {
                 moving = false;
