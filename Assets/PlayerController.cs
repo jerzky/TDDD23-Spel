@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     Sprite[] playerSprites = new Sprite[4];
     SpriteRenderer sr;
 
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
         playerSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[27];
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = playerSprites[0];
+ 
     }
 
     // Update is called once per frame
@@ -87,10 +90,11 @@ public class PlayerController : MonoBehaviour
             // Open inventory
         }
         KeyCode[] keyCodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8 };
-        for (int i = 0; i < keyCodes.Length; i++)
+        for (uint i = 0; i < keyCodes.Length; i++)
         {
             if(Input.GetKeyDown(keyCodes[i]))
             {
+                //PlayerMotor.Instance.UseItem(lookDir);
                 // Use/equip? item i
             }
         }

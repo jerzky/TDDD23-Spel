@@ -21,5 +21,5 @@ public abstract class Interactable : MonoBehaviour
     {
         tag = "interactable";
     }
-    public abstract void Interact(int itemIndex);
+    public abstract bool Interact(uint itemIndex);
 }
