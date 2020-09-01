@@ -20,7 +20,7 @@ public class Door : Interactable
         base.Constructor();
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
-        if(GetComponent<SpriteRenderer>().sprite.name == "Doors_20")
+        if(GetComponent<SpriteRenderer>().sprite.name == "Doors_20") // temporary fix will only work for blue doors
         {
             openingDir = Vector2.up;
         }

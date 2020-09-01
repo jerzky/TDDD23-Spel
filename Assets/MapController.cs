@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 public class MapController : MonoBehaviour
 {
     public class MapTileData 
     {
+        public uint UID { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
         [JsonProperty("Texture")]
@@ -18,6 +20,8 @@ public class MapController : MonoBehaviour
         public int B { get; set; }
         public int LayerMask { get; set; }
         public List<string> Components { get; set; }
+        [DefaultValue(false)]
+        public bool Moveable { get; set; }
 
         public override string ToString()
         {
@@ -90,6 +94,13 @@ public class MapController : MonoBehaviour
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
+                    if(tile.Moveable)
+                    {
+                        GameObject under = new GameObject("under");
+                        under.transform.position = new Vector3(x, y, 1);
+                        under.AddComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Textures/BuildingSpriteSheet")[363];
+                        under.layer = 2;
+                    }
                     if (tile.Components != null)
                     {
                         foreach (var str in tile.Components)
