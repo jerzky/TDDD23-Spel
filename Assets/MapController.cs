@@ -14,7 +14,7 @@ public class MapController : MonoBehaviour
     {
         ColorOrder = new SortedDictionary<string, int>();
         ReadColorOrder();
-        ReadImageToMap("Textures/T");
+        ReadImageToMap("Textures/maptest");
     }
 
     // Update is called once per frame
@@ -41,19 +41,20 @@ public class MapController : MonoBehaviour
         for (int y = 0; true; y++)
         {
             Color pixelColor = bitMap.GetPixel(0, bitMap.height-1-y);
-            
             string str = file.ReadLine();
-            if (pixelColor.Equals(new Color(1.0f, 1.0f, 1.0f)) || str == "END")
-            {
+
+            if (str == "END")
                 break;
-            }
+
             int spaceIndex = str.IndexOf(" ");
             str = str.Substring(spaceIndex+1);
             int spriteIndex = -1;
             int.TryParse(str, out spriteIndex);
             if(spriteIndex >= 0)
                 ColorOrder.Add(pixelColor.ToString(), spriteIndex);
-            Debug.Log(str + ", " + pixelColor);
+
+            if (pixelColor.Equals(new Color(1.0f, 1.0f, 1.0f))) 
+                break;
         }
     }
 
@@ -82,9 +83,9 @@ public class MapController : MonoBehaviour
                     GameObject temp = new GameObject("mapObject(" + x + ", " + y + ")");
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
+                    BoxCollider2D bc = temp.AddComponent<BoxCollider2D>();
                 }
             }
         }
-        
     }
 }
