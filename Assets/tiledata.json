@@ -6,7 +6,7 @@
     "R": 255,
     "G": 255,
     "B": 255,
-    "LayerMask": 2
+    "LayerMask": 2,
   },
   {
     "Index": 223,
@@ -92,7 +92,8 @@
     "Components": [
       "BoxCollider",
       "Door"
-    ]
+    ],
+    "Moveable": true
   },
   {
     "Index": 20,
@@ -105,6 +106,7 @@
     "Components": [
       "BoxCollider",
       "Door"
-    ]
+    ],
+    "Moveable": true
   }
 ]
