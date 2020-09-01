@@ -83,7 +83,8 @@ public class MapController : MonoBehaviour
                     GameObject temp = new GameObject("mapObject(" + x + ", " + y + ")");
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
-                    BoxCollider2D bc = temp.AddComponent<BoxCollider2D>();
+                    if(spriteIndex != 258 && spriteIndex != 89)
+                        temp.AddComponent<BoxCollider2D>();
                 }
             }
         }
