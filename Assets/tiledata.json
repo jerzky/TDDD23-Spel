@@ -1,0 +1,84 @@
+[
+  {
+    "Index": 120,
+	"Name": "Grass",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 255,
+    "G": 255,
+    "B": 255,
+	"LayerMask": 0
+  },
+  {
+    "Index": 223,
+    "Name": "Brick Wall Verical",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 0,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  },
+  {
+    "Index": 224,
+    "Name": "Brick Wall Horizontal",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 50,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  },
+  
+  {
+    "Index": 226,
+    "Name": "Brick Wall North East",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 100,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  },
+  {
+    "Index": 225,
+    "Name": "Brick Wall North West",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 150,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  },
+  {
+    "Index": 248,
+    "Name": "Brick Wall South West",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 200,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  },
+  {
+    "Index": 249,
+    "Name": "Brick Wall South East",
+	"Texture": "Textures/BuildingSpriteSheet",
+    "R": 250,
+    "G": 0,
+    "B": 0,
+	"LayerMask": 0,
+    "Components": [
+      "BoxCollider"
+    ]
+  }
+]
