@@ -1,5 +1,6 @@
 [
   {
+    "UID": 0,
     "Index": 120,
     "Name": "Grass",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -9,6 +10,7 @@
     "LayerMask": 2,
   },
   {
+    "UID": 1,
     "Index": 223,
     "Name": "Brick Wall Verical",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -21,6 +23,7 @@
     ]
   },
   {
+    "UID": 2,
     "Index": 224,
     "Name": "Brick Wall Horizontal",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -34,6 +37,7 @@
   },
 
   {
+    "UID": 3,
     "Index": 226,
     "Name": "Brick Wall North East",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -46,6 +50,7 @@
     ]
   },
   {
+    "UID": 4,
     "Index": 225,
     "Name": "Brick Wall North West",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -58,6 +63,7 @@
     ]
   },
   {
+    "UID": 5,
     "Index": 248,
     "Name": "Brick Wall South West",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -70,6 +76,7 @@
     ]
   },
   {
+    "UID": 6,
     "Index": 249,
     "Name": "Brick Wall South East",
     "Texture": "Textures/BuildingSpriteSheet",
@@ -82,6 +89,7 @@
     ]
   },
   {
+    "UID": 7,
     "Index": 21,
     "Name": "Blue Door Horizontal",
     "Texture": "Textures/Doors",
@@ -96,11 +104,42 @@
     "Moveable": true
   },
   {
+    "UID": 8,
     "Index": 20,
     "Name": "Blue Door Vertical",
     "Texture": "Textures/Doors",
     "R": 0,
     "G": 100,
+    "B": 0,
+    "LayerMask": 9,
+    "Components": [
+      "BoxCollider",
+      "Door"
+    ],
+    "Moveable": true
+  },
+  {
+    "UID": 9,
+    "Index": 20,
+    "Name": "Desk",
+    "Texture": "Textures/Doors",
+    "R": 0,
+    "G": 2,
+    "B": 0,
+    "LayerMask": 9,
+    "Components": [
+      "BoxCollider",
+      "Door"
+    ],
+    "Moveable": true
+  },
+  {
+    "UID": 10,
+    "Index": 20,
+    "Name": "Cabinet",
+    "Texture": "Textures/Doors",
+    "R": 0,
+    "G": 1,
     "B": 0,
     "LayerMask": 9,
     "Components": [
