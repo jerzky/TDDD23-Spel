@@ -20,31 +20,35 @@ public class MapController : MonoBehaviour
         public int B { get; set; }
         public int LayerMask { get; set; }
         public List<string> Components { get; set; }
-        [DefaultValue(false)]
-        public bool Moveable { get; set; }
-
+        [DefaultValue(1f)]
+        public float BoxColliderScaleX { get; set; }
+        [DefaultValue(1f)]
+        public float BoxColliderScaleY { get; set; }
         public override string ToString()
         {
             return string.Format("R: {0} G: {1}, B: {2}", R, G, B);
         }
-
     }
 
 
 
-    SortedDictionary<string, MapTileData> ColorOrder;
+    SortedDictionary<string, MapTileData> tileDictLevelOne;
+    SortedDictionary<string, MapTileData> tileDictLevelTwo;
 
     // Start is called before the first frame update
     void Start()
     {
- 
-        ColorOrder = new SortedDictionary<string, MapTileData>();
+
+        tileDictLevelOne = new SortedDictionary<string, MapTileData>();
+        tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
+
         ReadColorOrder();
-        foreach(var v in ColorOrder)
+        foreach(var v in tileDictLevelOne)
         {
             Debug.Log(v.Value.Name + " " + v.Key);
         }
-        ReadImageToMap("Textures/maptest");
+        ReadImageToMap("Textures/MapLayerOne", tileDictLevelOne);
+        ReadImageToMap("Textures/MapLayerTwo", tileDictLevelTwo);
     }
 
     // Update is called once per frame
@@ -65,10 +69,15 @@ public class MapController : MonoBehaviour
             Debug.Log(tile);
             var colorString = new Color((float)tile.R / 255, (float)tile.G / 255, (float)tile.B / 255).ToString();
             Debug.Log(colorString);
-            ColorOrder.Add(colorString,  tile);
+
+            if (tile.UID < 100)
+                tileDictLevelOne.Add(colorString, tile);
+            else if (tile.UID > 100)
+                tileDictLevelTwo.Add(colorString, tile);
+                
         }
     }
-    void ReadImageToMap(string imagePath)
+    void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict)
     {
         Texture2D bitMap = Resources.Load(imagePath) as Texture2D;
         if (bitMap == null)
@@ -84,7 +93,7 @@ public class MapController : MonoBehaviour
                 Color pixelColor = bitMap.GetPixel(x, y);
                 Debug.Log(string.Format("Found pixel: {0}", pixelColor));
 
-                if (ColorOrder.TryGetValue(pixelColor.ToString(), out MapTileData tile))
+                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile))
                 {
                     Debug.Log(tile.Name);
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
@@ -94,13 +103,7 @@ public class MapController : MonoBehaviour
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
-                    if(tile.Moveable)
-                    {
-                        GameObject under = new GameObject("under");
-                        under.transform.position = new Vector3(x, y, 1);
-                        under.AddComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Textures/BuildingSpriteSheet")[363];
-                        under.layer = 2;
-                    }
+
                     if (tile.Components != null)
                     {
                         foreach (var str in tile.Components)

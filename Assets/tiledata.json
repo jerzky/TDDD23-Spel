@@ -7,7 +7,7 @@
     "R": 255,
     "G": 255,
     "B": 255,
-    "LayerMask": 2,
+    "LayerMask": 2
   },
   {
     "UID": 1,
@@ -15,7 +15,7 @@
     "Name": "Brick Wall Verical",
     "Texture": "Textures/BuildingSpriteSheet",
     "R": 0,
-    "G": 0,
+    "G": 50,
     "B": 0,
     "LayerMask": 0,
     "Components": [
@@ -90,62 +90,67 @@
   },
   {
     "UID": 7,
-    "Index": 21,
-    "Name": "Blue Door Horizontal",
-    "Texture": "Textures/Doors",
-    "R": 0,
-    "G": 50,
-    "B": 0,
-    "LayerMask": 9,
-    "Components": [
-      "BoxCollider",
-      "Door"
-    ],
-    "Moveable": true
-  },
-  {
-    "UID": 8,
-    "Index": 20,
-    "Name": "Blue Door Vertical",
-    "Texture": "Textures/Doors",
+    "Index": 259,
+    "Name": "Blue And Grey Tiled Floor",
+    "Texture": "Textures/BuildingSpriteSheet",
     "R": 0,
     "G": 100,
     "B": 0,
+    "LayerMask": 2
+  },
+  // over 100 is tiles which needs tiles below them, meaning tiles that move and/or do not fully cover the 64 * 64 pixel box.
+  {
+    "UID": 101,
+    "Index": 21,
+    "Name": "Blue Door Horizontal",
+    "Texture": "Textures/Doors",
+    "R": 50,
+    "G": 0,
+    "B": 0,
     "LayerMask": 9,
     "Components": [
       "BoxCollider",
       "Door"
-    ],
-    "Moveable": true
+    ]
   },
   {
-    "UID": 9,
+    "UID": 102,
     "Index": 20,
+    "Name": "Blue Door Vertical",
+    "Texture": "Textures/Doors",
+    "R": 100,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 9,
+    "Components": [
+      "BoxCollider",
+      "Door"
+    ]
+  },
+  {
+    "UID": 103,
+    "Index": 71,
     "Name": "Desk",
-    "Texture": "Textures/Doors",
-    "R": 0,
-    "G": 2,
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 150,
+    "G": 0,
     "B": 0,
     "LayerMask": 9,
     "Components": [
       "BoxCollider",
-      "Door"
-    ],
-    "Moveable": true
+    ]
   },
   {
-    "UID": 10,
-    "Index": 20,
+    "UID": 104,
+    "Index": 361,
     "Name": "Cabinet",
-    "Texture": "Textures/Doors",
-    "R": 0,
-    "G": 1,
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 200,
+    "G": 0,
     "B": 0,
     "LayerMask": 9,
     "Components": [
-      "BoxCollider",
-      "Door"
-    ],
-    "Moveable": true
+      "BoxCollider"
+    ]
   }
 ]
