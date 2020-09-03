@@ -35,6 +35,9 @@ public class MapController : MonoBehaviour
     SortedDictionary<string, MapTileData> tileDictLevelOne;
     SortedDictionary<string, MapTileData> tileDictLevelTwo;
 
+    GameObject[] tiles = new GameObject[3];
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,13 +45,18 @@ public class MapController : MonoBehaviour
         tileDictLevelOne = new SortedDictionary<string, MapTileData>();
         tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
 
+        tiles[0] = new GameObject("BaseTiles");
+        tiles[1] = new GameObject("LevelTwoTiles");
+        tiles[2] = new GameObject("LevelThreeTiles");
+
         ReadColorOrder();
         foreach(var v in tileDictLevelOne)
         {
             Debug.Log(v.Value.Name + " " + v.Key);
         }
-        ReadImageToMap("Textures/MapLayerOne", tileDictLevelOne);
-        ReadImageToMap("Textures/MapLayerTwo", tileDictLevelTwo);
+        ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
+        ReadImageToMap("Maps/MapLayerTwo", tileDictLevelOne, 1);
+        ReadImageToMap("Maps/MapLayerThree", tileDictLevelTwo, 2);
     }
 
     // Update is called once per frame
@@ -77,7 +85,7 @@ public class MapController : MonoBehaviour
                 
         }
     }
-    void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict)
+    void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict, int level)
     {
         Texture2D bitMap = Resources.Load(imagePath) as Texture2D;
         if (bitMap == null)
@@ -93,13 +101,14 @@ public class MapController : MonoBehaviour
                 Color pixelColor = bitMap.GetPixel(x, y);
                 Debug.Log(string.Format("Found pixel: {0}", pixelColor));
 
-                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile))
+                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0,0,0).ToString())
                 {
                     Debug.Log(tile.Name);
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
 
                     if (sprite == null) Debug.Log("sprite is null");
                     GameObject temp = new GameObject(tile.Name);
+                    temp.transform.parent = tiles[level].transform;
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
@@ -115,6 +124,9 @@ public class MapController : MonoBehaviour
                                     break;
                                 case "door":
                                     temp.AddComponent<Door>();
+                                    break;
+                                case "searchablecontainer":
+                                    temp.AddComponent<SearchableContainer>();
                                     break;
                             }
                         }

@@ -34,10 +34,11 @@ public class PlayerMotor : MonoBehaviour
         {
             return;
         }
-        Debug.Log(hit.collider.name);
-        if(hit.collider.tag == "interactable")
+        Interactable inter = hit.collider.gameObject.GetComponent<Interactable>();
+        if(inter == null)
         {
-            hit.collider.gameObject.GetComponent<Interactable>().Interact(0);
+            Debug.LogError("GameObject with interactable layer does not have script Interactable");
         }
+        inter.Interact(0);
     }
 }

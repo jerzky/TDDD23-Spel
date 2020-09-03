@@ -138,6 +138,7 @@
     "LayerMask": 9,
     "Components": [
       "BoxCollider",
+      "SearchableContainer"
     ]
   },
   {
@@ -150,7 +151,8 @@
     "B": 0,
     "LayerMask": 9,
     "Components": [
-      "BoxCollider"
+      "BoxCollider",
+      "SearchableContainer"
     ]
   }
 ]
