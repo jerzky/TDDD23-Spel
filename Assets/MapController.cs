@@ -35,7 +35,7 @@ public class MapController : MonoBehaviour
     SortedDictionary<string, MapTileData> tileDictLevelOne;
     SortedDictionary<string, MapTileData> tileDictLevelTwo;
 
-    GameObject[] tiles = new GameObject[3];
+    GameObject[] tiles = new GameObject[2];
 
 
     // Start is called before the first frame update
@@ -45,18 +45,25 @@ public class MapController : MonoBehaviour
         tileDictLevelOne = new SortedDictionary<string, MapTileData>();
         tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
 
-        tiles[0] = new GameObject("BaseTiles");
+        tiles[0] = new GameObject("LevelOneTiles");
         tiles[1] = new GameObject("LevelTwoTiles");
-        tiles[2] = new GameObject("LevelThreeTiles");
 
         ReadColorOrder();
         foreach(var v in tileDictLevelOne)
         {
             Debug.Log(v.Value.Name + " " + v.Key);
         }
+
+        // create grass background
+        Texture2D bitMap = Resources.Load("Maps/MapLayerOne") as Texture2D;
+        GameObject background = new GameObject("background");
+        background.transform.position = new Vector3(bitMap.width/2 - background.transform.position.x, bitMap.height/2 - background.transform.position.y, 100);
+        SpriteRenderer sr = background.AddComponent<SpriteRenderer>();
+        sr.sprite = Resources.LoadAll<Sprite>("Textures/BuildingSpriteSheet")[120];
+        sr.drawMode = SpriteDrawMode.Tiled;
+        sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
-        ReadImageToMap("Maps/MapLayerTwo", tileDictLevelOne, 1);
-        ReadImageToMap("Maps/MapLayerThree", tileDictLevelTwo, 2);
+        ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
     }
 
     // Update is called once per frame
@@ -109,7 +116,7 @@ public class MapController : MonoBehaviour
                     if (sprite == null) Debug.Log("sprite is null");
                     GameObject temp = new GameObject(tile.Name);
                     temp.transform.parent = tiles[level].transform;
-                    temp.transform.position = new Vector3(x, y, 0);
+                    temp.transform.position = new Vector3(x, y, 99-level);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
 
