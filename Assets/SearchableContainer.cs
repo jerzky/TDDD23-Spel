@@ -20,7 +20,7 @@ public class SearchableContainer : Interactable
         
     }
 
-    public override void Interact(int itemIndex)
+    public override bool Interact(uint itemIndex)
     {
         if(itemIndex == lockpick || !isLocked)
         {
@@ -35,5 +35,6 @@ public class SearchableContainer : Interactable
                 Debug.Log("container opened");
             }
         }
+        return true;
     }
 }

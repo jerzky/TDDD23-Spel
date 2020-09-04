@@ -7,12 +7,20 @@ public class PlayerMotor : MonoBehaviour
 
     public static PlayerMotor Instance;
     Rigidbody2D rb;
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
+<<<<<<< Updated upstream
+=======
+        
+>>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -24,6 +32,7 @@ public class PlayerMotor : MonoBehaviour
     public void PlayerMove(Vector2 dir, float speed)
     {
         rb.MovePosition(rb.position + dir.normalized * speed * Time.deltaTime);
+        Debug.Log(Screen.height);
     }
 
     public void Interact(Vector2 lookDir)

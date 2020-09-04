@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float speed = 20f;
+    float speed = 5f;
     float sneakMultiplier = 0.5f;
+    Vector2 movementDirection;
+    float currentSpeed = 5f;
     Vector2 lookDir = Vector2.zero;
-    bool walking = false;
 
     Sprite[] playerSprites = new Sprite[4];
     SpriteRenderer sr;
 
+<<<<<<< Updated upstream
+=======
+    private Inventory Inventory { get; set; }
+
+>>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +27,11 @@ public class PlayerController : MonoBehaviour
         playerSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[27];
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = playerSprites[0];
+<<<<<<< Updated upstream
+=======
+        Inventory = new Inventory(FindObjectOfType<ItemBar>());
+        Inventory.AddItem(0, 1);
+>>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -29,52 +40,54 @@ public class PlayerController : MonoBehaviour
         HandleKeyInputs();
     }
 
+    private void FixedUpdate()
+    {
+        if (movementDirection != Vector2.zero)
+        {
+            PlayerMotor.Instance.PlayerMove(movementDirection, currentSpeed);
+            movementDirection = Vector2.zero;
+            currentSpeed = speed;
+        }
+    }
+
     void HandleKeyInputs()
     {
-        Vector2 dir = Vector2.zero;
-        float currentSpeed = speed;
 
 
 
 
         if (Input.GetKey(KeyCode.D))
         {
-            dir += Vector2.right;
+            movementDirection += Vector2.right;
             lookDir = Vector2.right;
             sr.sprite = playerSprites[3];
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            dir += Vector2.left;
+            movementDirection += Vector2.left;
             lookDir = Vector2.left;
             sr.sprite = playerSprites[2];
         }
 
         if (Input.GetKey(KeyCode.S))
         {
-            dir += Vector2.down;
+            movementDirection += Vector2.down;
             lookDir = Vector2.down;
             sr.sprite = playerSprites[1];
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            dir += Vector2.up;
+            movementDirection += Vector2.up;
             lookDir = Vector2.up;
             sr.sprite = playerSprites[0];
         }
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            currentSpeed = currentSpeed * sneakMultiplier;
+            currentSpeed = speed * sneakMultiplier;
         }
-        if (dir != Vector2.zero)
-        {
-            PlayerMotor.Instance.PlayerMove(dir, currentSpeed);
-        }
-        else
-            walking = false;
             
 
 
@@ -83,14 +96,9 @@ public class PlayerController : MonoBehaviour
             PlayerMotor.Instance.Interact(lookDir);
         }
 
-        if (Input.GetKey(KeyCode.F))
-        {
-            PlayerMotor.Instance.EnterCar(lookDir);
-        }
-
         if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
         {
-            // Open inventory
+            Inventory.OpenInventory();
         }
         KeyCode[] keyCodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8 };
         for (int i = 0; i < keyCodes.Length; i++)

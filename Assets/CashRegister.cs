@@ -37,13 +37,12 @@ public class CashRegister : Interactable
         }
     }
 
-    public override void Interact(int itemIndex)
+    public override bool Interact(uint itemIndex)
     {
         if (IsWeapon(itemIndex))
         {
             robType = (int)RobType.GunPoint;
             timerStarted = true;
-
             // Random chance that cashier pulls gun?
         }
         else
@@ -52,9 +51,10 @@ public class CashRegister : Interactable
             robType = (int)RobType.Stealthy;
             timerStarted = true;
         }
+        return true;
     }
 
-    bool IsWeapon(int xx)
+    bool IsWeapon(uint xx)
     {
         //TODO: fix a real way to determine if a item index is a weapon.
         return xx == 5;
