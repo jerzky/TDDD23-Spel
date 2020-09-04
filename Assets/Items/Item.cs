@@ -8,7 +8,7 @@ public abstract class Item
 
 
 
-    public abstract uint ID { get; set; }
+    public abstract uint ID { get; }
     public abstract bool MustInteract { get; }
 
     public abstract bool Use(uint id);

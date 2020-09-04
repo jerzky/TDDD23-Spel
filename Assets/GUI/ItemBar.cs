@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,11 +16,12 @@ public class ItemBar : MonoBehaviour
         {
             items[i] = gameObject.transform.GetChild(i).gameObject;
         }
+   
     }
    
-    public void AddItem(uint index, Inventory.ItemInfo info)
+    public void AddItem(uint index, ItemInfo info)
     {
-        Debug.Log("Test");
+        Debug.Log(string.Format("Item {0} Added", index));
         var sprite = Resources.Load<Sprite>(info.IconPath);
         if (sprite == null)
             Debug.Log(info.IconPath);

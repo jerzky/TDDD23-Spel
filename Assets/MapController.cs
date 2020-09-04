@@ -40,11 +40,24 @@ public class MapController : MonoBehaviour
  
         ColorOrder = new SortedDictionary<string, MapTileData>();
         ReadColorOrder();
+<<<<<<< Updated upstream
         foreach(var v in ColorOrder)
         {
             Debug.Log(v.Value.Name + " " + v.Key);
         }
         ReadImageToMap("Textures/maptest");
+=======
+        // create grass background
+        Texture2D bitMap = Resources.Load("Maps/MapLayerOne") as Texture2D;
+        GameObject background = new GameObject("background");
+        background.transform.position = new Vector3(bitMap.width/2 - background.transform.position.x, bitMap.height/2 - background.transform.position.y, 100);
+        SpriteRenderer sr = background.AddComponent<SpriteRenderer>();
+        sr.sprite = Resources.LoadAll<Sprite>("Textures/BuildingSpriteSheet")[120];
+        sr.drawMode = SpriteDrawMode.Tiled;
+        sr.size = new Vector2(bitMap.width, bitMap.height);
+        ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
+        ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
+>>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -62,10 +75,19 @@ public class MapController : MonoBehaviour
 
         foreach(var tile in tiles)
         {
-            Debug.Log(tile);
             var colorString = new Color((float)tile.R / 255, (float)tile.G / 255, (float)tile.B / 255).ToString();
+<<<<<<< Updated upstream
             Debug.Log(colorString);
             ColorOrder.Add(colorString,  tile);
+=======
+     
+
+            if (tile.UID < 100)
+                tileDictLevelOne.Add(colorString, tile);
+            else if (tile.UID > 100)
+                tileDictLevelTwo.Add(colorString, tile);
+                
+>>>>>>> Stashed changes
         }
     }
     void ReadImageToMap(string imagePath)
@@ -82,14 +104,14 @@ public class MapController : MonoBehaviour
             for (int y = 0; y < bitMap.height; y++)
             {
                 Color pixelColor = bitMap.GetPixel(x, y);
-                Debug.Log(string.Format("Found pixel: {0}", pixelColor));
+   
 
                 if (ColorOrder.TryGetValue(pixelColor.ToString(), out MapTileData tile))
                 {
-                    Debug.Log(tile.Name);
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
 
-                    if (sprite == null) Debug.Log("sprite is null");
+                    if (sprite == null) 
+                        Debug.LogError("sprite is null");
                     GameObject temp = new GameObject(tile.Name);
                     temp.transform.position = new Vector3(x, y, 0);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
@@ -148,7 +170,6 @@ public class MapController : MonoBehaviour
         setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         var json = JsonConvert.SerializeObject(list, setting);
         var path = Path.Combine(Application.dataPath, "tiledata.json");
-        Debug.Log(path);
         File.WriteAllText(path, json);
         
     }

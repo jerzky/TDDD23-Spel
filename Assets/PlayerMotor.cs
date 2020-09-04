@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,7 +16,8 @@ public class PlayerMotor : MonoBehaviour
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
         Inventory = new Inventory(FindObjectOfType<ItemBar>());
-        Inventory.AddItem(0, 1);
+        if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK, 1))
+            Debug.Log("Failed to add start item");
     }
 
     // Update is called once per frame
@@ -43,23 +45,49 @@ public class PlayerMotor : MonoBehaviour
           
         }
     }
-
     public void UseItem(uint index, Vector2 lookDir)
     {
-      /*
+        /*
+          RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
+          if (hit.collider == null)
+          {
+              if (item.MustInteract)
+                  return;
+              else
+                  item.Use(0);
+          }
+          Debug.Log(hit.collider.name);
+          if (hit.collider.tag == "interactable")
+          {
+              item.Interact(hit.collider.gameObject.GetComponent<Interactable>());
+          }*/
+
+    }
+    public void UseItemFromInventory(uint inventorySpot, Vector2 lookDir)
+    {
+
+        var item = Inventory.ItemsVisible[inventorySpot];
+     
+        if (item == null)
+        {
+            Debug.Log(string.Format("There is no item in spot: {0}", inventorySpot));
+            return;
+        }
+
         RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
         if (hit.collider == null)
         {
-            if (item.MustInteract)
-                return;
-            else
-                item.Use(0);
+            return;
         }
-        Debug.Log(hit.collider.name);
-        if (hit.collider.tag == "interactable")
+        Interactable inter = hit.collider.gameObject.GetComponent<Interactable>();
+        if (inter == null)
         {
-            item.Interact(hit.collider.gameObject.GetComponent<Interactable>());
-        }*/
+            Debug.LogError("GameObject with interactable layer does not have script Interactable");
 
+
+        }
+        inter.Interact(item.UID);
     }
+
 }
+

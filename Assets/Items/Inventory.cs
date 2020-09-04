@@ -1,26 +1,13 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory 
 {
-    private static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
-    {
-        {0,
-             new ItemInfo
-                 {
-            IconPath = "Textures/lockpick",
-            IconIndex = 0
-        }
-        }
-    };
 
-    public class ItemInfo
-    {
-        public string IconPath { get; set; }
-        public uint IconIndex { get; set; }
-       
-    }
+
+
 
     public class CurrentItem
     {
@@ -33,7 +20,6 @@ public class Inventory
     public Inventory(ItemBar bar)
     {
         ItemBar = bar;
-    
     }
 
  
@@ -42,7 +28,7 @@ public class Inventory
     {
         ItemInfo item;
 
-        if (!AllItems.TryGetValue(id, out item))
+        if (!ItemList.AllItems.TryGetValue(id, out item))
             return false;
 
         for (uint i = 0; i < 8; i++)
