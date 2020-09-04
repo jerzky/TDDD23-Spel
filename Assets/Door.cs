@@ -46,7 +46,7 @@ public class Door : Interactable
         }
     }
 
-    public override void Interact(int itemIndex)
+    public override bool Interact(uint itemIndex)
     {
         moving = true;
     }

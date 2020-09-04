@@ -12,12 +12,8 @@ public class PlayerController : MonoBehaviour
 
     Sprite[] playerSprites = new Sprite[4];
     SpriteRenderer sr;
-
-<<<<<<< Updated upstream
-=======
     private Inventory Inventory { get; set; }
 
->>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
@@ -27,11 +23,9 @@ public class PlayerController : MonoBehaviour
         playerSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[27];
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = playerSprites[0];
-<<<<<<< Updated upstream
-=======
+
         Inventory = new Inventory(FindObjectOfType<ItemBar>());
         Inventory.AddItem(0, 1);
->>>>>>> Stashed changes
     }
 
     // Update is called once per frame
