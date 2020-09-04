@@ -8,13 +8,6 @@ public class Inventory
 
 
 
-
-    public class CurrentItem
-    {
-        public uint Count { get; set; }
-        public Item Item { get; set; }
-    }
-
     private ItemBar ItemBar { get; set; }
     public ItemInfo[] ItemsVisible = new ItemInfo[8];
     public Inventory(ItemBar bar)

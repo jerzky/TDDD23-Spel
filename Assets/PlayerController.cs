@@ -85,17 +85,7 @@ public class PlayerController : MonoBehaviour
         {
             PlayerMotor.Instance.Interact(lookDir);
         }
-<<<<<<< Updated upstream
         if(Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
-=======
-
-        if (Input.GetKey(KeyCode.F))
-        {
-           // PlayerMotor.Instance.EnterCar(lookDir);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
->>>>>>> Stashed changes
         {
             // Open inventory
         }

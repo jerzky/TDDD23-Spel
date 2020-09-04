@@ -25,12 +25,7 @@ public class Lockpick : Item
 
     public override bool Interact(Interactable interactable)
     {
-        if (interactable.Interact(ID))
-        {
-
-            return true;
-        }
-        return false;
+        return interactable.Interact(ID);
     }
 
     public override bool Use(uint id)
