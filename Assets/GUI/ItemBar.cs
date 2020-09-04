@@ -38,7 +38,7 @@ public class ItemBar : MonoBehaviour
         }
     }
    
-    public void AddItem(uint index, Inventory.ItemInfo info)
+    public void AddItem(uint index, ItemInfo info)
     {
         Debug.Log("Test");
         var sprite = Resources.Load<Sprite>(info.IconPath);
