@@ -28,7 +28,7 @@ public class PlayerMotor : MonoBehaviour
 
     public void PlayerMove(Vector2 dir, float speed)
     {
-        rb.MovePosition(rb.position + dir * speed * Time.deltaTime);
+        rb.MovePosition(rb.position + dir.normalized * speed * Time.deltaTime);
     }
 
     public void Interact(Vector2 lookDir)
@@ -38,12 +38,14 @@ public class PlayerMotor : MonoBehaviour
         {
             return;
         }
-        Debug.Log(hit.collider.name);
-        if(hit.collider.tag == "interactable")
+        Interactable inter = hit.collider.gameObject.GetComponent<Interactable>();
+        if(inter == null)
         {
-            hit.collider.gameObject.GetComponent<Interactable>().Interact(0);
+            Debug.LogError("GameObject with interactable layer does not have script Interactable");
+         
           
         }
+        inter.Interact(0);
     }
     public void UseItem(uint index, Vector2 lookDir)
     {

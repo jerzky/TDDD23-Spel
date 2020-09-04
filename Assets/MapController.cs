@@ -52,8 +52,6 @@ public class MapController : MonoBehaviour
 
         // create grass background
         Texture2D bitMap = Resources.Load("Maps/MapLayerOne") as Texture2D;
-        if (bitMap == null)
-            Debug.LogError("Bitmap is null");
         GameObject background = new GameObject("background");
         background.transform.position = new Vector3(bitMap.width / 2 - background.transform.position.x, bitMap.height / 2 - background.transform.position.y, 100);
         SpriteRenderer sr = background.AddComponent<SpriteRenderer>();
@@ -85,7 +83,6 @@ public class MapController : MonoBehaviour
                 tileDictLevelOne.Add(colorString, tile);
             else if (tile.UID > 100)
                 tileDictLevelTwo.Add(colorString, tile);
-
         }
     }
     void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict, int level)
@@ -103,8 +100,7 @@ public class MapController : MonoBehaviour
             {
                 Color pixelColor = bitMap.GetPixel(x, y);
 
-
-                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0, 0, 0).ToString())
+                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0,0,0).ToString())
                 {
 
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
