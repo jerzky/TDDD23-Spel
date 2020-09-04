@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer sr;
     private Inventory Inventory { get; set; }
 
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -95,10 +97,11 @@ public class PlayerController : MonoBehaviour
             Inventory.OpenInventory();
         }
         KeyCode[] keyCodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8 };
-        for (int i = 0; i < keyCodes.Length; i++)
+        for (uint i = 0; i < keyCodes.Length; i++)
         {
             if(Input.GetKeyDown(keyCodes[i]))
             {
+                PlayerMotor.Instance.UseItemFromInventory(i, lookDir);
                 // Use/equip? item i
             }
         }

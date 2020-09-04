@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEditor;
@@ -7,7 +8,7 @@ using UnityEngine;
 public class Door : Interactable
 {
 
-    bool isLocked = false;
+    bool isLocked = true;
     bool moving = false;
     bool open = false;
     Vector3 originalPosition;
@@ -17,6 +18,7 @@ public class Door : Interactable
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.tag = "door";
         base.Constructor();
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
@@ -48,6 +50,24 @@ public class Door : Interactable
 
     public override bool Interact(uint itemIndex)
     {
-        moving = true;
+        if(isLocked)
+        {
+            if(itemIndex == ItemList.ITEM_LOCKPICK)
+            {
+                //Random in the future?
+                //and timer
+                isLocked = false;
+                // moving = true;
+                Debug.Log("Door is unlocked.");
+                return true;
+            }
+            Debug.Log("Door is locked.");
+            return false;
+        }
+       else
+        {
+            moving = true;
+        }
+        return true;
     }
 }
