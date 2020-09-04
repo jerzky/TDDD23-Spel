@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerMotor : MonoBehaviour
 {
 
     public static PlayerMotor Instance;
     Rigidbody2D rb;
-
+    private Inventory Inventory { get; set; }
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
+        Inventory = new Inventory(FindObjectOfType<ItemBar>());
+        Inventory.AddItem(0, 1);
     }
 
     // Update is called once per frame
@@ -37,7 +40,28 @@ public class PlayerMotor : MonoBehaviour
         if(inter == null)
         {
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
+         
+          
         }
         inter.Interact(0);
+    }
+
+    public void UseItem(uint index, Vector2 lookDir)
+    {
+      /*
+        RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
+        if (hit.collider == null)
+        {
+            if (item.MustInteract)
+                return;
+            else
+                item.Use(0);
+        }
+        Debug.Log(hit.collider.name);
+        if (hit.collider.tag == "interactable")
+        {
+            item.Interact(hit.collider.gameObject.GetComponent<Interactable>());
+        }*/
+
     }
 }
