@@ -7,7 +7,6 @@ public class PlayerMotor : MonoBehaviour
 
     public static PlayerMotor Instance;
     Rigidbody2D rb;
-    [SerializeField] ContactFilter2D interactablesCF;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +23,7 @@ public class PlayerMotor : MonoBehaviour
 
     public void PlayerMove(Vector2 dir, float speed)
     {
-        rb.MovePosition(rb.position + dir * speed * Time.deltaTime);
+        rb.MovePosition(rb.position + dir.normalized * speed * Time.deltaTime);
     }
 
     public void Interact(Vector2 lookDir)

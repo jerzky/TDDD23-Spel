@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
         }
         if (dir != Vector2.zero)
         {
-            PlayerMotor.Instance.PlayerMove(dir.normalized, currentSpeed);
+            PlayerMotor.Instance.PlayerMove(dir, currentSpeed);
         }
         else
             walking = false;
@@ -82,7 +82,13 @@ public class PlayerController : MonoBehaviour
         {
             PlayerMotor.Instance.Interact(lookDir);
         }
-        if(Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
+
+        if (Input.GetKey(KeyCode.F))
+        {
+            PlayerMotor.Instance.EnterCar(lookDir);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
         {
             // Open inventory
         }
