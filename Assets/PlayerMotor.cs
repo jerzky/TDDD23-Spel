@@ -21,6 +21,9 @@ public class PlayerMotor : MonoBehaviour
         if (!Inventory.AddItem(ItemList.ITEM_SLEDGEHAMMER.UID, 1))
             Debug.Log("Failed to add start item");
 
+        if (!Inventory.AddItem(ItemList.ITEM_PISTOL.UID, 1))
+            Debug.Log("Failed to add start item");
+
         Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
     }
 

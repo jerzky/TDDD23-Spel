@@ -46,6 +46,18 @@ namespace Assets.Items
             WeaponType = WeaponType.Meele
         };
 
+        public static readonly ItemInfo ITEM_PISTOL = new ItemInfo
+        {
+            UID = 3,
+            Name = "Pistol",
+            IconPath = "Textures/pistol",
+            IconIndex = 0,
+            AverageUseTime = 0f,
+            HumanDamage = 50,
+            BreakableDamage = 0,
+            WeaponType = WeaponType.Ranged
+        };
+
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
             {
@@ -53,6 +65,9 @@ namespace Assets.Items
             },
             {
                 ITEM_SLEDGEHAMMER.UID, ITEM_SLEDGEHAMMER
+            },
+            {
+                ITEM_PISTOL.UID, ITEM_PISTOL
             }
         };
     }

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {
-    private const float MAX_TRAVEL_DISTANCE = 10f;
+    private const float MAX_TRAVEL_DISTANCE = 30f;
     private const float BULLET_SPEED = 20f;
     public Vector2 BulletDirection { get; set; }
 

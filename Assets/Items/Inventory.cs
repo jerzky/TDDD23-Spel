@@ -109,6 +109,8 @@ public class Inventory
 
     public ItemInfo GetCurrentItem()
     {
+        if (InventoryItemInfo[currentItem, 0] == null)
+            return null;
         return InventoryItemInfo[currentItem, 0].ItemInfo;
     }
 

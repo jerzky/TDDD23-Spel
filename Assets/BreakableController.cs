@@ -6,8 +6,8 @@ using UnityEngine;
 public class BreakableController : MonoBehaviour
 {
     public static BreakableController Instance;
-    SortedDictionary<GameObject, int> damagedObjects = new SortedDictionary<GameObject, int>();
-    HashSet<GameObject> brokenObjects = new HashSet<GameObject>();
+    SortedDictionary<string, int> damagedObjects = new SortedDictionary<string, int>();
+    SortedSet<string> brokenObjects = new SortedSet<string>();
     public void Start()
     {
         Instance = this;
@@ -16,7 +16,7 @@ public class BreakableController : MonoBehaviour
     public bool HitObject(GameObject go, uint itemID)
     {
         Debug.Log("hit object");
-        if(go.tag == "breakable" && go.GetComponent<BoxCollider2D>().enabled == true)
+        if(go.tag == "breakable" && !brokenObjects.Contains(go.transform.position.ToString()))
         {
             int damage = ItemList.AllItems[itemID].BreakableDamage;
             if(damage == 0f)
@@ -31,15 +31,15 @@ public class BreakableController : MonoBehaviour
 
     bool DamageObject(GameObject go, int damage)
     {
-        if (damagedObjects.ContainsKey(go))
+        if (damagedObjects.ContainsKey(go.transform.position.ToString()))
         {
-            damagedObjects[go] -= damage;
-            Debug.Log("hit saved object: " + damagedObjects[go]);
-            if (damagedObjects[go] <= 0)
+            damagedObjects[go.transform.position.ToString()] -= damage;
+            Debug.Log("hit saved object: " + damagedObjects[go.transform.position.ToString()]);
+            if (damagedObjects[go.transform.position.ToString()] <= 0)
                 Destroy(go);
             else
             {
-                EditColor(MapController.AllTiles[go.name].Durability, damagedObjects[go], go);
+                EditColor(MapController.AllTiles[go.name].Durability, damagedObjects[go.transform.position.ToString()], go);
             }
         }
         else
@@ -47,12 +47,12 @@ public class BreakableController : MonoBehaviour
             Debug.Log("hit new object");
 
             int durability = MapController.AllTiles[go.name].Durability;
-            damagedObjects.Add(go, durability - damage);
-            if (damagedObjects[go] <= 0)
+            damagedObjects.Add(go.transform.position.ToString(), durability - damage);
+            if (damagedObjects[go.transform.position.ToString()] <= 0)
                 Destroy(go);
             else
             {
-                EditColor(durability, damagedObjects[go], go);
+                EditColor(durability, damagedObjects[go.transform.position.ToString()], go);
             }
         }
 
@@ -73,7 +73,7 @@ public class BreakableController : MonoBehaviour
 
         go.GetComponent<SpriteRenderer>().enabled = false;
         go.GetComponent<BoxCollider2D>().enabled = false;
-        brokenObjects.Add(go);
-        damagedObjects.Remove(go);
+        brokenObjects.Add(go.transform.position.ToString());
+        damagedObjects.Remove(go.transform.position.ToString());
     }
 }
