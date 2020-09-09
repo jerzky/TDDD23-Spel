@@ -58,6 +58,8 @@ public class Door : Interactable
                 //and timer
                 isLocked = false;
                 // moving = true;
+
+                LoadingCircle.Instance.StartLoading();
                 Debug.Log("Door is unlocked.");
                 return true;
             }

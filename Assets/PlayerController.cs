@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.F))
         {
-            PlayerMotor.Instance.EnterCar(lookDir);
+           //PlayerMotor.Instance.EnterCar(lookDir);
         }
 
         if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
