@@ -36,17 +36,23 @@ namespace Assets.Items
 
         public static readonly ItemInfo ITEM_SLEDGEHAMMER = new ItemInfo
         {
-            UID = 1,
-            Name = "Lockpick",
-            IconPath = "Textures/drilltesticon",
+            UID = 2,
+            Name = "SledgeHammer",
+            IconPath = "Textures/sledgeHammer",
             IconIndex = 0,
-            AverageUseTime = 5f
+            AverageUseTime = 0f,
+            HumanDamage = 10,
+            BreakableDamage = 10, 
+            WeaponType = WeaponType.Meele
         };
 
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
             {
                 ITEM_LOCKPICK.UID, ITEM_LOCKPICK
+            },
+            {
+                ITEM_SLEDGEHAMMER.UID, ITEM_SLEDGEHAMMER
             }
         };
     }

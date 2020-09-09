@@ -55,9 +55,10 @@ public class ItemBar : MonoBehaviour
    
     public void AddItem(Vector2 position, ItemInfo info)
     {
+        Debug.Log(position + " " + info.IconPath);
         var sprite = Resources.Load<Sprite>(info.IconPath);
         if (sprite == null)
-            Debug.Log(info.IconPath);
+            Debug.LogError(info.IconPath);
         inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = sprite;
     }
     public void UpdateCount(Vector2 position, uint newCount)

@@ -119,6 +119,7 @@ public class MapController : MonoBehaviour
                     temp.transform.position = new Vector3(x, y, 99 - level);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
+                    temp.tag = tile.Tag;
 
                     if (tile.Components != null)
                     {

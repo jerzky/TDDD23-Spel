@@ -18,6 +18,9 @@ public class PlayerMotor : MonoBehaviour
         if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK.UID, 2))
             Debug.Log("Failed to add start item");
 
+        if (!Inventory.AddItem(ItemList.ITEM_SLEDGEHAMMER.UID, 1))
+            Debug.Log("Failed to add start item");
+
         Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
     }
 
@@ -98,14 +101,7 @@ public class PlayerMotor : MonoBehaviour
 
     public void Attack(ItemInfo currentItem)
     {
-        if(currentItem.WeaponType == WeaponType.Meele)
-        {
-
-        }
-        else if(currentItem.WeaponType == WeaponType.Ranged)
-        {
-
-        }
+        WeaponController.Instance.Shoot(currentItem.UID);
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -118,8 +119,7 @@ public class PlayerController : MonoBehaviour
             {
                 currentSelectedItem = i;
                 Inventory.Instance.UpdateCurrentItem(i);
-                //PlayerMotor.Instance.UseItemFromInventory(i, lookDir);
-                // Use/equip? item i
+                WeaponController.Instance.ChangeWeaponSprite();
             }
         }
 
@@ -148,14 +148,6 @@ public class PlayerController : MonoBehaviour
         {
             CurrentInteractable.Cancel();
             CurrentInteractable = null;
-        }
-
-
-        //för att testa
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            WeaponController.Instance.Shoot();
-
         }
     }
 }

@@ -52,11 +52,15 @@ public class Inventory
         ItemInfo item;
 
         if (!ItemList.AllItems.TryGetValue(id, out item))
+        {
+            Debug.LogError("Item id not in item list");
             return false;
 
-        for (int x = 0; x < inventorySizeX; x++)
+        }
+
+        for (int y = 0; y < inventorySizeX; y++)
         {
-            for (int y = 0; y < inventorySizeY; y++)
+            for (int x = 0; x < inventorySizeY; x++)
             {
                 if (InventoryItemInfo[x, y] == null)
                 {
@@ -67,6 +71,8 @@ public class Inventory
                 }
             }
         }
+
+        Debug.LogError("Inventory empty?");
         return false;
     }
 
@@ -148,17 +154,18 @@ public class Inventory
             InventoryItemInfo[(int)first.x, (int)first.y] = secondInfo;
             InventoryItemInfo[(int)second.x, (int)second.y] = firstInfo;
             ItemBar.RemoveItem(first);
-            ItemBar.AddItem(second, firstInfo.ItemInfo);
-            ItemBar.UpdateCount(second, firstInfo.Count);
-
+            
             if(secondInfo != null)
             {
                 InventoryItemMap.Remove(secondInfo.ItemInfo.UID);
+                InventoryItemMap.Add(secondInfo.ItemInfo.UID, first);
                 ItemBar.RemoveItem(second);
                 ItemBar.AddItem(first, secondInfo.ItemInfo);
                 ItemBar.UpdateCount(first, secondInfo.Count);
-                InventoryItemMap.Add(secondInfo.ItemInfo.UID, first);
+                
             }
+            ItemBar.AddItem(second, firstInfo.ItemInfo);
+            ItemBar.UpdateCount(second, firstInfo.Count);
             DeSelectItem();
         }
     }

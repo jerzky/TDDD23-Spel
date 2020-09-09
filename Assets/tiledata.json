@@ -19,7 +19,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -34,7 +34,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -50,7 +50,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -65,7 +65,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -80,7 +80,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -95,7 +95,7 @@
     "B": 0,
     "LayerMask": 0,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider"
     ]
@@ -121,7 +121,7 @@
     "B": 0,
     "LayerMask": 9,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider",
       "Door"
@@ -137,7 +137,7 @@
     "B": 0,
     "LayerMask": 9,
     "Tag": "breakable",
-    "Durability": 100,
+    "Durability": 110,
     "Components": [
       "BoxCollider",
       "Door"
