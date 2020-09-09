@@ -7,34 +7,52 @@ public class ItemBar : MonoBehaviour
 {
     [SerializeField]
     GameObject item;
-    private GameObject[] items = new GameObject[8];
+    [SerializeField]
+    GameObject inventory;
+    [SerializeField]
+    GameObject bar;
+    private GameObject[] barItems = new GameObject[8];
+    private GameObject[,] inventoryItems = new GameObject[8,8];
+
+    Vector3 firstItemPositionBar;
+    Vector3 firstItemPositionInventory;
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        firstItemPositionBar = new Vector3(32+5, 32+5, 0);
+        firstItemPositionInventory = inventory.GetComponent<RectTransform>().position + new Vector3(-inventory.GetComponent<RectTransform>().rect.width/2, inventory.GetComponent<RectTransform>().rect.height/2, 0);
+        firstItemPositionInventory += new Vector3(32 + 5, -(32 + 5), 0);
+
+        for (int i = 0; i < 8; i++)
         {
-            items[i] = gameObject.transform.GetChild(i).gameObject;
+            barItems[i] = Instantiate(item, firstItemPositionBar + new Vector3((64+5)*i, 0, 0), Quaternion.identity, bar.transform);
         }
-   
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                inventoryItems[x,y] = Instantiate(item, firstItemPositionInventory + new Vector3((64 + 5) * x, -(64 + 5) * y, 0), Quaternion.identity, inventory.transform);
+            }
+        }
     }
    
     public void AddItem(uint index, ItemInfo info)
     {
-        Debug.Log(string.Format("Item {0} Added", index));
+        Debug.Log("Test");
         var sprite = Resources.Load<Sprite>(info.IconPath);
         if (sprite == null)
             Debug.Log(info.IconPath);
-        items[index].GetComponent<Image>().sprite = sprite;
+        barItems[index].GetComponent<Image>().sprite = sprite;
     }
     public void UpdateCount(uint index, int newCount )
     {
-        items[index].transform.GetChild(1).GetComponent<Text>().text = newCount.ToString();
+        barItems[index].transform.GetChild(1).GetComponent<Text>().text = newCount.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OpenInventory()
     {
-        
+        inventory.SetActive(!inventory.activeSelf);
     }
 }

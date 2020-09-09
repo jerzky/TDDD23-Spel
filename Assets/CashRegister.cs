@@ -43,7 +43,6 @@ public class CashRegister : Interactable
         {
             robType = (int)RobType.GunPoint;
             timerStarted = true;
-
             // Random chance that cashier pulls gun?
         }
         else

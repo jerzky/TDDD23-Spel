@@ -1,13 +1,11 @@
-﻿using Assets.Items;
+﻿﻿using Assets.Items;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory 
 {
-
-
-
+    
     private ItemBar ItemBar { get; set; }
     public ItemInfo[] ItemsVisible = new ItemInfo[8];
     public Inventory(ItemBar bar)
@@ -41,5 +39,10 @@ public class Inventory
     public ItemInfo GetItem(uint index)
     {
         return ItemsVisible[index];
+    }
+
+    public void OpenInventory()
+    {
+        ItemBar.OpenInventory();
     }
 }
