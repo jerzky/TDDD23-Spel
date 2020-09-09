@@ -18,6 +18,8 @@
     "G": 50,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -31,6 +33,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -45,6 +49,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -58,6 +64,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -71,6 +79,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -84,6 +94,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider"
     ]
@@ -108,6 +120,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider",
       "Door"
@@ -122,6 +136,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider",
       "Door"

@@ -10,7 +10,7 @@ public class Inventory
     public static Inventory Instance;
     static int inventorySizeX = 8;
     static int inventorySizeY = 9;
-
+    uint currentItem = 0;
     GameObject SelectedItem;
 
     public class InventoryItem
@@ -98,11 +98,12 @@ public class Inventory
 
     public ItemInfo GetItem(Vector2 index)
     {
-        if(InventoryItemInfo[(int)index.x, (int)index.y] == null)
-        {
-            return null;
-        }
         return InventoryItemInfo[(int)index.x, (int)index.y].ItemInfo;
+    }
+
+    public ItemInfo GetCurrentItem()
+    {
+        return InventoryItemInfo[currentItem, 0].ItemInfo;
     }
 
     public void OpenInventory()
@@ -170,6 +171,7 @@ public class Inventory
 
     public void UpdateCurrentItem(uint index)
     {
+        currentItem = index;
         ItemBar.UpdateCurrentItem(index);
     }
 }

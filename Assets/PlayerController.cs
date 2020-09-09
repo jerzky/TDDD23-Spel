@@ -128,10 +128,17 @@ public class PlayerController : MonoBehaviour
             CancelCurrentInteractable();
             if (EventSystem.current.IsPointerOverGameObject())
             {
+                // over UI element
                 Inventory.Instance.SelectItem();
             }
             else
+            {
+                // NOT over UI element
                 Inventory.Instance.DeSelectItem();
+
+                // attack?
+                PlayerMotor.Instance.Attack(Inventory.Instance.GetCurrentItem());
+            }
         }
     }
 

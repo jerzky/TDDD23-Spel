@@ -55,25 +55,25 @@ public class PlayerMotor : MonoBehaviour
         if(inter.Interact(itemId))
             PlayerController.Instance.CurrentInteractable = inter;
     }
-    public void UseItem(uint index, Vector2 lookDir)
-    {
-        /*
-          RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
-          if (hit.collider == null)
-          {
-              if (item.MustInteract)
-                  return;
-              else
-                  item.Use(0);
-          }
-          Debug.Log(hit.collider.name);
-          if (hit.collider.tag == "interactable")
-          {
-              item.Interact(hit.collider.gameObject.GetComponent<Interactable>());
-          }*/
+    /* public void UseItem(uint index, Vector2 lookDir)
+     {
+         
+           RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
+           if (hit.collider == null)
+           {
+               if (item.MustInteract)
+                   return;
+               else
+                   item.Use(0);
+           }
+           Debug.Log(hit.collider.name);
+           if (hit.collider.tag == "interactable")
+           {
+               item.Interact(hit.collider.gameObject.GetComponent<Interactable>());
+           }
 
-    }
-    public void UseItemFromInventory(uint inventorySpot, Vector2 lookDir)
+     }*/
+    /*public void UseItemFromInventory(uint inventorySpot, Vector2 lookDir)
     {
         return;
         var item = Inventory.GetItem(new Vector2(inventorySpot, 0));
@@ -95,13 +95,18 @@ public class PlayerMotor : MonoBehaviour
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
         }
         inter.Interact(item.UID);
-    }
+    }*/
 
-    public void SelectUI()
+    public void Attack(ItemInfo currentItem)
     {
-        
-        
-    }
+        if(currentItem.WeaponType == WeaponType.Meele)
+        {
 
+        }
+        else if(currentItem.WeaponType == WeaponType.Ranged)
+        {
+
+        }
+    }
 }
 

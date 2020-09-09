@@ -19,6 +19,10 @@ public class MapController : MonoBehaviour
         public int G { get; set; }
         public int B { get; set; }
         public int LayerMask { get; set; }
+        [DefaultValue("Untagged")]
+        public string Tag { get; set; }
+        [DefaultValue(Mathf.Infinity)]
+        public int Durability { get; set; }
         public List<string> Components { get; set; }
         [DefaultValue(1f)]
         public float BoxColliderScaleX { get; set; }
@@ -34,6 +38,7 @@ public class MapController : MonoBehaviour
 
     SortedDictionary<string, MapTileData> tileDictLevelOne;
     SortedDictionary<string, MapTileData> tileDictLevelTwo;
+    public static SortedDictionary<string, MapTileData> AllTiles;
 
     GameObject[] tiles = new GameObject[2];
 
@@ -44,7 +49,7 @@ public class MapController : MonoBehaviour
 
         tileDictLevelOne = new SortedDictionary<string, MapTileData>();
         tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
-
+        AllTiles = new SortedDictionary<string, MapTileData>();
         tiles[0] = new GameObject("LevelOneTiles");
         tiles[1] = new GameObject("LevelTwoTiles");
 
@@ -83,6 +88,8 @@ public class MapController : MonoBehaviour
                 tileDictLevelOne.Add(colorString, tile);
             else if (tile.UID > 100)
                 tileDictLevelTwo.Add(colorString, tile);
+
+            AllTiles.Add(tile.Name, tile);
         }
     }
     void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict, int level)
