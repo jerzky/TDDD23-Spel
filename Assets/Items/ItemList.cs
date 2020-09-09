@@ -23,15 +23,16 @@ namespace Assets.Items
 
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
-             {ITEM_LOCKPICK, new ItemInfo
-                    {
-                        UID = ITEM_LOCKPICK,
-                        Name = "Lockpick",
-                        IconPath = "Textures/lockpick",
-                        IconIndex = 0
-                    }
-            }
-    };
+            {
+                ITEM_LOCKPICK, new ItemInfo
+                {
+                    UID = ITEM_LOCKPICK,
+                    Name = "Lockpick",
+                    IconPath = "Textures/drilltesticon",
+                    IconIndex = 0
+                }
+             }
+        };
     }
 
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,10 +14,9 @@ public class PlayerController : MonoBehaviour
 
     Sprite[] playerSprites = new Sprite[4];
     SpriteRenderer sr;
-    private Inventory Inventory { get; set; }
 
-
-   
+    EventSystem EventSystem;
+    uint currentSelectedItem = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,9 +26,7 @@ public class PlayerController : MonoBehaviour
         playerSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[27];
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = playerSprites[0];
-
-        Inventory = new Inventory(FindObjectOfType<ItemBar>());
-        Inventory.AddItem(0, 1);
+        EventSystem = FindObjectOfType<EventSystem>();
     }
 
     // Update is called once per frame
@@ -84,31 +83,48 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeed = speed * sneakMultiplier;
         }
-            
 
 
-        if(Input.GetKeyDown(KeyCode.E))
+        
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            PlayerMotor.Instance.Interact(lookDir);
+            PlayerMotor.Instance.Interact(lookDir, currentSelectedItem);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            PlayerMotor.Instance.Inventory.RemoveItem(1, 1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            PlayerMotor.Instance.Inventory.AddItem(1, 1);
         }
 
         if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
         {
-            Inventory.OpenInventory();
+            PlayerMotor.Instance.Inventory.OpenInventory();
         }
         KeyCode[] keyCodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8 };
         for (uint i = 0; i < keyCodes.Length; i++)
         {
             if(Input.GetKeyDown(keyCodes[i]))
             {
-                PlayerMotor.Instance.UseItemFromInventory(i, lookDir);
+                currentSelectedItem = i;
+                Inventory.Instance.UpdateCurrentItem(i);
+                //PlayerMotor.Instance.UseItemFromInventory(i, lookDir);
                 // Use/equip? item i
             }
         }
-        bool weaponEquiped = true;
-        if(Input.GetKeyDown(KeyCode.Mouse0) && weaponEquiped)
+
+        if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            // Shoot/hit?
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                Inventory.Instance.SelectItem();
+            }
+            else
+                Inventory.Instance.DeSelectItem();
         }
     }
 }

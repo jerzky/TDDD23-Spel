@@ -65,9 +65,9 @@ public class Door : Interactable
             return false;
         }
        else
-        {
+       {
             moving = true;
-        }
+       }
         return true;
     }
 }

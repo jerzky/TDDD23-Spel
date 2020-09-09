@@ -6,18 +6,19 @@ using UnityEngine.UIElements;
 
 public class PlayerMotor : MonoBehaviour
 {
-
     public static PlayerMotor Instance;
     Rigidbody2D rb;
-    private Inventory Inventory { get; set; }
+    public Inventory Inventory { get; set; }
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
         Inventory = new Inventory(FindObjectOfType<ItemBar>());
-        if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK, 1))
+        if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK, 2))
             Debug.Log("Failed to add start item");
+
+        Inventory.RemoveItem(ItemList.ITEM_LOCKPICK, 1);
     }
 
     // Update is called once per frame
@@ -32,8 +33,15 @@ public class PlayerMotor : MonoBehaviour
         Debug.Log(Screen.height);
     }
 
-    public void Interact(Vector2 lookDir)
+    public void Interact(Vector2 lookDir, uint currentSelectedItem)
     {
+        var item = Inventory.GetItem(new Vector2(currentSelectedItem, 0));
+        uint itemId = 0;
+        if (item != null)
+            itemId = item.UID;
+            
+        
+
         RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
         if (hit.collider == null)
         {
@@ -43,10 +51,8 @@ public class PlayerMotor : MonoBehaviour
         if(inter == null)
         {
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
-         
-          
         }
-        inter.Interact(0);
+        inter.Interact(itemId);
     }
     public void UseItem(uint index, Vector2 lookDir)
     {
@@ -68,8 +74,8 @@ public class PlayerMotor : MonoBehaviour
     }
     public void UseItemFromInventory(uint inventorySpot, Vector2 lookDir)
     {
-
-        var item = Inventory.ItemsVisible[inventorySpot];
+        return;
+        var item = Inventory.GetItem(new Vector2(inventorySpot, 0));
      
         if (item == null)
         {
@@ -86,10 +92,14 @@ public class PlayerMotor : MonoBehaviour
         if (inter == null)
         {
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
-
-
         }
         inter.Interact(item.UID);
+    }
+
+    public void SelectUI()
+    {
+        
+        
     }
 
 }

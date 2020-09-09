@@ -6,6 +6,7 @@ TagManager:
   tags:
   - interactable
   - door
+  - UI
   layers:
   - Default
   - TransparentFX
