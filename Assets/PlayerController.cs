@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             CancelCurrentInteractable();
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
         KeyCode[] keyCodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8 };
         for (uint i = 0; i < keyCodes.Length; i++)
         {
-            if(Input.GetKeyDown(keyCodes[i]))
+            if (Input.GetKeyDown(keyCodes[i]))
             {
                 currentSelectedItem = i;
                 Inventory.Instance.UpdateCurrentItem(i);
@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             CancelCurrentInteractable();
             if (EventSystem.current.IsPointerOverGameObject())
@@ -148,6 +148,14 @@ public class PlayerController : MonoBehaviour
         {
             CurrentInteractable.Cancel();
             CurrentInteractable = null;
+        }
+
+
+        //för att testa
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            WeaponController.Instance.Shoot();
+
         }
     }
 }

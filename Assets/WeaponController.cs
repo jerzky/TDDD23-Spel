@@ -8,13 +8,28 @@ public class WeaponController : MonoBehaviour
 {
     [SerializeField]
     GameObject currentWeapon;
+    
+    [SerializeField]
+    WeaponFire WeaponEnd;
+
+    [SerializeField]
+    GameObject bulletPrefab;
+
+    [SerializeField]
+    public GameObject bulletHolder;
+
+
+    public static WeaponController Instance;
+    private readonly List<Bullet> ActiveBullets = new List<Bullet>();
+
+
     Vector3 playerOffset = new Vector3(-0.08f, 0.2f, 0f);
     bool WeaponEquiped = true;
     float previousAngle = 0f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Instance = this;
     }
 
     // Update is called once per frame
@@ -37,5 +52,11 @@ public class WeaponController : MonoBehaviour
             currentWeapon.transform.Rotate(Vector3.up, 180f);
 
         previousAngle = angle;
+    }
+
+
+    public void Shoot()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, WeaponEnd.transform.position, WeaponEnd.transform.rotation, bulletHolder.transform);
     }
 }
