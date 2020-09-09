@@ -51,12 +51,17 @@ public class CashRegister : Interactable
             robType = (int)RobType.Stealthy;
             timerStarted = true;
         }
-        return true;
+        return false;
     }
 
     bool IsWeapon(uint xx)
     {
         //TODO: fix a real way to determine if a item index is a weapon.
         return xx == 5;
+    }
+
+    public override void Cancel()
+    {
+        throw new System.NotImplementedException();
     }
 }

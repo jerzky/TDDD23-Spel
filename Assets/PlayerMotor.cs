@@ -15,10 +15,10 @@ public class PlayerMotor : MonoBehaviour
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
         Inventory = new Inventory(FindObjectOfType<ItemBar>());
-        if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK, 2))
+        if (!Inventory.AddItem(ItemList.ITEM_LOCKPICK.UID, 2))
             Debug.Log("Failed to add start item");
 
-        Inventory.RemoveItem(ItemList.ITEM_LOCKPICK, 1);
+        Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
     }
 
     // Update is called once per frame
@@ -52,7 +52,8 @@ public class PlayerMotor : MonoBehaviour
         {
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
         }
-        inter.Interact(itemId);
+        if(inter.Interact(itemId))
+            PlayerController.Instance.CurrentInteractable = inter;
     }
     public void UseItem(uint index, Vector2 lookDir)
     {

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
+
     float speed = 5f;
     float sneakMultiplier = 0.5f;
     Vector2 movementDirection;
@@ -17,9 +19,11 @@ public class PlayerController : MonoBehaviour
 
     EventSystem EventSystem;
     uint currentSelectedItem = 0;
+    public Interactable CurrentInteractable;
     // Start is called before the first frame update
     void Start()
     {
+        Instance = this;
         playerSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[25];
         playerSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[24];
         playerSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[26];
@@ -39,6 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         if (movementDirection != Vector2.zero)
         {
+            CancelCurrentInteractable();
             PlayerMotor.Instance.PlayerMove(movementDirection, currentSpeed);
             movementDirection = Vector2.zero;
             currentSpeed = speed;
@@ -88,6 +93,7 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.E))
         {
+            CancelCurrentInteractable();
             PlayerMotor.Instance.Interact(lookDir, currentSelectedItem);
         }
 
@@ -119,12 +125,22 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
+            CancelCurrentInteractable();
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 Inventory.Instance.SelectItem();
             }
             else
                 Inventory.Instance.DeSelectItem();
+        }
+    }
+
+    void CancelCurrentInteractable()
+    {
+        if (CurrentInteractable != null)
+        {
+            CurrentInteractable.Cancel();
+            CurrentInteractable = null;
         }
     }
 }

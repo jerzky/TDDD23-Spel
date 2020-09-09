@@ -12,26 +12,27 @@ namespace Assets.Items
         public string Name { get; set; }
         public string IconPath { get; set; }
         public uint IconIndex { get; set; }
-
+        public float AverageUseTime { get; set; }
     }
 
 
 
     public static class ItemList
     {
-        public const uint ITEM_LOCKPICK = 1;
+        public static readonly ItemInfo ITEM_LOCKPICK = new ItemInfo
+        {
+            UID = 1,
+            Name = "Lockpick",
+            IconPath = "Textures/drilltesticon",
+            IconIndex = 0,
+            AverageUseTime = 5f
+        };
 
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
             {
-                ITEM_LOCKPICK, new ItemInfo
-                {
-                    UID = ITEM_LOCKPICK,
-                    Name = "Lockpick",
-                    IconPath = "Textures/drilltesticon",
-                    IconIndex = 0
-                }
-             }
+                ITEM_LOCKPICK.UID, ITEM_LOCKPICK
+            }
         };
     }
 

@@ -114,12 +114,19 @@ public class Inventory
     {
         if (SelectedItem == null)
         {
-            Debug.Log("No previous selection");
+            Vector2 first;
+            first.x = int.Parse(EventSystem.current.currentSelectedGameObject.name.Substring(0, 1));
+            first.y = int.Parse(EventSystem.current.currentSelectedGameObject.name.Substring(2, 1));
+            InventoryItem firstInfo = InventoryItemInfo[(int)first.x, (int)first.y];
+            if (firstInfo == null)
+            {
+                DeSelectItem();
+                return;
+            }
             SelectedItem = EventSystem.current.currentSelectedGameObject;
         }
         else
         {
-            Debug.Log("previous selection");
             GameObject secondGO = EventSystem.current.currentSelectedGameObject;
             Vector2 first;
             first.x = int.Parse(SelectedItem.name.Substring(0, 1));
@@ -131,7 +138,6 @@ public class Inventory
             InventoryItem firstInfo = InventoryItemInfo[(int)first.x, (int)first.y];
             if (firstInfo == null) 
                 return;
-            Debug.Log("item was in inventory");
             InventoryItem secondInfo = InventoryItemInfo[(int)second.x, (int)second.y];
 
             InventoryItemMap.Remove(firstInfo.ItemInfo.UID);
@@ -152,15 +158,14 @@ public class Inventory
                 ItemBar.UpdateCount(first, secondInfo.Count);
                 InventoryItemMap.Add(secondInfo.ItemInfo.UID, first);
             }
-            SelectedItem = null;
-            EventSystem.current.SetSelectedGameObject(null);
+            DeSelectItem();
         }
     }
 
     public void DeSelectItem()
     {
-        Debug.Log("DESELECT");
         SelectedItem = null;
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public void UpdateCurrentItem(uint index)

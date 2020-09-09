@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Lockpick : Item
 {
-    public override uint ID { get { return ItemList.ITEM_LOCKPICK; } }
+    public override uint ID { get { return ItemList.ITEM_LOCKPICK.UID; } }
     public override bool MustInteract { get { return true; } }
 
 
@@ -25,11 +25,13 @@ public class Lockpick : Item
 
     public override bool Interact(Interactable interactable)
     {
+        Debug.LogError("WHAAT?");
         return interactable.Interact(ID);
     }
 
     public override bool Use(uint id)
     {
+        Debug.LogError("WHAAT?");
         return false;
     }
 }

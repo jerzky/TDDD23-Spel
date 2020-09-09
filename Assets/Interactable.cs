@@ -22,4 +22,6 @@ public abstract class Interactable : MonoBehaviour
         tag = "interactable";
     }
     public abstract bool Interact(uint itemIndex);
+
+    public abstract void Cancel();
 }

@@ -25,7 +25,7 @@ public class ItemBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        arrowOriginalPosition = arrow.transform.position;
+       
         firstItemPositionBar = new Vector3(32+5, 32+5, 0);
         firstItemPositionInventory = inventory.GetComponent<RectTransform>().position + new Vector3(-inventory.GetComponent<RectTransform>().rect.width/2, inventory.GetComponent<RectTransform>().rect.height/2, 0);
         firstItemPositionInventory += new Vector3(32 + 5, -(32 + 5), 0);
@@ -35,6 +35,10 @@ public class ItemBar : MonoBehaviour
             inventoryItems[i, 0] = Instantiate(item, firstItemPositionBar + new Vector3((64+5)*i, 0, 0), Quaternion.identity, bar.transform);
             inventoryItems[i, 0].name = i + " " + 0;
         }
+
+        arrow = Instantiate(arrow, inventoryItems[0, 0].transform.position + new Vector3(0f, 0f, -1f), Quaternion.identity, bar.transform);
+        arrowOriginalPosition = arrow.transform.position;
+        arrow.name = "SelectedItemBorder";
 
         for (int x = 0; x < 8; x++)
         {
@@ -51,29 +55,20 @@ public class ItemBar : MonoBehaviour
    
     public void AddItem(Vector2 position, ItemInfo info)
     {
-        Debug.Log("Test");
         var sprite = Resources.Load<Sprite>(info.IconPath);
         if (sprite == null)
             Debug.Log(info.IconPath);
         inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = sprite;
-
-
-        Debug.Log("Item Added: " + info.UID);
     }
     public void UpdateCount(Vector2 position, uint newCount)
     {
         inventoryItems[(int)position.x, (int)position.y].transform.GetChild(0).GetComponent<Text>().text = newCount.ToString();
-
-        Debug.Log("Item Edited at position: " + position + " NewCount: " + newCount);
     }
 
     public void RemoveItem(Vector2 position)
     {
-
         inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = originalItemSprite;
         inventoryItems[(int)position.x, (int)position.y].transform.GetChild(0).GetComponent<Text>().text = "";
-
-        Debug.Log("Item fully removed at position: " + position);
     }
 
     public void OpenInventory()
