@@ -70,7 +70,7 @@ public class WeaponController : MonoBehaviour
 
 
         weaponGO.transform.RotateAround(transform.position + playerOffset, Vector3.forward, (angle - previousAngle));
-        if ((previousAngle < 0 && angle > 0) || previousAngle > 0 && angle < 0)
+        if ((previousAngle <= 0 && angle >= 0) || previousAngle > 0 && angle < 0)
             weaponGO.transform.Rotate(Vector3.up, 180f);
 
         previousAngle = angle;
