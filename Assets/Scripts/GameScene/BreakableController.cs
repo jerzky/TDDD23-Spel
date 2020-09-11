@@ -23,7 +23,7 @@ public class BreakableController : MonoBehaviour
             {
                 return false;
             }
-            DamageObject(go, damage);
+           return DamageObject(go, damage);
         }
 
         return false;
@@ -56,7 +56,7 @@ public class BreakableController : MonoBehaviour
             }
         }
 
-        return false;
+        return go == null;
     }
 
     private void EditColor(float max, float curr, GameObject go)

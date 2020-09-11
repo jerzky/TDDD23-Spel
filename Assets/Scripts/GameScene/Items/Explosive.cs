@@ -10,12 +10,25 @@ public class Explosive : UsableItem
     {
         public float Timer { get; set; }
         public GameObject GameObject { get; set; }
+        public ItemInfo ItemInfo { get; set; }
+
+        public bool Removed { get; set; } = false;
+        public bool HasExploded { get; set; } = false;
+        public uint SpriteExplosionIndex { get; set; } = 0;
     }
 
     private uint IdCounter = 1;
     private List<ExplosiveInfo> TimedExplosives = new List<ExplosiveInfo>();
     private SortedDictionary<uint, ExplosiveInfo> RemoteExplosives = new SortedDictionary<uint, ExplosiveInfo>();
 
+    private const float EXPLOSIVE_RADIUS = 2f;
+    private Sprite[] ExplosionSprites;
+
+    private void Start()
+    {
+        ExplosionSprites = Resources.LoadAll<Sprite>("Textures/ExplosionSprites");
+    }
+    private const float EXPLOSION_FRAME_DELAY = 0.07f;
     private void Update()
     {
 
@@ -24,11 +37,33 @@ public class Explosive : UsableItem
             exp.Timer -= Time.deltaTime;
             if (exp.Timer <= 0f)
             {
-                TimedExplosives.Remove(exp);
-                Debug.Log("We have exploded!");
-            }
-              
+                if (!exp.HasExploded)
+                {           
+                    exp.Timer = EXPLOSION_FRAME_DELAY;
+                    exp.HasExploded = true;
+                }
+                else
+                {
+                    if (exp.SpriteExplosionIndex >= ExplosionSprites.Length)
+                    {
+                        Destroy(exp.GameObject);
+                        exp.Removed = true;
+                    }
+                    else
+                    {
+                        exp.GameObject.transform.localScale = new Vector3(4, 4, 1);
+                        exp.GameObject.GetComponent<SpriteRenderer>().sprite = ExplosionSprites[exp.SpriteExplosionIndex++];
+                        exp.Timer = EXPLOSION_FRAME_DELAY;
+
+                        if(exp.SpriteExplosionIndex == 10)
+                        {
+                            Explode(exp);
+                        }
+                    }
+                }
+            }           
         }
+        TimedExplosives.RemoveAll(e => e.Removed);
     }
 
     public override uint Add(ItemInfo item, Vector3 pos)
@@ -38,7 +73,8 @@ public class Explosive : UsableItem
             RemoteExplosives.Add(IdCounter++, new ExplosiveInfo
             {
                 Timer = 0,
-                GameObject = CreateExplosive(item, pos)
+                GameObject = CreateExplosive(item, pos),
+                ItemInfo = item
             });
             return IdCounter;
 
@@ -47,8 +83,9 @@ public class Explosive : UsableItem
         {
             TimedExplosives.Add(new ExplosiveInfo
             {
-                Timer = 10f,
-                GameObject = CreateExplosive(item,pos)
+                Timer = 2f,
+                GameObject = CreateExplosive(item,pos),
+                ItemInfo = item
             });
         }
         return 0;
@@ -67,5 +104,18 @@ public class Explosive : UsableItem
     void Explode(ExplosiveInfo info)
     {
 
+        var colliders = Physics2D.OverlapCircleAll(info.GameObject.transform.position, EXPLOSIVE_RADIUS);
+        foreach (var c in colliders)
+        {
+            if (c.gameObject.CompareTag("humanoid"))
+            {
+
+            }
+            else
+            {
+               BreakableController.Instance.HitObject(c.gameObject, info.ItemInfo.UID);
+            }
+        }
+    
     }
 }

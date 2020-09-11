@@ -84,6 +84,7 @@ namespace Assets.Items
             AverageUseTime = 0f,
             ItemType = ItemType.Usable,
             InventoryStackSize = 64,
+            BreakableDamage = 150,
             PrefabPath = "Assets/Prefabs/Explosive"
         };
 
@@ -96,6 +97,7 @@ namespace Assets.Items
             AverageUseTime = 0f,
             ItemType = ItemType.Usable,
             InventoryStackSize = 64,
+            BreakableDamage = 150,
             PrefabPath = "Assets/Prefabs/Explosive"
         };
 
