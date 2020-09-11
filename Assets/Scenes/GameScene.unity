@@ -659,7 +659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1282809523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1108,6 +1108,7 @@ GameObject:
   - component: {fileID: 1920875587}
   - component: {fileID: 1920875591}
   - component: {fileID: 1920875592}
+  - component: {fileID: 1920875593}
   m_Layer: 0
   m_Name: SCRIPTS
   m_TagString: Untagged
@@ -1226,6 +1227,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1438513243}
   creditText: {fileID: 175249849}
+--- !u!114 &1920875593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be42d845ee108734c8ddce99eebb171d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2036169873
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,7 +44,6 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
-    "Tag": "breakable",
     "Tag": null,
     "Durability": 0,
     "Components": [
@@ -63,7 +62,6 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
-    "Tag": "breakable",
     "Tag": null,
     "Durability": 0,
     "Components": [
