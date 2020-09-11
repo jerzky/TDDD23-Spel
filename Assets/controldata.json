@@ -42,17 +42,17 @@
   "Itembar_1": {
     "Action": "Itembar_1",
     "KeyCode1": 49,
-    "KeyCode2": 257
+    "KeyCode2": 0
   },
   "Itembar_2": {
     "Action": "Itembar_2",
     "KeyCode1": 50,
-    "KeyCode2": 258
+    "KeyCode2": 0
   },
   "Itembar_3": {
     "Action": "Itembar_3",
     "KeyCode1": 51,
-    "KeyCode2": 259
+    "KeyCode2": 0
   },
   "Itembar_4": {
     "Action": "Itembar_4",

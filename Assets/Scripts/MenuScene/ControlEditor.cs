@@ -42,7 +42,10 @@ public class ControlEditor : MonoBehaviour
 
     bool controlEditorOpen = false;
     bool choosingKey = false;
-    bool justOpened = true;
+    bool skipFrame = true;
+
+    Text currentRedText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,28 +61,27 @@ public class ControlEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!controlEditorOpen)
             return;
-        if(justOpened)
+        if(skipFrame)
         {
-            justOpened = false;
+            skipFrame = false;
             return;
-        }
-
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (choosingKey)
-                choosingKey = false;
-            else
-            {
-                DeActivate();
-                MenuController.Instance.Activate();
-            }
         }
         if (choosingKey)
             return;
+
         if (Input.GetKeyDown(KeyCode.Return))
+        {
             choosingKey = true;
+            keyTexts[(int)currentPointer.x, (int)currentPointer.y].color = Color.green;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            DeActivate();
+            MenuController.Instance.Activate();
+        }
         else if (Input.GetKeyDown(KeyCode.S))
             UpdatePointer(currentPointer + Vector2.up);
         else if (Input.GetKeyDown(KeyCode.W))
@@ -92,29 +94,73 @@ public class ControlEditor : MonoBehaviour
     
     private void OnGUI()
     {
-        if (choosingKey)
-            Debug.Log("CHOOSING KEY");
-        if(choosingKey && Event.current.keyCode != KeyCode.None && Event.current.keyCode != KeyCode.Return && Event.current.keyCode != KeyCode.Escape)
+        
+        if (choosingKey && Event.current.keyCode != KeyCode.Return)
         {
+            KeyCode lastKey = Event.current.keyCode;
+            if (lastKey == KeyCode.None)
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                    lastKey = KeyCode.LeftShift;
+                else if (Input.GetKey(KeyCode.Mouse0))
+                    lastKey = KeyCode.Mouse0;
+                else if (Input.GetKey(KeyCode.Mouse1))
+                    lastKey = KeyCode.Mouse1;
+                else if (Input.GetKey(KeyCode.Mouse2))
+                    lastKey = KeyCode.Mouse2;
+                else if (Input.GetKey(KeyCode.Mouse3))
+                    lastKey = KeyCode.Mouse3;
+                else if (Input.GetKey(KeyCode.Mouse4))
+                    lastKey = KeyCode.Mouse4;
+                else
+                    return;
+            }
+            
+            if (Event.current.keyCode == KeyCode.Escape)
+                lastKey = KeyCode.None;
+
+            int y = 0;
+            foreach (var v in controlMap)
+            {
+                int x = 0;
+                if (KeyCode.None != lastKey && v.Value.KeyCode1 == (uint)lastKey)
+                    x = 1;
+                if (KeyCode.None != lastKey && v.Value.KeyCode2 == (uint)lastKey)
+                    x = 2;
+
+                if(x != 0)
+                {
+                    Debug.Log(x);
+                    if (currentRedText != null)
+                        currentRedText.color = Color.black;
+                    currentRedText = keyTexts[x, y];
+                    keyTexts[x, y].color = Color.red;
+                    return;
+                }
+                y++;
+            }
+
             if (currentPointer.x == 1)
             {
-                Debug.Log("KEY 1");
-                controlMap[controlActions[(int)currentPointer.y]].KeyCode1 = (uint)Event.current.keyCode;
-                keyTexts[1, (int)currentPointer.y].text = Event.current.keyCode.ToString();
+                controlMap[controlActions[(int)currentPointer.y]].KeyCode1 = (uint)lastKey;
+                keyTexts[1, (int)currentPointer.y].text = lastKey.ToString();
             }
             else if (currentPointer.x == 2)
             {
-                Debug.Log("KEY 2");
-                
-                controlMap[controlActions[(int)currentPointer.y]].KeyCode2 = (uint)Event.current.keyCode;
-                keyTexts[2, (int)currentPointer.y].text = Event.current.keyCode.ToString();
-                Debug.Log(controlMap[controlActions[(int)currentPointer.y]].KeyCode2 + " " + Event.current.keyCode);
-                Debug.Log(Event.current.keyCode.ToString());
+                controlMap[controlActions[(int)currentPointer.y]].KeyCode2 = (uint)lastKey;
+                keyTexts[2, (int)currentPointer.y].text = lastKey.ToString();
             }
-            else
-                Debug.Log("NO KEY ?!?!?!?");
 
+            
+            if (currentRedText != null)
+            {
+                currentRedText.color = Color.black;
+                currentRedText = null;
+            }
+
+            keyTexts[(int)currentPointer.x, (int)currentPointer.y].color = Color.magenta;
             choosingKey = false;
+            skipFrame = true;
         }
     }
 
@@ -172,6 +218,7 @@ public class ControlEditor : MonoBehaviour
     {
         controlEditorOpen = true;
         holder.SetActive(true);
+        skipFrame = true;
     }
 
     public void DeActivate()
