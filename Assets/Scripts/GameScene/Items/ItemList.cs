@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Items
 {
-    public enum WeaponType { None, Ranged, Meele };
+    public enum ItemType { None, Weapon, Usable };
     public class ItemInfo
     {
         public uint UID { get; set; }
@@ -18,7 +18,9 @@ namespace Assets.Items
         public float AverageUseTime { get; set; }
         public int HumanDamage { get; set; } = 0;
         public int BreakableDamage { get; set; } = 0;
-        public WeaponType WeaponType { get; set; } = WeaponType.None;
+        public ItemType ItemType { get; set; } = ItemType.None;
+        public string PrefabPath { get; set; }
+
 
     }
 
@@ -45,7 +47,7 @@ namespace Assets.Items
             AverageUseTime = 0f,
             HumanDamage = 10,
             BreakableDamage = 10,
-            WeaponType = WeaponType.Meele,
+            ItemType = ItemType.Weapon,
             InventoryStackSize = 1
         };
 
@@ -58,7 +60,7 @@ namespace Assets.Items
             AverageUseTime = 0f,
             HumanDamage = 50,
             BreakableDamage = 0,
-            WeaponType = WeaponType.Ranged,
+            ItemType = ItemType.Weapon,
             InventoryStackSize = 1
         };
 
@@ -69,8 +71,34 @@ namespace Assets.Items
             IconPath = "Textures/bullet",
             IconIndex = 0,
             AverageUseTime = 0f,
-            WeaponType = WeaponType.None,
+            ItemType = ItemType.None,
             InventoryStackSize = 64
+        };
+
+        public static readonly ItemInfo ITEM_EXPLOSIVE_REMOTE = new ItemInfo
+        {
+            UID = 5,
+            Name = "Explosive",
+            IconPath = "Textures/c4",
+            IconIndex = 0,
+            AverageUseTime = 0f,
+            ItemType = ItemType.Usable,
+            InventoryStackSize = 64,
+            BreakableDamage = 150,
+            PrefabPath = "Assets/Prefabs/Explosive"
+        };
+
+        public static readonly ItemInfo ITEM_EXPLOSIVE_TIMED = new ItemInfo
+        {
+            UID = 6,
+            Name = "Explosive",
+            IconPath = "Textures/c4",
+            IconIndex = 0,
+            AverageUseTime = 0f,
+            ItemType = ItemType.Usable,
+            InventoryStackSize = 64,
+            BreakableDamage = 150,
+            PrefabPath = "Assets/Prefabs/Explosive"
         };
 
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
@@ -86,6 +114,12 @@ namespace Assets.Items
             },
             {
                 ITEM_AMMO.UID, ITEM_AMMO
+            },
+            {
+                ITEM_EXPLOSIVE_REMOTE.UID, ITEM_EXPLOSIVE_REMOTE
+            },
+            {
+                ITEM_EXPLOSIVE_TIMED.UID, ITEM_EXPLOSIVE_TIMED
             }
         };
     }

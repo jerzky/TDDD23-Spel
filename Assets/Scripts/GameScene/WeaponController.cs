@@ -51,7 +51,7 @@ public class WeaponController : MonoBehaviour
         if(animationActive)
             if (weapons[currentWeapon].Use(animationObject))
             {
-                if(Inventory.Instance.GetCurrentItem().WeaponType != WeaponType.None)
+                if(Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
                     weaponGO.GetComponent<SpriteRenderer>().enabled = true;
                 animationActive = false;
                 currentWeapon = 0;
@@ -112,7 +112,7 @@ public class WeaponController : MonoBehaviour
     public void ChangeWeaponSprite()
     {
         ItemInfo info = Inventory.Instance.GetCurrentItem();
-        if (info != null && info.WeaponType != WeaponType.None)
+        if (info != null && info.ItemType == ItemType.Weapon)
         {
             weaponGO.GetComponent<SpriteRenderer>().enabled = true;
             weaponGO.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(info.IconPath);

@@ -24,6 +24,11 @@
     "KeyCode1": 101,
     "KeyCode2": 0
   },
+  "UseItem": {
+    "Action": "UseItem",
+    "KeyCode1": 102,
+    "KeyCode2": 0
+  },
   "Shoot": {
     "Action": "Shoot",
     "KeyCode1": 323,
