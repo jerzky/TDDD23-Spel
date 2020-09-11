@@ -1,6 +1,7 @@
 ﻿using Assets.Items;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -28,7 +29,8 @@ public class PlayerMotor : MonoBehaviour
         if (!Inventory.AddItem(ItemList.ITEM_AMMO.UID, 64))
             Debug.Log("Failed to add start item");
 
-
+        if (!Inventory.AddItem(ItemList.ITEM_EXPLOSIVE_TIMED.UID, 64))
+            Debug.Log("Failed to add start item");
 
         Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
     }
@@ -111,6 +113,12 @@ public class PlayerMotor : MonoBehaviour
     public void Attack(ItemInfo currentItem)
     {
         WeaponController.Instance.Shoot(currentItem.UID);
+    }
+    public void UseItem(ItemInfo currentItem)
+    {
+     var prefab = Resources.Load<GameObject>(currentItem.PrefabPath);
+     //GameObject bullet = Instantiate(PrefabUtility.GetPrefabObject(prefab, transform.position, WeaponEnd.transform.rotation, bulletHolder.transform);
+    
     }
 }
 

@@ -9,7 +9,7 @@ using UnityEditor.U2D.Path.GUIFramework;
 using Newtonsoft.Json.Converters;
 
 
-public enum ControlAction { Up, Down, Left, Right, Interact, Shoot, Sneak, Inventory, Itembar_1, Itembar_2, Itembar_3, Itembar_4, Itembar_5, Itembar_6, Itembar_7, Itembar_8 }
+public enum ControlAction { Up, Down, Left, Right, Interact, Shoot, UseItem, Sneak, Inventory, Itembar_1, Itembar_2, Itembar_3, Itembar_4, Itembar_5, Itembar_6, Itembar_7, Itembar_8 }
 
 public class ControlInfo
 {
@@ -53,6 +53,7 @@ public class ControlEditor : MonoBehaviour
         Debug.Log(controlMap.Count);
         CreateControlTexts();
         Json.SaveToJson<SortedDictionary<ControlAction, ControlInfo>>(controlMap, "controldata.json");
+  
     }
     
     // Update is called once per frame

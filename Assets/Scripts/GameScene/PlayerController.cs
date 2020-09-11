@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     uint[,] actionToKeys;
     ControlAction[] itemBarActions = { ControlAction.Itembar_1, ControlAction.Itembar_2, ControlAction.Itembar_3, ControlAction.Itembar_4, ControlAction.Itembar_5, ControlAction.Itembar_6, ControlAction.Itembar_7, ControlAction.Itembar_8 };
 
+    ItemController itemController;
+
     
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,10 @@ public class PlayerController : MonoBehaviour
             actionToKeys[(uint)v.Key, 1] = (uint)v.Value.KeyCode2;
 
         }
+
+
+
+
     }
 
     // Update is called once per frame
@@ -112,8 +118,24 @@ public class PlayerController : MonoBehaviour
         if (GetInput(Input.GetKeyDown, ControlAction.Interact))
         {
             CancelCurrentInteractable();
-            PlayerMotor.Instance.Interact(lookDir, currentSelectedItem);
+            PlayerMotor.Instance.Interact(lookDir, 0);
         }
+
+        if (GetInput(Input.GetKeyDown, ControlAction.UseItem))
+        {
+            var item = Inventory.Instance.GetCurrentItem();
+            if(item.ItemType == ItemType.Usable)
+            {
+                //PlayerMotor.Instance.UseItem(currentSelectedItem);
+                ItemController.Instance.Use(item, transform.position);
+            }
+            else if(item.ItemType == ItemType.None)
+            {
+                CancelCurrentInteractable();
+                PlayerMotor.Instance.Interact(lookDir, currentSelectedItem);
+            }
+        }
+
 
         if (GetInput(Input.GetKeyDown, ControlAction.Inventory))
         {
@@ -149,10 +171,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // temporary
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            PlayerMotor.Instance.Inventory.RemoveItem(1, 1);
-        }
+ 
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
