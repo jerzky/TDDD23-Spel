@@ -1,0 +1,134 @@
+{
+  "RGBA(0.000, 0.000, 0.000, 1.000)": {
+    "UID": 0,
+    "Index": 120,
+    "Name": "Grass",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 0,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 2,
+    "Tag": null,
+    "Durability": 0,
+    "Components": null,
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.000, 0.196, 0.000, 1.000)": {
+    "UID": 1,
+    "Index": 223,
+    "Name": "Brick Wall Verical",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 0,
+    "G": 50,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.000, 0.392, 0.000, 1.000)": {
+    "UID": 7,
+    "Index": 259,
+    "Name": "Blue And Grey Tiled Floor",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 0,
+    "G": 100,
+    "B": 0,
+    "LayerMask": 2,
+    "Tag": null,
+    "Durability": 0,
+    "Components": null,
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.196, 0.000, 0.000, 1.000)": {
+    "UID": 2,
+    "Index": 224,
+    "Name": "Brick Wall Horizontal",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 50,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.392, 0.000, 0.000, 1.000)": {
+    "UID": 3,
+    "Index": 226,
+    "Name": "Brick Wall North East",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 100,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.588, 0.000, 0.000, 1.000)": {
+    "UID": 4,
+    "Index": 225,
+    "Name": "Brick Wall North West",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 150,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.784, 0.000, 0.000, 1.000)": {
+    "UID": 5,
+    "Index": 248,
+    "Name": "Brick Wall South West",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 200,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.980, 0.000, 0.000, 1.000)": {
+    "UID": 6,
+    "Index": 249,
+    "Name": "Brick Wall South East",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 250,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 0,
+    "Tag": "breakable",
+    "Durability": 110,
+    "Components": [
+      "BoxCollider"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  }
+}
