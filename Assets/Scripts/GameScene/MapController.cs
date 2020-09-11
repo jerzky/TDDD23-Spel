@@ -6,6 +6,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using UnityEngine.Tilemaps;
+using Assets.Items;
 
 public class MapController : MonoBehaviour
 {
@@ -128,10 +129,14 @@ public class MapController : MonoBehaviour
                                     BoxCollider2D bc = temp.AddComponent<BoxCollider2D>();
                                     break;
                                 case "door":
-                                    temp.AddComponent<Door>();
+                                    temp.AddComponent<Door>().AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID });
                                     break;
                                 case "searchablecontainer":
-                                    temp.AddComponent<SearchableContainer>();
+                                    temp.AddComponent<SearchableContainer>().AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID });
+                                    break;
+                                case "vault":
+                                    Door door = temp.AddComponent<Door>();
+                                    door.timerMultiplier = 10f;
                                     break;
                             }
                         }
@@ -171,11 +176,4 @@ public class MapController : MonoBehaviour
         File.WriteAllText(path, json);
 
     }
-
-
-
-
-
-
-
 }

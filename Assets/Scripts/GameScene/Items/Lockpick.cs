@@ -6,9 +6,6 @@ using UnityEngine;
 public class Lockpick : Item
 {
     public override uint ID { get { return ItemList.ITEM_LOCKPICK.UID; } }
-    public override bool MustInteract { get { return true; } }
-
-
 
     // Start is called before the first frame update
     void Start()

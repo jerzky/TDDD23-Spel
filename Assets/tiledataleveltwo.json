@@ -2,7 +2,7 @@
   "RGBA(0.196, 0.000, 0.000, 1.000)": {
     "UID": 101,
     "Index": 21,
-    "Name": "Blue Door Horizontal",
+    "Name": "Horizontal Blue Door",
     "Texture": "Textures/Doors",
     "R": 50,
     "G": 0,
@@ -20,7 +20,7 @@
   "RGBA(0.392, 0.000, 0.000, 1.000)": {
     "UID": 102,
     "Index": 20,
-    "Name": "Blue Door Vertical",
+    "Name": "Vertical Blue Door",
     "Texture": "Textures/Doors",
     "R": 100,
     "G": 0,
@@ -44,6 +44,7 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
+    "Tag": "breakable",
     "Tag": null,
     "Durability": 0,
     "Components": [
@@ -62,6 +63,7 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
+    "Tag": "breakable",
     "Tag": null,
     "Durability": 0,
     "Components": [

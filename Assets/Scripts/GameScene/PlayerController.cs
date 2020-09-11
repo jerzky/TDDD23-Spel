@@ -158,8 +158,6 @@ public class PlayerController : MonoBehaviour
         {
             PlayerMotor.Instance.Inventory.AddItem(1, 1);
         }
-
-        
     }
 
     void CancelCurrentInteractable()

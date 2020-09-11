@@ -94,7 +94,7 @@ public class ControlEditor : MonoBehaviour
     
     private void OnGUI()
     {
-        
+
         if (choosingKey && Event.current.keyCode != KeyCode.Return)
         {
             KeyCode lastKey = Event.current.keyCode;
@@ -115,7 +115,7 @@ public class ControlEditor : MonoBehaviour
                 else
                     return;
             }
-            
+
             if (Event.current.keyCode == KeyCode.Escape)
                 lastKey = KeyCode.None;
 
@@ -128,7 +128,7 @@ public class ControlEditor : MonoBehaviour
                 if (KeyCode.None != lastKey && v.Value.KeyCode2 == (uint)lastKey)
                     x = 2;
 
-                if(x != 0)
+                if (x != 0)
                 {
                     Debug.Log(x);
                     if (currentRedText != null)
@@ -151,7 +151,7 @@ public class ControlEditor : MonoBehaviour
                 keyTexts[2, (int)currentPointer.y].text = lastKey.ToString();
             }
 
-            
+
             if (currentRedText != null)
             {
                 currentRedText.color = Color.black;

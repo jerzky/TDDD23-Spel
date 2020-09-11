@@ -6,24 +6,23 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-public class Door : Interactable
+public class Door : Openable
 {
-    bool timerActive = false;
-    bool isLocked = true;
+    protected bool timerActive = false;
     bool moving = false;
     bool open = false;
     Vector3 originalPosition;
     Vector2 openingDir = Vector2.left;
     float doorSpeed = 1f;
-    uint currentItem = 0;
-    float timeLeft = 0f;
+    protected float timeLeft = 0f;
+    public float timerMultiplier = 1f;
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
-        if(GetComponent<SpriteRenderer>().sprite.name == "Doors_20") // temporary fix will only work for blue doors
+        if(gameObject.name.Substring(0, 8) == "Vertical") // temporary fix will only work for blue doors
         {
             openingDir = Vector2.up;
         }
@@ -38,20 +37,23 @@ public class Door : Interactable
             MoveDoor();
     }
 
+    public override void AssignUnlockItems(HashSet<uint> set)
+    {
+        unlockItems = set;
+    }
+
     public void Timer()
     {
         if (timeLeft < 0)
         {
-            timerActive = false;
-            Debug.Log("DOOR OPEN");
+            Cancel();
             isLocked = false;
-            LoadingCircle.Instance.StopLoading();
         }
         else
             timeLeft -= Time.deltaTime;
     }
 
-    public void MoveDoor()
+    public virtual void MoveDoor()
     {
         Vector3 dir = openingDir;
         if (open)
@@ -67,33 +69,23 @@ public class Door : Interactable
         }
     }
 
-    public override bool Interact(uint itemIndex)
-    {
-        if(isLocked)
-        {
-            if(itemIndex == ItemList.ITEM_LOCKPICK.UID)
-            {
-                currentItem = ItemList.ITEM_LOCKPICK.UID;
-                timeLeft = ItemList.ITEM_LOCKPICK.AverageUseTime;
-                LoadingCircle.Instance.StartLoading();
-                timerActive = true;
-                Debug.Log("Attempting LockPicking");
-                return true;
-            }
-            Debug.Log("Door is locked.");
-            return false;
-        }
-       else
-       {
-            moving = true;
-       }
-        return false;
-    }
-
     public override void Cancel()
     {
         timerActive = false;
         LoadingCircle.Instance.StopLoading();
         currentItem = 0;
+    }
+
+    public override void Open()
+    {
+        Debug.Log("OPEN IN DOOR");
+        moving = true;
+    }
+
+    public override void UnLock()
+    {
+        timeLeft = ItemList.AllItems[currentItem].AverageUseTime * timerMultiplier;
+        LoadingCircle.Instance.StartLoading();
+        timerActive = true;
     }
 }
