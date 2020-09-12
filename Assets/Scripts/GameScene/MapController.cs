@@ -69,8 +69,9 @@ public class MapController : MonoBehaviour
         sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
         ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
-        Json.SaveToJson(tileDictLevelOne, "tiledatalevelone.json");
-        Json.SaveToJson(tileDictLevelTwo, "tiledataleveltwo.json");
+        Debug.Log("tiledictone size: " + tileDictLevelOne.Count);
+        Debug.Log("tiledicttwo size: " + tileDictLevelTwo.Count);
+
     }
 
     // Update is called once per frame
@@ -106,7 +107,7 @@ public class MapController : MonoBehaviour
 
                 if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0,0,0).ToString())
                 {
-
+                    Debug.Log(tile.Index);
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
 
                     if (sprite == null) 
