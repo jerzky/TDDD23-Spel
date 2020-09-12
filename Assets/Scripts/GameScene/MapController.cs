@@ -138,6 +138,12 @@ public class MapController : MonoBehaviour
                                     Door door = temp.AddComponent<Door>();
                                     door.timerMultiplier = 10f;
                                     break;
+                                case "cashregister":
+                                    temp.AddComponent<CashRegister>();
+                                    break;
+                                case "store":
+                                    temp.AddComponent<Store>();
+                                    break;
                             }
                         }
                     }

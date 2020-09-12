@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Inventory 
 {
@@ -139,6 +140,10 @@ public class Inventory
 
     public void SelectItem()
     {
+        if (EventSystem.current.currentSelectedGameObject == null)
+            return;
+        if (EventSystem.current.currentSelectedGameObject.GetComponent<Button>() != null)
+            return;
         if (SelectedItem == null)
         {
             Vector2 first;

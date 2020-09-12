@@ -1,15 +1,20 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CashRegister : Interactable
 {
     enum RobType{ GunPoint, Stealthy };
-    float[] averageRobTime = { 10f, 5f };
-    bool timerStarted = false;
-    float currentTime = 0f;
+    float[] averageRobTime = { 15f, 10f };
+    bool timerActive = false;
+    float timeLeft = 0f;
     int robType = -1;
     int averageCashAmount = 500;
+    float downTime = 300f;
+    float downTimeTimer = 0f;
+    bool isDown = false;
+    float creditMultiplier = 1f;
 
 
     // Start is called before the first frame update
@@ -21,47 +26,56 @@ public class CashRegister : Interactable
     // Update is called once per frame
     void Update()
     {
-        if(timerStarted)
+        if(isDown)
         {
-            // Handle UI event which shows a timer?
-            if (false)
+            downTimeTimer += Time.deltaTime;
+            if(downTimeTimer > downTime)
             {
-                // check if player walked away before finishing?
-            }
-            currentTime += Time.deltaTime;
-            if(currentTime > averageRobTime[robType]) // add a multiplier to change time?
-            {
-                currentTime = 0;
-                // Add cash to player here?
-            }
+                downTimeTimer = 0f;
+                isDown = false;
+            }    
         }
+        else if (timerActive)
+            Timer();
+    }
+
+    public void Timer()
+    {
+        if (timeLeft < 0)
+        {
+            Cancel();
+            GeneralUI.Instance.Credits += (int)(averageCashAmount * creditMultiplier);
+            isDown = true;
+        }
+        else
+            timeLeft -= Time.deltaTime;
     }
 
     public override bool Interact(uint itemIndex)
     {
-        if (IsWeapon(itemIndex))
+        if (isDown)
+            return false;
+        if (itemIndex != 0 && ItemList.AllItems[itemIndex].ItemType == ItemType.Weapon)
         {
-            robType = (int)RobType.GunPoint;
-            timerStarted = true;
+            timerActive = true;
+            LoadingCircle.Instance.StartLoading();
+            timeLeft = averageRobTime[(int)RobType.GunPoint];
             // Random chance that cashier pulls gun?
         }
         else
         {
-            // check if cashier is in vision?
-            robType = (int)RobType.Stealthy;
-            timerStarted = true;
+            timeLeft = averageRobTime[(int)RobType.Stealthy];
+            timerActive = true;
+            LoadingCircle.Instance.StartLoading();
         }
-        return false;
-    }
-
-    bool IsWeapon(uint xx)
-    {
-        //TODO: fix a real way to determine if a item index is a weapon.
-        return xx == 5;
+        return true;
     }
 
     public override void Cancel()
     {
-        throw new System.NotImplementedException();
+        timerActive = false;
+        timeLeft = 0;
+        robType = -1;
+        LoadingCircle.Instance.StopLoading();
     }
 }

@@ -15,7 +15,10 @@ public class BreakableController : MonoBehaviour
 
     public bool HitObject(GameObject go, uint itemID)
     {
-        Debug.Log("hit object");
+        if(go.name.ToLower() == "cabinet")
+        {
+            Debug.Log("BREAK CABINET");
+        }
         if(go.tag == "breakable" && !brokenObjects.Contains(go.transform.position.ToString()))
         {
             int damage = ItemList.AllItems[itemID].BreakableDamage;

@@ -37,7 +37,7 @@ public abstract class Openable : Interactable
             else
                 Debug.Log("OPENABLE IS LOCKED");
         }
-        else
+        else if(itemUID == 0)
         {
             Debug.Log("OPENABLE IS OPENING");
             Open();

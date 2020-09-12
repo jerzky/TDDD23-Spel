@@ -1,4 +1,22 @@
 {
+  "RGBA(0.000, 0.196, 0.000, 1.000)": {
+    "UID": 105,
+    "Index": 399,
+    "Name": "Store",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 0,
+    "G": 50,
+    "B": 0,
+    "LayerMask": 9,
+    "Tag": null,
+    "Durability": 0,
+    "Components": [
+      "BoxCollider",
+      "Store"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
   "RGBA(0.196, 0.000, 0.000, 1.000)": {
     "UID": 101,
     "Index": 21,
@@ -44,8 +62,8 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
-    "Tag": null,
-    "Durability": 0,
+    "Tag": "breakable",
+    "Durability": 100,
     "Components": [
       "BoxCollider",
       "SearchableContainer"
@@ -62,11 +80,29 @@
     "G": 0,
     "B": 0,
     "LayerMask": 9,
+    "Tag": "breakable",
+    "Durability": 100,
+    "Components": [
+      "BoxCollider",
+      "SearchableContainer"
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
+  },
+  "RGBA(0.980, 0.000, 0.000, 1.000)": {
+    "UID": 105,
+    "Index": 398,
+    "Name": "CashRegister",
+    "Texture": "Textures/BuildingSpriteSheet",
+    "R": 250,
+    "G": 0,
+    "B": 0,
+    "LayerMask": 9,
     "Tag": null,
     "Durability": 0,
     "Components": [
       "BoxCollider",
-      "SearchableContainer"
+      "CashRegister"
     ],
     "BoxColliderScaleX": 0.0,
     "BoxColliderScaleY": 0.0

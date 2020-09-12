@@ -117,22 +117,24 @@ public class PlayerController : MonoBehaviour
 
         if (GetInput(Input.GetKeyDown, ControlAction.Interact))
         {
-            CancelCurrentInteractable();
             PlayerMotor.Instance.Interact(lookDir, 0);
         }
 
         if (GetInput(Input.GetKeyDown, ControlAction.UseItem))
         {
             var item = Inventory.Instance.GetCurrentItem();
-            if(item.ItemType == ItemType.Usable)
+            if(item != null)
             {
-                //PlayerMotor.Instance.UseItem(currentSelectedItem);
-                ItemController.Instance.Use(item, transform.position);
-            }
-            else if(item.ItemType == ItemType.None)
-            {
-                CancelCurrentInteractable();
-                PlayerMotor.Instance.Interact(lookDir, currentSelectedItem);
+                if (item.ItemType == ItemType.Usable)
+                {
+                    //PlayerMotor.Instance.UseItem(currentSelectedItem);
+                    ItemController.Instance.Use(item, transform.position);
+                }
+                else if (item.ItemType != ItemType.Usable)
+                {
+                    CancelCurrentInteractable();
+                    PlayerMotor.Instance.Interact(lookDir, item.UID);
+                }
             }
         }
 
@@ -154,7 +156,6 @@ public class PlayerController : MonoBehaviour
 
         if (GetInput(Input.GetKeyDown, ControlAction.Shoot))
         {
-            CancelCurrentInteractable();
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 // over UI element
@@ -164,9 +165,11 @@ public class PlayerController : MonoBehaviour
             {
                 // NOT over UI element
                 Inventory.Instance.DeSelectItem();
-
+                bool storeIsOpen = StoreController.Instance.IsOpen();
+                CancelCurrentInteractable();
                 // attack?
-                PlayerMotor.Instance.Attack(Inventory.Instance.GetCurrentItem());
+                if (!storeIsOpen)
+                    PlayerMotor.Instance.Attack(Inventory.Instance.GetCurrentItem());
             }
         }
 
@@ -179,7 +182,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void CancelCurrentInteractable()
+    public void CancelCurrentInteractable()
     {
         if (CurrentInteractable != null)
         {
