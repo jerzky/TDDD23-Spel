@@ -32,8 +32,14 @@ public class SledgeHammer : Weapon
             animationActive = false;
             currentRotation = 0f;
             RaycastHit2D hit = Physics2D.Raycast(go.transform.position, dir, 0.5f);
-            if(hit.collider != null)
+            
+            if (hit.collider != null)
+            {
                 BreakableController.Instance.HitObject(hit.collider.gameObject, info.UID);
+                WeaponController.Instance.AudioSource.clip = Resources.Load<AudioClip>("Sounds/Hit2");
+                WeaponController.Instance.AudioSource.Play();
+            }
+            
             return true;
         }
 

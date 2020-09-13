@@ -110,6 +110,7 @@ public class StoreController : MonoBehaviour
         {
             GeneralUI.Instance.Credits -= (int)boughtItem.BuyPrice;
             Inventory.Instance.AddItem(boughtItem.UID, boughtItem.PurchaseAmount);
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing2"), PlayerController.Instance.transform.position);
         }
     }
 
@@ -134,6 +135,7 @@ public class StoreController : MonoBehaviour
         {
             Inventory.Instance.RemoveItem(soldItem.UID, soldItem.PurchaseAmount);
             GeneralUI.Instance.Credits += (int)soldItem.SellPrice;
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing1"), PlayerController.Instance.transform.position);
         }
     }
 

@@ -10,15 +10,16 @@ public class WeaponController : MonoBehaviour
 {
     [SerializeField]
     GameObject weaponGO;
-    
     [SerializeField]
     WeaponFire WeaponEnd;
-
     [SerializeField]
     GameObject bulletPrefab;
-
     [SerializeField]
     public GameObject bulletHolder;
+    [SerializeField]
+    public AudioSource AudioSource;
+
+    GameObject playerGO;
 
     SortedDictionary<uint, Weapon> weapons = new SortedDictionary<uint, Weapon>();
 
@@ -38,6 +39,7 @@ public class WeaponController : MonoBehaviour
     void Start()
     {
         Instance = this;
+        playerGO = FindObjectOfType<PlayerController>().gameObject;
         weapons.Add(ItemList.ITEM_SLEDGEHAMMER.UID, new SledgeHammer(ItemList.ITEM_SLEDGEHAMMER));
         ChangeWeaponSprite();
     }
@@ -51,8 +53,9 @@ public class WeaponController : MonoBehaviour
         if(animationActive)
             if (weapons[currentWeapon].Use(animationObject))
             {
-                if(Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
+                if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
                     weaponGO.GetComponent<SpriteRenderer>().enabled = true;
+
                 animationActive = false;
                 currentWeapon = 0;
                 Destroy(animationObject);
@@ -63,7 +66,7 @@ public class WeaponController : MonoBehaviour
     public void HandleWeaponRotation()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 player = gameObject.transform.position + playerOffset;
+        Vector3 player = playerGO.transform.position + playerOffset;
 
         float xDis = mousePosition.x - player.x;
         float yDis = mousePosition.y - player.y;
@@ -71,7 +74,7 @@ public class WeaponController : MonoBehaviour
         float angle = -Mathf.Atan2(xDis, yDis) * 180 / Mathf.PI;
 
 
-        weaponGO.transform.RotateAround(transform.position + playerOffset, Vector3.forward, (angle - previousAngle));
+        weaponGO.transform.RotateAround(playerGO.transform.position + playerOffset, Vector3.forward, (angle - previousAngle));
         if ((previousAngle <= 0 && angle >= 0) || previousAngle > 0 && angle < 0)
             weaponGO.transform.Rotate(Vector3.up, 180f);
 
@@ -90,12 +93,19 @@ public class WeaponController : MonoBehaviour
             animationActive = true;
             animationObject = Instantiate(weaponGO, weaponGO.transform.position, weaponGO.transform.rotation, transform);
             weaponGO.GetComponent<SpriteRenderer>().enabled = false;
+            Destroy(animationObject.GetComponent<WeaponController>());
+            Destroy(animationObject.GetComponent<AudioSource>());
+            AudioSource.clip = Resources.Load<AudioClip>("Sounds/SledgeSwoosh");
+            AudioSource.Play();
+
         }
         else if(weaponUID == ItemList.ITEM_PISTOL.UID)
         {
             if (OutOfAmmo())
                 return;
             GameObject bullet = Instantiate(bulletPrefab, WeaponEnd.transform.position, WeaponEnd.transform.rotation, bulletHolder.transform);
+            AudioSource.clip = Resources.Load<AudioClip>("Sounds/gunfire");
+            AudioSource.Play();
         }
     }
 
@@ -106,6 +116,8 @@ public class WeaponController : MonoBehaviour
             Inventory.Instance.RemoveItem(ItemList.ITEM_AMMO.UID, 1);
             return false;
         }
+        AudioSource.clip = Resources.Load<AudioClip>("Sounds/noammo");
+        AudioSource.Play();
         return true;
     }
 

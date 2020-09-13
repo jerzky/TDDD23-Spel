@@ -83,9 +83,10 @@ public class Explosive : UsableItem
         }
         else
         {
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/TimedExplosive"), new Vector3(pos.x, pos.y, -5f));
             TimedExplosives.Add(new ExplosiveInfo
             {
-                Timer = 2f,
+                Timer = 5f,
                 GameObject = CreateExplosive(item,pos),
                 ItemInfo = item
             });

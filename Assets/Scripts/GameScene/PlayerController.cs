@@ -70,7 +70,11 @@ public class PlayerController : MonoBehaviour
             PlayerMotor.Instance.PlayerMove(movementDirection, currentSpeed);
             movementDirection = Vector2.zero;
             currentSpeed = speed;
+            GetComponent<AudioSource>().enabled = true;
+
         }
+        else
+            GetComponent<AudioSource>().enabled = false;
     }
 
     bool GetInput(Func<KeyCode, bool> func, ControlAction ca)

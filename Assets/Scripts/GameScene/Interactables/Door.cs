@@ -20,6 +20,12 @@ public class Door : Openable
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.enabled = false;
+        audioSource.playOnAwake = true;
+        audioSource.volume = 0.15f;
+        audioSource.clip = Resources.Load<AudioClip>("Sounds/LockPicking");
+        audioSource.loop = true;
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
         if(gameObject.name.Substring(0, 8) == "Vertical") // temporary fix will only work for blue doors
@@ -47,6 +53,7 @@ public class Door : Openable
         if (timeLeft < 0)
         {
             Cancel();
+            audioSource.enabled = false;
             isLocked = false;
         }
         else
@@ -74,6 +81,7 @@ public class Door : Openable
         timerActive = false;
         LoadingCircle.Instance.StopLoading();
         currentItem = 0;
+        audioSource.enabled = false;
     }
 
     public override void Open()
