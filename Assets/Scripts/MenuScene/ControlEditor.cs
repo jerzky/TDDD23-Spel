@@ -53,7 +53,6 @@ public class ControlEditor : MonoBehaviour
         //controlMap = new SortedDictionary<ControlAction, ControlInfo>();
         //controlMap.Add(ControlAction.Up, new ControlInfo { Action = ControlAction.Up, KeyCode1 = 1, KeyCode2 = 2 });
         controlMap = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
-        Debug.Log(controlMap.Count);
         CreateControlTexts();
         Json.SaveToJson<SortedDictionary<ControlAction, ControlInfo>>(controlMap, "controldata.json");
   
@@ -131,7 +130,6 @@ public class ControlEditor : MonoBehaviour
 
                 if (x != 0)
                 {
-                    Debug.Log(x);
                     if (currentRedText != null)
                         currentRedText.color = Color.black;
                     currentRedText = keyTexts[x, y];

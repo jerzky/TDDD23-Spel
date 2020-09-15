@@ -33,13 +33,13 @@ public class Explosive : UsableItem
     private void Update()
     {
 
-        foreach(var exp in TimedExplosives)
+        foreach (var exp in TimedExplosives)
         {
             exp.Timer -= Time.deltaTime;
             if (exp.Timer <= 0f)
             {
                 if (!exp.HasExploded)
-                {           
+                {
                     exp.Timer = EXPLOSION_FRAME_DELAY;
                     exp.HasExploded = true;
                 }
@@ -57,18 +57,18 @@ public class Explosive : UsableItem
                         exp.GameObject.GetComponent<SpriteRenderer>().sprite = ExplosionSprites[exp.SpriteExplosionIndex++];
                         exp.Timer = EXPLOSION_FRAME_DELAY;
 
-                        if(exp.SpriteExplosionIndex == 3)
+                        if (exp.SpriteExplosionIndex == 3)
                         {
                             Explode(exp);
                         }
                     }
                 }
-            }           
+            }
         }
         TimedExplosives.RemoveAll(e => e.Removed);
     }
 
-    public override uint Add(ItemInfo item, Vector3 pos)
+    public override uint Use(ItemInfo item, Vector3 pos)
     {
         if(item.UID == ItemList.ITEM_EXPLOSIVE_REMOTE.UID)
         {

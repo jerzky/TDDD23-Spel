@@ -54,7 +54,6 @@ public class ItemBar : MonoBehaviour
    
     public void AddItem(Vector2 position, Inventory.InventoryItem item)
     {
-        Debug.Log(position + " " + item.ItemInfo.IconPath);
         var sprite = Resources.Load<Sprite>(item.ItemInfo.IconPath);
         if (sprite == null)
             Debug.LogError(item.ItemInfo.IconPath);

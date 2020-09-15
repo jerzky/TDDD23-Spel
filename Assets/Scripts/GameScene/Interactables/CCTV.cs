@@ -17,14 +17,21 @@ public class CCTV : Interactable
     void Start()
     {
         cameraSprites = Resources.LoadAll<Sprite>("Textures/camerasprites");
-        GetComponent<SpriteRenderer>().sprite = cameraSprites[0];
+        GetComponent<SpriteRenderer>().sprite = cameraSprites[2];
+        SetCameraLookDir(new Vector3(0f, 0f, -90f));
         originalRotation = transform.rotation.eulerAngles;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         RotateCamera();
+    }
+
+    void SetCameraLookDir(Vector3 rotation)
+    {
+        transform.rotation = Quaternion.Euler(rotation);
     }
 
     void RotateCamera()

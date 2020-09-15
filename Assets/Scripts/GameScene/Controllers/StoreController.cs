@@ -48,7 +48,6 @@ public class StoreController : MonoBehaviour
             if (y >= allItems.Length || y > 5)
                 break;
             storeTexts[x, y] = v.GetComponentInChildren<Text>();
-            Debug.Log(y);
             if (x == 0)
                 storeTexts[x, y].text = allItems[y].Name;
             else if(x == 1)
@@ -89,22 +88,19 @@ public class StoreController : MonoBehaviour
 
     public void Buy()
     {
-        Debug.Log("BUY");
         int clicked = 0;
         Vector3 mouse = Input.mousePosition;
         for (int i = 0; i < storeTexts.GetLength(1); i++)
         {
             if (i >= allItems.Length)
                 break;
-            Debug.Log("mouse: " + mouse);
-            Debug.Log("storetext" + storeTexts[2, i].transform.position);
+
             if (Vector2.Distance(storeTexts[1, i].transform.position, mouse) < Vector2.Distance(storeTexts[1, clicked].transform.position, mouse))
             {
                 clicked = i;
             }
         }
         clicked += currentTopIndex;
-        Debug.Log(allItems[clicked].Name);
         ItemInfo boughtItem = allItems[clicked];
         if (GeneralUI.Instance.Credits >= boughtItem.BuyPrice)
         {
@@ -116,7 +112,6 @@ public class StoreController : MonoBehaviour
 
     public void Sell()
     {
-        Debug.Log("SELL");
         int clicked = 0;
         Vector3 mouse = Input.mousePosition;
         for (int i = 0; i < storeTexts.GetLength(1); i++)
@@ -142,7 +137,6 @@ public class StoreController : MonoBehaviour
     public void Toggle(bool b)
     {
         isOpen = b;
-        Debug.Log("TOGGLE");
         header.SetActive(b);
         scrollbar.SetActive(b);
         storeTextHolder.SetActive(b);

@@ -1,174 +1,18 @@
-[
-  {
-    "UID": 0,
-    "Index": 120,
-    "Name": "Grass",
-    "Texture": "Textures/BuildingSpriteSheet",
+{
+  "RGBA(0.000, 0.000, 1.000, 1.000)": {
+    "UID": 201,
+    "Index": 4,
+    "Name": "Node",
+    "Texture": "Textures/interiorandtrees",
     "R": 0,
     "G": 0,
-    "B": 0,
-    "LayerMask": 2
-  },
-  {
-    "UID": 1,
-    "Index": 223,
-    "Name": "Brick Wall Verical",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 0,
-    "G": 50,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-  {
-    "UID": 2,
-    "Index": 224,
-    "Name": "Brick Wall Horizontal",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 50,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-
-  {
-    "UID": 3,
-    "Index": 226,
-    "Name": "Brick Wall North East",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 100,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-  {
-    "UID": 4,
-    "Index": 225,
-    "Name": "Brick Wall North West",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 150,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-  {
-    "UID": 5,
-    "Index": 248,
-    "Name": "Brick Wall South West",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 200,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-  {
-    "UID": 6,
-    "Index": 249,
-    "Name": "Brick Wall South East",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 250,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 0,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider"
-    ]
-  },
-  {
-    "UID": 7,
-    "Index": 259,
-    "Name": "Blue And Grey Tiled Floor",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 0,
-    "G": 100,
-    "B": 0,
-    "LayerMask": 2
-  },
-  // over 100 is tiles which needs tiles below them, meaning tiles that move and/or do not fully cover the 64 * 64 pixel box.
-  {
-    "UID": 101,
-    "Index": 21,
-    "Name": "Blue Door Horizontal",
-    "Texture": "Textures/Doors",
-    "R": 50,
-    "G": 0,
-    "B": 0,
+    "B": 255,
     "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 110,
+    "Tag": null,
+    "Durability": 0,
     "Components": [
-      "BoxCollider",
-      "Door"
-    ]
-  },
-  {
-    "UID": 102,
-    "Index": 20,
-    "Name": "Blue Door Vertical",
-    "Texture": "Textures/Doors",
-    "R": 100,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 110,
-    "Components": [
-      "BoxCollider",
-      "Door"
-    ]
-  },
-  {
-    "UID": 103,
-    "Index": 71,
-    "Name": "Desk",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 150,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 9,
-    "Components": [
-      "BoxCollider",
-      "SearchableContainer"
-    ]
-  },
-  {
-    "UID": 104,
-    "Index": 361,
-    "Name": "Cabinet",
-    "Texture": "Textures/BuildingSpriteSheet",
-    "R": 200,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 9,
-    "Components": [
-      "BoxCollider",
-      "SearchableContainer"
-    ]
+    ],
+    "BoxColliderScaleX": 0.0,
+    "BoxColliderScaleY": 0.0
   }
-]
+}

@@ -9,11 +9,9 @@ using System.Net.Sockets;
 public class WeaponController : MonoBehaviour
 {
     [SerializeField]
-    GameObject weaponGO;
+    public GameObject weaponGO;
     [SerializeField]
-    WeaponFire WeaponEnd;
-    [SerializeField]
-    GameObject bulletPrefab;
+    public WeaponFire WeaponEnd;
     [SerializeField]
     public GameObject bulletHolder;
     [SerializeField]
@@ -25,6 +23,8 @@ public class WeaponController : MonoBehaviour
 
     uint currentWeapon = 0;
     bool animationActive = false;
+    int debugCounter = 0;
+    public bool AnimationActive { get { return animationActive; } set { Debug.Log("AnimationActive Changed From" + debugCounter++ + ": " + animationActive + " To: " + value); animationActive = value; } }
     GameObject animationObject;
 
 
@@ -40,8 +40,6 @@ public class WeaponController : MonoBehaviour
     {
         Instance = this;
         playerGO = FindObjectOfType<PlayerController>().gameObject;
-        weapons.Add(ItemList.ITEM_SLEDGEHAMMER.UID, new SledgeHammer(ItemList.ITEM_SLEDGEHAMMER));
-        ChangeWeaponSprite();
     }
 
     // Update is called once per frame
@@ -49,18 +47,6 @@ public class WeaponController : MonoBehaviour
     {
         if (WeaponEquiped)
             HandleWeaponRotation();
-
-        if(animationActive)
-            if (weapons[currentWeapon].Use(animationObject))
-            {
-                if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
-                    weaponGO.GetComponent<SpriteRenderer>().enabled = true;
-
-                animationActive = false;
-                currentWeapon = 0;
-                Destroy(animationObject);
-            }
-
     }
 
     public void HandleWeaponRotation()
@@ -84,47 +70,20 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(uint weaponUID)
     {
-        if (animationActive) 
+        Debug.Log(AnimationActive);
+        if (AnimationActive || ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon) 
             return;
 
-        if (weaponUID == ItemList.ITEM_SLEDGEHAMMER.UID)
-        {
-            currentWeapon = ItemList.ITEM_SLEDGEHAMMER.UID;
-            animationActive = true;
-            animationObject = Instantiate(weaponGO, weaponGO.transform.position, weaponGO.transform.rotation, transform);
-            weaponGO.GetComponent<SpriteRenderer>().enabled = false;
-            Destroy(animationObject.GetComponent<WeaponController>());
-            Destroy(animationObject.GetComponent<AudioSource>());
-            AudioSource.clip = Resources.Load<AudioClip>("Sounds/SledgeSwoosh");
-            AudioSource.Play();
-
-        }
-        else if(weaponUID == ItemList.ITEM_PISTOL.UID)
-        {
-            if (OutOfAmmo())
-                return;
-            GameObject bullet = Instantiate(bulletPrefab, WeaponEnd.transform.position, WeaponEnd.transform.rotation, bulletHolder.transform);
-            AudioSource.clip = Resources.Load<AudioClip>("Sounds/gunfire");
-            AudioSource.Play();
-        }
-    }
-
-    public bool OutOfAmmo()
-    {
-        if (Inventory.Instance.GetItemCount(ItemList.ITEM_AMMO.UID) > 0)
-        {
-            Inventory.Instance.RemoveItem(ItemList.ITEM_AMMO.UID, 1);
-            return false;
-        }
-        AudioSource.clip = Resources.Load<AudioClip>("Sounds/noammo");
-        AudioSource.Play();
-        return true;
+        currentWeapon = weaponUID;
+        ItemController.Instance.Use(ItemList.AllItems[weaponUID], playerGO.transform.position);
     }
 
     public void ChangeWeaponSprite()
     {
         ItemInfo info = Inventory.Instance.GetCurrentItem();
-        if (info != null && info.ItemType == ItemType.Weapon)
+        if (info == null)
+            return;
+        if (info.ItemType == ItemType.Weapon)
         {
             weaponGO.GetComponent<SpriteRenderer>().enabled = true;
             weaponGO.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(info.IconPath);

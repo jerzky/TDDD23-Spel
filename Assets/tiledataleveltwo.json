@@ -1,56 +1,4 @@
 {
-  "RGBA(0.000, 0.000, 0.196, 1.000)": {
-    "UID": 101,
-    "Index": 30,
-    "Name": "Desk With Computer Horizontal Chair On Top",
-    "Texture": "Textures/interiorandtrees",
-    "R": 0,
-    "G": 0,
-    "B": 50,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 50,
-    "Components": [
-      "BoxCollider",
-      "SearchableContainer"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
-  "RGBA(0.000, 0.000, 0.392, 1.000)": {
-    "UID": 102,
-    "Index": 41,
-    "Name": "(0,0)Security Station Facing Down",
-    "Texture": "Textures/interiorandtrees",
-    "R": 0,
-    "G": 0,
-    "B": 100,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 100,
-    "Components": [
-      "BoxCollider"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
-  "RGBA(0.000, 0.000, 0.588, 1.000)": {
-    "UID": 103,
-    "Index": 42,
-    "Name": "(1,0)Security Station Facing Down",
-    "Texture": "Textures/interiorandtrees",
-    "R": 0,
-    "G": 0,
-    "B": 150,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 100,
-    "Components": [
-      "BoxCollider"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
   "RGBA(0.000, 0.000, 0.784, 1.000)": {
     "UID": 104,
     "Index": 13,
@@ -102,24 +50,6 @@
     "BoxColliderScaleX": 0.0,
     "BoxColliderScaleY": 0.0
   },
-  "RGBA(0.000, 0.196, 0.392, 1.000)": {
-    "UID": 107,
-    "Index": 6,
-    "Name": "Vent",
-    "Texture": "Textures/interiorandtrees",
-    "R": 0,
-    "G": 50,
-    "B": 100,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 75,
-    "Components": [
-      "BoxCollider",
-      "Vent"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
   "RGBA(0.000, 0.196, 0.588, 1.000)": {
     "UID": 108,
     "Index": 7,
@@ -134,8 +64,10 @@
     "Components": [
       "BoxCollider"
     ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
+    "BoxColliderScaleX": 0.3,
+    "BoxColliderScaleY": 1.0,
+    "BoxColliderOffsetX": 0.35,
+    "BoxColliderOffsetY": 0.0
   },
   "RGBA(0.000, 0.196, 0.784, 1.000)": {
     "UID": 109,
@@ -145,23 +77,6 @@
     "R": 0,
     "G": 50,
     "B": 200,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 50,
-    "Components": [
-      "BoxCollider"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
-  "RGBA(0.000, 0.196, 0.980, 1.000)": {
-    "UID": 110,
-    "Index": 31,
-    "Name": "Right Desk With Computer Chair Top Side",
-    "Texture": "Textures/interiorandtrees",
-    "R": 0,
-    "G": 50,
-    "B": 250,
     "LayerMask": 9,
     "Tag": "breakable",
     "Durability": 50,
@@ -221,24 +136,6 @@
     "Components": [
       "BoxCollider",
       "Door"
-    ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
-  },
-  "RGBA(0.588, 0.000, 0.000, 1.000)": {
-    "UID": 114,
-    "Index": 9,
-    "Name": "Desk nochair on bottom",
-    "Texture": "Textures/interiorandtrees",
-    "R": 150,
-    "G": 0,
-    "B": 0,
-    "LayerMask": 9,
-    "Tag": "breakable",
-    "Durability": 100,
-    "Components": [
-      "BoxCollider",
-      "SearchableContainer"
     ],
     "BoxColliderScaleX": 0.0,
     "BoxColliderScaleY": 0.0

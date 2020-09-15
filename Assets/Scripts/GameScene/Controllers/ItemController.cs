@@ -13,12 +13,25 @@ public class ItemController : MonoBehaviour
         Instance = this;
         GameObject temp = new GameObject("UsableItems");
         var exp = temp.AddComponent<Explosive>();
+        var lockpick = temp.AddComponent<LockPick>();
+        var sledge = temp.AddComponent<SledgeHammer>();
+        var pistol = temp.AddComponent<Pistol>();
         Items.Add(ItemList.ITEM_EXPLOSIVE_REMOTE.UID, exp);
         Items.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID, exp);
+        Items.Add(ItemList.ITEM_LOCKPICK.UID, lockpick);
+        Items.Add(ItemList.ITEM_SLEDGEHAMMER.UID, sledge);
+        Items.Add(ItemList.ITEM_PISTOL.UID, pistol);
+
+
     }
     public void Use(ItemInfo item, Vector3 pos)
     {
+        Items[item.UID].Use(item, pos);
+    }
 
-        Items[item.UID].Add(item, pos);
+    public void SecondaryUse(ItemInfo item, Vector3 pos)
+    {
+        Items[item.UID].SecondaryUse(item, pos);
+
     }
 }

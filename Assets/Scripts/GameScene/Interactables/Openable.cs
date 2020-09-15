@@ -5,11 +5,10 @@ using Assets.Items;
 
 public abstract class Openable : Interactable
 {
-
+    [SerializeField]
     protected bool isLocked = true;
     protected HashSet<uint> unlockItems = new HashSet<uint>();
     protected uint currentItem = 0;
-    protected AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,21 +29,17 @@ public abstract class Openable : Interactable
         {
             if (unlockItems.Contains(itemUID))
             {
-                Debug.Log("OPENABLE IS UNLOCKING");
                 currentItem = itemUID;
-                audioSource.enabled = true;
                 UnLock();
                 return true;
             }
             else
             {
-                Debug.Log("OPENABLE IS LOCKED");
                 AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/Locked"),  new Vector3(transform.position.x, transform.position.y, -5f));
             }
         }
         else if(itemUID == 0)
         {
-            Debug.Log("OPENABLE IS OPENING");
             Open();
             return true;
         }

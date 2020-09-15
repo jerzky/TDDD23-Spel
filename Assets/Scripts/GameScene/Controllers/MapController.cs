@@ -11,8 +11,7 @@ using Assets.Items;
 public class MapController : MonoBehaviour
 {
     public class MapTileData
-    {
-        public uint UID { get; set; }
+    { 
         public int Index { get; set; }
         public string Name { get; set; }
         [JsonProperty("Texture")]
@@ -30,19 +29,22 @@ public class MapController : MonoBehaviour
         public float BoxColliderScaleX { get; set; }
         [DefaultValue(1f)]
         public float BoxColliderScaleY { get; set; }
+        [DefaultValue(0f)]
+        public float BoxColliderOffsetX { get; set; }
+        [DefaultValue(0f)]
+        public float BoxColliderOffsetY { get; set; }
         public override string ToString()
         {
             return string.Format("R: {0} G: {1}, B: {2}", R, G, B);
         }
     }
 
-
-
     SortedDictionary<string, MapTileData> tileDictLevelOne;
     SortedDictionary<string, MapTileData> tileDictLevelTwo;
+    SortedDictionary<string, MapTileData> tileDictLevelThree;
     public static SortedDictionary<string, MapTileData> AllTiles;
 
-    GameObject[] tiles = new GameObject[2];
+    GameObject[] tiles = new GameObject[3];
 
 
     // Start is called before the first frame update
@@ -51,9 +53,11 @@ public class MapController : MonoBehaviour
 
         tileDictLevelOne = new SortedDictionary<string, MapTileData>();
         tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
+        tileDictLevelThree = new SortedDictionary<string, MapTileData>();
         AllTiles = new SortedDictionary<string, MapTileData>();
         tiles[0] = new GameObject("LevelOneTiles");
         tiles[1] = new GameObject("LevelTwoTiles");
+        tiles[2] = new GameObject("LevelThreeTiles");
 
         ReadTileData();
         
@@ -69,8 +73,7 @@ public class MapController : MonoBehaviour
         sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
         ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
-        Debug.Log("tiledictone size: " + tileDictLevelOne.Count);
-        Debug.Log("tiledicttwo size: " + tileDictLevelTwo.Count);
+        //ReadImageToMap("Maps/MapLayerThree", tileDictLevelThree, 2);
 
     }
 
@@ -85,10 +88,14 @@ public class MapController : MonoBehaviour
     {
         tileDictLevelOne = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledatalevelone.json");
         tileDictLevelTwo = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledataleveltwo.json");
+        tileDictLevelThree = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledatalevelthree.json");
+
         foreach (var v in tileDictLevelOne)
             AllTiles.Add(v.Value.Name, v.Value);
         foreach (var v in tileDictLevelTwo)
             AllTiles.Add(v.Value.Name, v.Value);
+        foreach (var v in tileDictLevelThree)
+            Debug.Log(v.Key + v.Value.Name);
     }
     void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict, int level)
     {
@@ -104,20 +111,20 @@ public class MapController : MonoBehaviour
             for (int y = 0; y < bitMap.height; y++)
             {
                 Color pixelColor = bitMap.GetPixel(x, y);
+                if (level == 2)
+                    Debug.Log(pixelColor);
 
-                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0,0,0).ToString())
+                if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0, 0, 0).ToString())
                 {
-                    Debug.Log(tile.Index);
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
-
-                    if (sprite == null) 
-                        Debug.LogError("sprite is null");
+                    if (level == 2)
+                        Debug.Log("CREATING NODE");
                     GameObject temp = new GameObject(tile.Name);
                     temp.transform.parent = tiles[level].transform;
                     temp.transform.position = new Vector3(x, y, 99 - level);
                     temp.AddComponent<SpriteRenderer>().sprite = sprite;
                     temp.layer = tile.LayerMask;
-                    if(!string.IsNullOrEmpty(tile.Tag))
+                    if (!string.IsNullOrEmpty(tile.Tag))
                         temp.tag = tile.Tag;
 
                     if (tile.Components != null)
@@ -128,6 +135,11 @@ public class MapController : MonoBehaviour
                             {
                                 case "boxcollider":
                                     BoxCollider2D bc = temp.AddComponent<BoxCollider2D>();
+                                    if (tile.BoxColliderScaleX > 0 && tile.BoxColliderScaleY > 0)
+                                    {
+                                        bc.size = new Vector2(tile.BoxColliderScaleX, tile.BoxColliderScaleY);
+                                        bc.offset = new Vector2(tile.BoxColliderOffsetX, tile.BoxColliderOffsetY);
+                                    }  
                                     break;
                                 case "door":
                                     temp.AddComponent<Door>().AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID });
@@ -145,6 +157,10 @@ public class MapController : MonoBehaviour
                                 case "store":
                                     temp.AddComponent<Store>();
                                     break;
+                                case "node":
+
+                                    break;
+
                             }
                         }
                     }

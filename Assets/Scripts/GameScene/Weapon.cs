@@ -10,6 +10,5 @@ public abstract class Weapon
     {
         this.info = info;
     }
-
     public abstract bool Use(GameObject go);
 }

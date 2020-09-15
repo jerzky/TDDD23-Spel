@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (GetInput(Input.GetKeyDown, ControlAction.Shoot))
+        if (GetInput(Input.GetKey, ControlAction.Shoot))
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {

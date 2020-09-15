@@ -26,13 +26,15 @@ public class PlayerMotor : MonoBehaviour
         if (!Inventory.AddItem(ItemList.ITEM_SLEDGEHAMMER.UID, 1))
             Debug.Log("Failed to add start item");
 
-        if (!Inventory.AddItem(ItemList.ITEM_AMMO.UID, 64))
+        if (!Inventory.AddItem(ItemList.ITEM_PISTOL_AMMO.UID, 64))
             Debug.Log("Failed to add start item");
 
         if (!Inventory.AddItem(ItemList.ITEM_EXPLOSIVE_TIMED.UID, 64))
             Debug.Log("Failed to add start item");
 
         Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
+
+        WeaponController.Instance.ChangeWeaponSprite();
     }
 
     // Update is called once per frame
@@ -60,7 +62,11 @@ public class PlayerMotor : MonoBehaviour
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
         }
         if (inter.Interact(itemID))
+        {
             PlayerController.Instance.CurrentInteractable = inter;
+            if(itemID != 0)
+                ItemController.Instance.Use(ItemList.AllItems[itemID], inter.transform.position);
+        }
         else
             PlayerController.Instance.CancelCurrentInteractable();
     }

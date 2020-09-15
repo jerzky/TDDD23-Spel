@@ -75,10 +75,10 @@ namespace Assets.Items
             PurchaseAmount = 1
         };
 
-        public static readonly ItemInfo ITEM_AMMO = new ItemInfo
+        public static readonly ItemInfo ITEM_PISTOL_AMMO = new ItemInfo
         {
             UID = 4,
-            Name = "Ammo",
+            Name = "Pistol_Ammo",
             IconPath = "Textures/bullet",
             IconIndex = 0,
             AverageUseTime = 0f,
@@ -198,7 +198,7 @@ namespace Assets.Items
                 ITEM_PISTOL.UID, ITEM_PISTOL
             },
             {
-                ITEM_AMMO.UID, ITEM_AMMO
+                ITEM_PISTOL_AMMO.UID, ITEM_PISTOL_AMMO
             },
             /*{
                 ITEM_EXPLOSIVE_REMOTE.UID, ITEM_EXPLOSIVE_REMOTE

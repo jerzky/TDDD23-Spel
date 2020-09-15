@@ -35,7 +35,6 @@ public class MenuController : MonoBehaviour
 
         for (int i = 0; i < menuButtons.Length; i++)
         {
-            Debug.Log("say what?");
             menuButtons[i].color = Color.blue;
         }
         menuButtons[0].color = Color.magenta;
@@ -64,7 +63,6 @@ public class MenuController : MonoBehaviour
     void UpdateCurrentMenuButton(int newButton)
     {
         if (newButton < 0 || newButton >= menuButtons.Length) return;
-        Debug.Log(menuButtons.Length - 1 + " " + newButton);
         menuButtons[currentMenuButton].color = Color.blue;
         currentMenuButton = newButton;
         menuButtons[currentMenuButton].color = Color.magenta;

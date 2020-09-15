@@ -43,7 +43,6 @@ public class Inventory
         if(InventoryItemMap.TryGetValue(id, out itemPos))
         {
             InventoryItem temp = InventoryItemInfo[(int)itemPos.x, (int)itemPos.y];
-            Debug.Log((temp.Count + count) + " > " + temp.ItemInfo.InventoryStackSize);
             if(temp.Count + count <= temp.ItemInfo.InventoryStackSize)
             {
                 temp.Count += count;
@@ -77,34 +76,28 @@ public class Inventory
                 }
             }
         }
-
-        Debug.LogError("Inventory empty?");
         return false;
     }
 
     public bool RemoveItem(uint id, uint count)
     {
-        Debug.Log("(INVENTORY) Item removed: " + id + " itemCount: " + count);
         Vector2 itemPos;
         if (InventoryItemMap.TryGetValue(id, out itemPos))
         {
             
             if(InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count <= count)
             {
-                Debug.Log("INVENTORY REMOVE WHOLE");
                 InventoryItemInfo[(int)itemPos.x, (int)itemPos.y] = null;
                 InventoryItemMap.Remove(id);
                 ItemBar.RemoveItem(itemPos);
             }
             else
             {
-                Debug.Log("INVENTORY REMOVE UPDATE");
                 InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count -= count;
                 ItemBar.UpdateCount(itemPos, InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count);
             }
             return true;
         }
-        Debug.Log("ITEM NOT FOUND");
         return false;
     }
 

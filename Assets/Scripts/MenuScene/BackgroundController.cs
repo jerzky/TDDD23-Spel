@@ -18,7 +18,6 @@ public class BackgroundController
         this.image = image;
         this.backgroundSprites = backgroundSprites;
         this.image.sprite = backgroundSprites[0];
-        Debug.Log(backgroundSprites.Length);
     }
 
 
@@ -32,7 +31,6 @@ public class BackgroundController
                 if (image.rectTransform.rect.width > 1920*1.5)
                     return true;
 
-                Debug.Log(image.rectTransform.rect.width);
                 image.rectTransform.sizeDelta = new Vector2(image.rectTransform.rect.width + zoomSpeed * 1920/1080 * Time.deltaTime, image.rectTransform.rect.height + zoomSpeed * Time.deltaTime);
                 return false;
             }

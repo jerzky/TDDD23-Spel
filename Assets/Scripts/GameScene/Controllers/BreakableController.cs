@@ -15,10 +15,6 @@ public class BreakableController : MonoBehaviour
 
     public bool HitObject(GameObject go, uint itemID)
     {
-        if(go.name.ToLower() == "cabinet")
-        {
-            Debug.Log("BREAK CABINET");
-        }
         if(go.tag == "breakable" && !brokenObjects.Contains(go.transform.position.ToString()))
         {
             int damage = ItemList.AllItems[itemID].BreakableDamage;
@@ -26,7 +22,8 @@ public class BreakableController : MonoBehaviour
             {
                 return false;
             }
-           return DamageObject(go, damage);
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/Hit2"), new Vector3(go.transform.position.x, go.transform.position.y, 2.5f));
+            return DamageObject(go, damage);
         }
 
         return false;
@@ -37,7 +34,6 @@ public class BreakableController : MonoBehaviour
         if (damagedObjects.ContainsKey(go.transform.position.ToString()))
         {
             damagedObjects[go.transform.position.ToString()] -= damage;
-            Debug.Log("hit saved object: " + damagedObjects[go.transform.position.ToString()]);
             if (damagedObjects[go.transform.position.ToString()] <= 0)
                 Destroy(go);
             else
@@ -47,8 +43,6 @@ public class BreakableController : MonoBehaviour
         }
         else
         {
-            Debug.Log("hit new object");
-
             int durability = MapController.AllTiles[go.name].Durability;
             damagedObjects.Add(go.transform.position.ToString(), durability - damage);
             if (damagedObjects[go.transform.position.ToString()] <= 0)
@@ -65,15 +59,11 @@ public class BreakableController : MonoBehaviour
     private void EditColor(float max, float curr, GameObject go)
     {
         float c = curr / max;
-        Debug.Log(c);
         go.GetComponent<SpriteRenderer>().color = new Color(c, c, c);
-        Debug.Log(go.GetComponent<SpriteRenderer>().color);
     }
 
     void Destroy(GameObject go)
     {
-        Debug.Log("Destroy object");
-
         go.GetComponent<SpriteRenderer>().enabled = false;
         go.GetComponent<BoxCollider2D>().enabled = false;
         brokenObjects.Add(go.transform.position.ToString());
