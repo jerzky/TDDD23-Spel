@@ -102,10 +102,13 @@ public class StoreController : MonoBehaviour
         }
         clicked += currentTopIndex;
         ItemInfo boughtItem = allItems[clicked];
-        if (GeneralUI.Instance.Credits >= boughtItem.BuyPrice)
+        uint count = boughtItem.InventoryStackSize - Inventory.Instance.GetItemCount(boughtItem.UID);
+        count = count > boughtItem.PurchaseAmount ? boughtItem.PurchaseAmount : count;
+        int price = (int)(boughtItem.BuyPrice * ((float)count / boughtItem.PurchaseAmount));
+        if (GeneralUI.Instance.Credits >= price && count > 0)
         {
-            GeneralUI.Instance.Credits -= (int)boughtItem.BuyPrice;
-            Inventory.Instance.AddItem(boughtItem.UID, boughtItem.PurchaseAmount);
+            Inventory.Instance.AddItem(boughtItem.UID, count);
+            GeneralUI.Instance.Credits -= price;
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing2"), PlayerController.Instance.transform.position);
         }
     }
@@ -128,9 +131,11 @@ public class StoreController : MonoBehaviour
         ItemInfo soldItem = allItems[clicked];
         if(Inventory.Instance.GetItemCount(soldItem.UID) >= soldItem.PurchaseAmount)
         {
-            Inventory.Instance.RemoveItem(soldItem.UID, soldItem.PurchaseAmount);
-            GeneralUI.Instance.Credits += (int)soldItem.SellPrice;
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing1"), PlayerController.Instance.transform.position);
+            if(Inventory.Instance.RemoveItem(soldItem.UID, soldItem.PurchaseAmount))
+            {
+                GeneralUI.Instance.Credits += (int)soldItem.SellPrice;
+                AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing1"), PlayerController.Instance.transform.position);
+            }
         }
     }
 
