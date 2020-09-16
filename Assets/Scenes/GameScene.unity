@@ -2129,7 +2129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponGO: {fileID: 812849251}
   WeaponEnd: {fileID: 524266239}
-  bulletPrefab: {fileID: 7152125686928520255, guid: e2f29ca1909a00844b070cc6316e687b, type: 3}
   bulletHolder: {fileID: 799403862}
   AudioSource: {fileID: 812849254}
 --- !u!1 &863341596
@@ -3070,7 +3069,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3849614408194441226, guid: 3e94ed06e9582c94ea4daf6eb46a4cad, type: 3}
+  m_Sprite: {fileID: 3323497650954810989, guid: 3e94ed06e9582c94ea4daf6eb46a4cad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3089,7 +3088,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118301910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 2, z: 0}
+  m_LocalPosition: {x: -2, y: 74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1105861757}
