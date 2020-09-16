@@ -39,6 +39,9 @@ public class MapController : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    bool willBuildMap;
+
     SortedDictionary<string, MapTileData> tileDictLevelOne;
     SortedDictionary<string, MapTileData> tileDictLevelTwo;
     SortedDictionary<string, MapTileData> tileDictLevelThree;
@@ -50,7 +53,8 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if (!willBuildMap)
+            return;
         tileDictLevelOne = new SortedDictionary<string, MapTileData>();
         tileDictLevelTwo = new SortedDictionary<string, MapTileData>();
         tileDictLevelThree = new SortedDictionary<string, MapTileData>();
