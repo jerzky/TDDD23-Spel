@@ -563,6 +563,15 @@ TextureImporter:
   - first:
       213: 5741625148492241554
     second: x64spritesheet_93
+  - first:
+      213: 2630689754514624724
+    second: x64spritesheet_93
+  - first:
+      213: -2012311053410041862
+    second: x64spritesheet_94
+  - first:
+      213: 5460742520178628802
+    second: x64spritesheet_95
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -2606,6 +2615,48 @@ TextureImporter:
       name: x64spritesheet_93
       rect:
         serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d09a1cc466128420800000000000000
+      internalID: 2630689754514624724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: x64spritesheet_94
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afff6e332c5d214e0800000000000000
+      internalID: -2012311053410041862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: x64spritesheet_95
+      rect:
+        serializedVersion: 2
         x: 576
         y: 0
         width: 64
@@ -2617,8 +2668,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 29a5451f6a95eaf40800000000000000
-      internalID: 5741625148492241554
+      spriteID: 2c85e1dc36478cb40800000000000000
+      internalID: 5460742520178628802
       vertices: []
       indices: 
       edges: []

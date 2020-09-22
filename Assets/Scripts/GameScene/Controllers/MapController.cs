@@ -77,7 +77,6 @@ public class MapController : MonoBehaviour
         sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
         ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
-        //ReadImageToMap("Maps/MapLayerThree", tileDictLevelThree, 2);
 
     }
 
@@ -92,14 +91,11 @@ public class MapController : MonoBehaviour
     {
         tileDictLevelOne = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledatalevelone.json");
         tileDictLevelTwo = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledataleveltwo.json");
-        tileDictLevelThree = Json.JsonToContainer<SortedDictionary<string, MapTileData>>("tiledatalevelthree.json");
 
         foreach (var v in tileDictLevelOne)
             AllTiles.Add(v.Value.Name, v.Value);
         foreach (var v in tileDictLevelTwo)
             AllTiles.Add(v.Value.Name, v.Value);
-        foreach (var v in tileDictLevelThree)
-            Debug.Log(v.Key + v.Value.Name);
     }
     void ReadImageToMap(string imagePath, SortedDictionary<string, MapTileData> tileDict, int level)
     {

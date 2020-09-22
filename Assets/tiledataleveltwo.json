@@ -1,9 +1,9 @@
 {
   "RGBA(0.000, 0.000, 0.784, 1.000)": {
     "UID": 104,
-    "Index": 13,
+    "Index": 93,
     "Name": "Toilet facing down",
-    "Texture": "Textures/interiorandtrees",
+    "Texture": "Textures/x64spritesheet",
     "R": 0,
     "G": 0,
     "B": 200,
@@ -18,9 +18,9 @@
   },
   "RGBA(0.000, 0.000, 0.980, 1.000)": {
     "UID": 105,
-    "Index": 5,
+    "Index": 90,
     "Name": "Toilet facing left",
-    "Texture": "Textures/interiorandtrees",
+    "Texture": "Textures/x64spritesheet",
     "R": 0,
     "G": 0,
     "B": 250,
