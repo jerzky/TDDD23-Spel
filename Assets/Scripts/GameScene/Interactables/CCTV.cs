@@ -42,7 +42,6 @@ public class CCTV : Interactable
         {
             direction *= -1;
         }
-        
     }
 
     public override void Cancel()

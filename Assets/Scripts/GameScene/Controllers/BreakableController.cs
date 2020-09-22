@@ -1,4 +1,5 @@
 ﻿using Assets.Items;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class BreakableController : MonoBehaviour
     public bool HitObject(GameObject go, uint itemID)
     {
         if(go.tag == "breakable" && !brokenObjects.Contains(go.transform.position.ToString()))
-        {
+        {   
             int damage = ItemList.AllItems[itemID].BreakableDamage;
             if(damage == 0f)
             {
@@ -38,12 +39,21 @@ public class BreakableController : MonoBehaviour
                 Destroy(go);
             else
             {
-                EditColor(MapController.AllTiles[go.name].Durability, damagedObjects[go.transform.position.ToString()], go);
+                int durability;
+                if (!MapController.AllTiles.ContainsKey(go.name))
+                    durability = 75;
+                else
+                    durability = MapController.AllTiles[go.name].Durability;
+                EditColor(durability, damagedObjects[go.transform.position.ToString()], go);
             }
         }
         else
         {
-            int durability = MapController.AllTiles[go.name].Durability;
+            int durability;
+            if (!MapController.AllTiles.ContainsKey(go.name))
+                durability = 75;
+            else
+                durability = MapController.AllTiles[go.name].Durability;
             damagedObjects.Add(go.transform.position.ToString(), durability - damage);
             if (damagedObjects[go.transform.position.ToString()] <= 0)
                 Destroy(go);

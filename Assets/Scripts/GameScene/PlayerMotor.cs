@@ -73,6 +73,8 @@ public class PlayerMotor : MonoBehaviour
 
     public void Attack(ItemInfo currentItem)
     {
+        if (currentItem == null) 
+            return;
         WeaponController.Instance.Shoot(currentItem.UID);
     }
    /* public void UseItem(ItemInfo currentItem)

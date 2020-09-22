@@ -21,6 +21,8 @@ public class GeneralUI : MonoBehaviour
     void Start()
     {
         Instance = this;
+        creditText.color = Color.white;
+        creditText.font = Resources.Load<Font>("DigitaldreamSkew");
         healthSlider.maxValue = 100;
         healthSlider.minValue = 0;
 
