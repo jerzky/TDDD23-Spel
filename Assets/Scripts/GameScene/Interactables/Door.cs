@@ -16,13 +16,15 @@ public class Door : Openable
     float doorSpeed = 1f;
     protected float timeLeft = 0f;
     public float timerMultiplier = 1f;
+    [SerializeField]
+    bool isVertical;
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
-        if(gameObject.name.Substring(0, 8) == "Vertical") // temporary fix will only work for blue doors
+        if(isVertical)
         {
             openingDir = Vector2.up;
         }
