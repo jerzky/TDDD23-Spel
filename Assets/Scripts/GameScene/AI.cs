@@ -9,7 +9,7 @@ using UnityEngine;
 public class AI : MonoBehaviour
 {
     public Node nextNode;
-    float walkingSpeed = 20f;
+    float walkingSpeed = 5f;
     public bool isWaitingForPath = false;
     Vector2[] dirToLeft = { Vector2.down, Vector2.up, Vector2.left, Vector2.right, Vector2.down + Vector2.left, Vector2.up + Vector2.left, Vector2.down + Vector2.right, Vector2.up + Vector2.right };
     Vector2[] dirToRight = { Vector2.up, Vector2.down, Vector2.right, Vector2.left, Vector2.up + Vector2.left, Vector2.up + Vector2.right, Vector2.down + Vector2.left, Vector2.down + Vector2.right };
@@ -24,7 +24,12 @@ public class AI : MonoBehaviour
     List<Collider2D> inVision = new List<Collider2D>();
 
     Vector2 bankPos = new Vector2(9f, 83f);
-    List<Vector2> goals = new List<Vector2> { new Vector2(2f, 8f), new Vector2(5f, 8f), new Vector2(2f, -4f) };
+    List<Vector2> goals = new List<Vector2> { new Vector2(5f, -4f), new Vector2(2f, -4f), new Vector2(2f, 8f), new Vector2(5f, 8f), new Vector2(7f, 8f), new Vector2(8f, 8f), new Vector2(10f, 8f), new Vector2(10f, 15f) };
+    int orderIndex = 0;
+    int orderIndexChange = 1;
+
+
+    int health = 100;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,14 +37,23 @@ public class AI : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (nextNode == null && !isWaitingForPath)
         {
             float x = UnityEngine.Random.Range(46, 123);
             float y = UnityEngine.Random.Range(34, 66);
-            if (PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), goals[0], this))
+            
+            if (PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), goals[orderIndex] + bankPos, this))
+            {
                 isWaitingForPath = true;
+                orderIndex += orderIndexChange;
+                if (orderIndex >= goals.Count || orderIndex < 0)
+                {
+                    orderIndexChange *= -1;
+                    orderIndex += orderIndexChange*2;
+                }
+            }
         }
         if (nextNode == null)
         {
@@ -66,8 +80,8 @@ public class AI : MonoBehaviour
             return;
         }
 
-        GetComponent<Rigidbody2D>().MovePosition(transform.position + new Vector3(dir.x, dir.y, 0f) * speed * Time.deltaTime);
-        if (Vector2.Distance(transform.position, nextNode.Position) < 0.2f)
+        GetComponent<Rigidbody2D>().MovePosition(transform.position + new Vector3(dir.x, dir.y, 0f) * speed * Time.fixedDeltaTime);
+        if (Vector2.Distance(transform.position, nextNode.Position) < 0.25f)
         {
             nextNode = nextNode.Child;
             offset = Vector2.zero;
@@ -183,7 +197,7 @@ public class AI : MonoBehaviour
         isCollidingWithAI = false;*/
     }
 
-    public void EnteredVision(Collider2D col)
+    public void OnVisionEnter(Collider2D col)
     {
         /*
         if (col.CompareTag(tag))
@@ -209,7 +223,7 @@ public class AI : MonoBehaviour
         }*/
     }
 
-    public void InVision(Collider2D col)
+    public void OnVisionStay(Collider2D col)
     {/*
         if (col.CompareTag(tag))
         {
@@ -219,11 +233,18 @@ public class AI : MonoBehaviour
         }*/
     }
 
-    public void ExitVision(Collider2D col)
+    public void OnVisionExit(Collider2D col)
     {/*
         if (col.CompareTag(tag))
         {
             inVision.Remove(col);
         }*/
+    }
+
+    public void Injure(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+            Destroy(gameObject);
     }
 }

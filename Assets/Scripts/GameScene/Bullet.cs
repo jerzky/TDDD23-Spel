@@ -13,6 +13,7 @@ public class Bullet : MonoBehaviour
     public float BulletTravelDistance { get; private set; }
     public bool HasExpired { get { return BulletTravelDistance >= maxTravelDistance; } }
     bool bulletInfoSet = false;
+    int damage = 50;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,14 +38,23 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.collider.CompareTag("humanoid"))
+        {
+            collision.collider.GetComponent<AI>().Injure(damage);
+        }
+        else if(collision.collider.CompareTag("Player"))
+        {
+            PlayerController.Instance.Injure(damage);
+        }
         Destroy(gameObject);
     }
 
-    public void SetBulletInfo(float muzzleVelocity, float maxTravelDistance)
+    public void SetBulletInfo(float muzzleVelocity, float maxTravelDistance, int damage)
     {
         Debug.Log("SET BULLET INFO CALLED");
         this.muzzleVelocity = muzzleVelocity;
         this.maxTravelDistance = maxTravelDistance;
+        this.damage = damage;
         Debug.Log(muzzleVelocity + " " + maxTravelDistance);
         bulletInfoSet = true;
     }

@@ -17,6 +17,7 @@ public abstract class Gun : UsableItem
     protected float cantShootTimer;
     protected GameObject bulletPrefab;
     protected float reloadSpeed;
+    protected int damage;
 
     public override uint Use(ItemInfo item, Vector3 pos)
     {
@@ -39,7 +40,7 @@ public abstract class Gun : UsableItem
     public uint Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab, WeaponController.Instance.WeaponEnd.transform.position, WeaponController.Instance.WeaponEnd.transform.rotation, WeaponController.Instance.bulletHolder.transform);
-        bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance);
+        bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance, damage);
         return 1;
     }
     public uint Reload()

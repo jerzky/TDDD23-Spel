@@ -20,6 +20,8 @@ public class Pistol : Gun
 
         magSize = 16;
         currentMagSize = 16;
+
+        damage = 50;
         bulletPrefab = Resources.Load<GameObject>("Prefabs/bullet");
         if (bulletPrefab == null)
             Debug.Log("BULLET NULL????");

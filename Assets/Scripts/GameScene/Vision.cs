@@ -6,17 +6,15 @@ using UnityEngine;
 public class Vision : MonoBehaviour
 {
     public enum VisionType { CCTV, GUARD, WORKER, BANKCASHIER, STORECASHIER };
-    public enum LocationType { BANK, STORE };
+    
     PolygonCollider2D pc;
     [SerializeField]
     VisionType visionType;
-    LocationType locationType;
     // Start is called before the first frame update
     void Start()
     {
         pc = GetComponent<PolygonCollider2D>();
         visionType = VisionType.CCTV;
-        locationType = LocationType.BANK;
     }
 
     // Update is called once per frame
@@ -30,7 +28,10 @@ public class Vision : MonoBehaviour
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().EnteredVision(col);
+                gameObject.GetComponentInParent<AI>().OnVisionEnter(col);
+                break;
+            case VisionType.CCTV:
+                gameObject.GetComponentInParent<CCTV>().OnVisionEnter(col);
                 break;
         }
     }
@@ -40,7 +41,10 @@ public class Vision : MonoBehaviour
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().InVision(col);
+                gameObject.GetComponentInParent<AI>().OnVisionStay(col);
+                break;
+            case VisionType.CCTV:
+                gameObject.GetComponentInParent<CCTV>().OnVisionStay(col);
                 break;
         }
     }
@@ -49,7 +53,10 @@ public class Vision : MonoBehaviour
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().ExitVision(col);
+                gameObject.GetComponentInParent<AI>().OnVisionExit(col);
+                break;
+            case VisionType.CCTV:
+                gameObject.GetComponentInParent<CCTV>().OnVisionExit(col);
                 break;
         }
     }

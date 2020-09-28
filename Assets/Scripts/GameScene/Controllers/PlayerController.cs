@@ -198,4 +198,14 @@ public class PlayerController : MonoBehaviour
             CurrentInteractable = null;
         }
     }
+
+    public void Injure(int damage)
+    {
+        GeneralUI.Instance.Health -= damage;
+        if (GeneralUI.Instance.Health <= 0)
+        {
+            // you lost motherfucker
+            Destroy(gameObject);
+        }
+    }
 }
