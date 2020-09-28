@@ -22,9 +22,7 @@ public abstract class Gun : UsableItem
     {
         if (cantShootTimer > 0)
             return 0;
-        Debug.Log("ADD");
         uint temp = OutOfAmmo();
-        Debug.Log("OUT OF AMMO: " + temp);
         if (temp == 0)
         {
             Shoot();
@@ -34,21 +32,14 @@ public abstract class Gun : UsableItem
         }
         else if (temp == 1)
         {
-            Debug.Log("RELOAD");
             Reload();
         }
         return 0;
     }
     public uint Shoot()
     {
-        Debug.Log("SHOOT");
-        
-        Debug.Log("RATE OF FIRE TIMER OK");
-        
-
         GameObject bullet = Instantiate(bulletPrefab, WeaponController.Instance.WeaponEnd.transform.position, WeaponController.Instance.WeaponEnd.transform.rotation, WeaponController.Instance.bulletHolder.transform);
         bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance);
-        Debug.Log("BULLET CREATED");
         return 1;
     }
     public uint Reload()

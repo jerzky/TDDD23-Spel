@@ -1,174 +1,182 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
+using System.IO;
 using UnityEngine;
 
-public class Node
-{ 
-    public enum NodeType { Regular, Door };
-    public uint UID;
-    public GameObject GameObject;
-    public List<Node> Neighbours { get; }
-    public NodeType Type;
-    public Vector3 Position { get { return GameObject.transform.position; } }
-    public Node(GameObject gameObject, NodeType type)
+public enum NodeType { Clear, Blocked, Door, AvailableAction, Visited };
+public class Node 
+{
+    public Vector2 Position;
+    public Node Parent;
+    public float Distance;
+    public Node Child;
+    public Node(Vector2 position, Node parent, float distance)
     {
-        Type = type;
-        this.GameObject = gameObject;
-        Neighbours = new List<Node>();
-    }
-
-
-    public void AddNeighbours(List<Node> nodes)
-    {
-        int indexOfDash = GameObject.name.IndexOf('-');
-        int length = indexOfDash;
-        if (indexOfDash == -1)
-            length = GameObject.name.Length;
-        this.UID = uint.Parse(GameObject.name.Substring(0, length));
-
-
-        if (indexOfDash != -1)
-        {
-            for (int i = indexOfDash + 1; i < GameObject.name.Length; i++)
-            {
-                Neighbours.Add(nodes[int.Parse(GameObject.name[i].ToString())]);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < nodes.Count; i++)
-                if (i != UID)
-                    Neighbours.Add(nodes[i]);
-        }
+        Position = position;
+        Parent = parent;
+        Distance = distance;
     }
 }
 
+public class PathFindingQueueItem
+{
+    public Vector2 StartPos { get; }
+    public Vector2 EndPos { get; }
+    public AI AI { get; }
+    public PathFindingQueueItem(Vector2 startPos, Vector2 endPos, AI ai)
+    {
+        StartPos = startPos;
+        EndPos = endPos;
+        AI = ai;
+    }
+}
 
 public class PathingController : MonoBehaviour
 {
-    [SerializeField]
-    List<GameObject> lobbyNodes;
-    [SerializeField]
-    List<GameObject> officeNodes;
-    List<NodeSystem> nodeSystems;
     public static PathingController Instance;
-// Start is called before the first frame update
-void Start()
+    public readonly Vector2[] neighbours = { Vector2.left, Vector2.right, Vector2.up, Vector2.down, Vector2.up + Vector2.left, Vector2.up + Vector2.right, Vector2.down + Vector2.left, Vector2.down + Vector2.right };
+    float[] actionDistance = { 1f, 1f, 1f, 1f, 1.5f, 1.5f, 1.5f, 1.5f };
+    NodeType[,] grid;
+    Queue<PathFindingQueueItem> waitingQueue = new Queue<PathFindingQueueItem>();
+    float delayBetweenPathFindings = 0;
+    float maxDelayBetweenPathFindings = 0.012f;
+
+    // Start is called before the first frame update
+    void Start()
     {
         Instance = this;
-        nodeSystems = new List<NodeSystem>();
-
-        List<SortedDictionary<uint, Node>> doorDicts = new List<SortedDictionary<uint, Node>> { new SortedDictionary<uint, Node>(), new SortedDictionary<uint, Node>() };
-        AddDoorsToDicts(doorDicts);
-        nodeSystems.Add(new NodeSystem(0, CreateNodesFromGO(lobbyNodes), doorDicts[0], 1));
-        nodeSystems.Add(new NodeSystem(1, CreateNodesFromGO(officeNodes), doorDicts[1], 0));
-
-    }
-
-    void AddDoorsToDicts(List<SortedDictionary<uint, Node>> doorDicts)
-    {
-        foreach(var v in FindObjectsOfType<Door>())
-        {
-            Node temp = new Node(v.gameObject, Node.NodeType.Door);
-            if (!int.TryParse(v.gameObject.name[0].ToString(), out int unused))
-                continue;
-            uint first = uint.Parse(v.gameObject.name.Substring(0, v.gameObject.name.IndexOf('-')));
-            uint second = uint.Parse(v.gameObject.name.Substring(v.gameObject.name.IndexOf('-')+1));
-            doorDicts[(int)first].Add(second, temp);
-            doorDicts[(int)second].Add(first, temp);
-        }
-    }
-
-    List<Node> CreateNodesFromGO(List<GameObject> g)
-    {
-        List<Node> result = new List<Node>();
-        foreach(var v in g)
-        {
-            result.Add(new Node(v, Node.NodeType.Regular));
-        }
-        return result;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    public List<Node> GetPath(Vector3 from, Vector3 to)
-    {
-        List<Node> result = new List<Node>();
-        List<uint> sectionPath = GetNodeSystemPath(from, to);
-
-        result.Add(nodeSystems[(int)sectionPath[0]].FindClosestNode(from));
-        for (int i = 0; i < sectionPath.Count; i++)
+        if (waitingQueue.Count > 0)
         {
-            var currentNodeSystem = nodeSystems[(int)sectionPath[i]];
-            Node currentFrom = currentNodeSystem.FindClosestNode(from);
-            Vector3 currentTo = to;
-            if (i+1 < sectionPath.Count)
-                currentTo = currentNodeSystem.FindClosestNode(currentNodeSystem.doorNodes[sectionPath[i+1]].Position).Position;
-
-            
-            List<Node> temp = currentNodeSystem.GetPathToIdle(currentFrom, currentTo);
-            result.AddRange(temp);
-        }
-        return result;
-    }
-
-    List<uint> GetNodeSystemPath(Vector3 from, Vector3 to)
-    {
-        List<uint> result = new List<uint>();
-        uint[] visited = new uint[nodeSystems.Count];
-        Queue<Tuple<uint, uint>> frontier = new Queue<Tuple<uint, uint>>();
-        var start = new Tuple<uint, uint>(GetSection(from), 404);
-        frontier.Enqueue(start);
-        visited[frontier.Peek().Item1] = 404;
-
-        uint destination = GetSection(to);
-
-        while(frontier.Count > 0)
-        {
-            var current = frontier.Dequeue();
-            foreach(var v in nodeSystems[(int)current.Item1].SectionNeighbours.FindAll(c => visited[c] == 0))
+            delayBetweenPathFindings -= Time.deltaTime;
+            if(delayBetweenPathFindings <= 0f)
             {
-                if(v == destination)
-                {
-                    uint temp = v;
-                    while(temp != 404)
-                    {
-                        result.Add(temp);
-                        temp = visited[temp];
-                    }
-                    result.Reverse();
-                    return result;
-                }
-                else
-                {
-                    visited[v] = current.Item1;
-                    frontier.Enqueue(new Tuple<uint, uint>(v, current.Item1));
-                }
+                PathFindingQueueItem pfqi = waitingQueue.Dequeue();
+                pfqi.AI.nextNode = FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone());
+                delayBetweenPathFindings = maxDelayBetweenPathFindings;
             }
         }
-        result.Add(start.Item1);
-        return result;
     }
 
-    uint GetSection(Vector3 position)
+    public void CreateNodeGrid()
     {
-        //TODO: write a better version of this
-        uint system = 0;
-        for(int i = 0; i < nodeSystems.Count; i++)
+        grid = new NodeType[(int)MapController.MapSize.x, (int)MapController.MapSize.y];
+        for (int y = 0; y < MapController.MapSize.y; y++)
         {
-            var v = nodeSystems[i];
-            if (Vector2.Distance(v.FindClosestNode(position).Position, position) < Vector2.Distance(nodeSystems[(int)system].FindClosestNode(position).Position, position))
-                system = (uint)i;
+            for (int x = 0; x < MapController.MapSize.x; x++)
+            {
+                Collider2D[] hits = Physics2D.OverlapCircleAll(new Vector2(x, y), 0.45f);
+                grid[x, y] = (uint)NodeType.Clear;
+                Debug.Log("Ray");
+                foreach (var v in hits)
+                {
+                    BoxCollider2D bc = v.GetComponent<BoxCollider2D>();
+                    if (bc != null && !bc.isTrigger)
+                    {
+                        if(v.GetComponent<Door>() != null)
+                            grid[x, y] = NodeType.Door;
+                        else
+                            grid[x, y] = NodeType.Blocked;
+                        Debug.Log("BoxCollider");
+                        break;
+                    }
+                }
+                if (y <= 0 || x <= 0 || x >= MapController.MapSize.x - 1 || y >= MapController.MapSize.y - 1)
+                    grid[x, y] = NodeType.Blocked;
+            }
         }
+    }
 
-        return system;
+    public Node FindPathExcluding(Vector2 s, Vector2 g, List<Vector2> excluding)
+    {
+        if (grid[(int)g.x, (int)g.y] != NodeType.Clear)
+            return null;
+
+        NodeType[,] gridCopy = (NodeType[,])grid.Clone();
+        foreach(var v in excluding)
+        {
+            gridCopy[(int)v.x, (int)v.y] = NodeType.Blocked;
+        }
+        return FindPath(s, g, gridCopy);
+    }
+
+    public bool FindPath(Vector2 s, Vector2 g, AI ai)
+    {
+        if (grid[(int)g.x, (int)g.y] != NodeType.Clear)
+            return false;
+
+        waitingQueue.Enqueue(new PathFindingQueueItem(s, g, ai));
+        return true;
+    }
+
+    Node FindPath(Vector2 s, Vector2 g, NodeType[,] gridCopy)
+    {
+        Vector2 startPos = new Vector2((int)s.x, (int)s.y);
+        Vector2 goalPos = new Vector2((int)g.x, (int)g.y);
+
+        LinkedList<Node> availableActions = new LinkedList<Node>();
+        Node current = new Node(startPos, null, 0f);
+        AddNeighbours(current, availableActions, gridCopy);
+        while (availableActions.Count > 0)
+        {
+            current = FindNextAction(availableActions, goalPos);
+            gridCopy[(int)current.Position.x, (int)current.Position.y] = NodeType.Visited;
+            availableActions.Remove(current);
+
+            if (current.Position == goalPos)
+            {
+                while(current.Parent != null)
+                {
+                    current.Parent.Child = current;
+                    current = current.Parent;
+                }
+                return current;
+            }
+            AddNeighbours(current, availableActions, gridCopy);
+        }
+        return null;
+    }
+
+    Node FindNextAction(LinkedList<Node> availableActions, Vector2 goalPos)
+    {
+        Node best = availableActions.First.Value;
+        double bestDist = ManhattanDistance(best.Position, goalPos);
+        foreach (var v in availableActions)
+        {
+            if (v.Distance + ManhattanDistance(v.Position, goalPos) < best.Distance + bestDist)
+            {
+                best = v;
+                bestDist = ManhattanDistance(best.Position, goalPos);
+            }
+        }
+        return best;
+    }
+
+    void AddNeighbours(Node origin, LinkedList<Node> availableActions, NodeType[,] gridCopy)
+    {
+        Vector2 current;
+        for (int i = 0; i < neighbours.Length; i++)
+        {
+            current = origin.Position + neighbours[i];
+            if (gridCopy[(int)current.x, (int)current.y] == NodeType.Clear && (i < 4 || (gridCopy[(int)origin.Position.x, (int)current.y] == NodeType.Clear && gridCopy[(int)current.x, (int)origin.Position.y] == NodeType.Clear)))
+            {
+                availableActions.AddFirst(new Node(current, origin, origin.Distance + actionDistance[i]));
+                gridCopy[(int)current.x, (int)current.y] = NodeType.AvailableAction;
+            }
+        }
+    }
+
+    float ManhattanDistance(Vector2 a, Vector2 b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
+    public bool IsClear(Vector2 pos)
+    {
+        return grid[(int)pos.x, (int)pos.y] == NodeType.Clear;
     }
 }

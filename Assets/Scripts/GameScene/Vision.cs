@@ -8,6 +8,7 @@ public class Vision : MonoBehaviour
     public enum VisionType { CCTV, GUARD, WORKER, BANKCASHIER, STORECASHIER };
     public enum LocationType { BANK, STORE };
     PolygonCollider2D pc;
+    [SerializeField]
     VisionType visionType;
     LocationType locationType;
     // Start is called before the first frame update
@@ -26,13 +27,30 @@ public class Vision : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Player"))
+        switch (visionType)
         {
-            // Player is in Vision
-            // TODO: CHECK IF PLAYER IS HOSTILE
+            case VisionType.GUARD:
+                gameObject.GetComponentInParent<AI>().EnteredVision(col);
+                break;
+        }
+    }
 
-
-            Debug.Log("Player in Vision");
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        switch (visionType)
+        {
+            case VisionType.GUARD:
+                gameObject.GetComponentInParent<AI>().InVision(col);
+                break;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        switch (visionType)
+        {
+            case VisionType.GUARD:
+                gameObject.GetComponentInParent<AI>().ExitVision(col);
+                break;
         }
     }
 }

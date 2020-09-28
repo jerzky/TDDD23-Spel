@@ -182,7 +182,11 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            PlayerMotor.Instance.Inventory.AddItem(1, 1);
+            foreach(var v in FindObjectsOfType<AI>())
+            {
+                v.nextNode = null;
+                v.isWaitingForPath = false;
+            }
         }
     }
 

@@ -48,7 +48,7 @@ public class MapController : MonoBehaviour
     public static SortedDictionary<string, MapTileData> AllTiles;
 
     GameObject[] tiles = new GameObject[3];
-
+    public static Vector2 MapSize;
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +69,7 @@ public class MapController : MonoBehaviour
 
         // create grass background
         Texture2D bitMap = Resources.Load("Maps/MapLayerOne") as Texture2D;
+        MapSize = new Vector2(bitMap.width, bitMap.height);
         GameObject background = new GameObject("background");
         background.transform.position = new Vector3(bitMap.width / 2 - background.transform.position.x, bitMap.height / 2 - background.transform.position.y, 100);
         SpriteRenderer sr = background.AddComponent<SpriteRenderer>();
@@ -77,7 +78,7 @@ public class MapController : MonoBehaviour
         sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
         ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
-
+        PathingController.Instance.CreateNodeGrid();
     }
 
     // Update is called once per frame
