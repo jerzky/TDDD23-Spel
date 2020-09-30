@@ -12,19 +12,17 @@ public class Bank : Building
     [SerializeField] 
     private GameObject _nodeHolder;
 
+
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
-    }
-
-    public void start()
-    {
-        var guard = GetComponentInChildren<AI>();
+        var guard = FindObjectOfType<AI>();
         LoadPathingNodes();
         _nodePaths[0].Guard = guard;
         guard.SetRoute(_nodePaths[0]);
     }
+
 
     // Update is called once per frame
     void Update()

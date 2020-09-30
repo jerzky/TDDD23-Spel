@@ -67,9 +67,7 @@ public class AI : MonoBehaviour
     NodePath currentRoute;
     float waitTimer;
 
-    Vector2[] route = { new Vector2(17, 98), new Vector2(22, 98), new Vector2(17, 91), new Vector2(22, 91) };
-    int index = 0;
-    int indexChange = 1;
+
 
     // Start is called before the first frame update
     void Start()
@@ -136,11 +134,9 @@ public class AI : MonoBehaviour
     void FollowRoute()
     {
         // We should start following the path to the next route node here
-        Debug.Log("Set path to next desired node");
-        SetPathToPosition(route[index]);
-        index += indexChange;
-        if (index % 3 == 0 || index == 0)
-            indexChange *= -1;
+
+        SetPathToPosition(currentRoute.GetNextNode("FollowRoute").Position);
+        Debug.Log($"Set path to next desired node ({currentRoute.CurrentNode.Position.x}, {currentRoute.CurrentNode.Position.y})");
     }
 
     void StartFollowRoute()
@@ -163,7 +159,12 @@ public class AI : MonoBehaviour
 
     public void SetRoute(NodePath route)
     {
-        currentRoute = route;
+     //   currentRoute = route;
+     currentRoute = new NodePath("test", this, 
+         new NodePath.RouteNode(new Vector2(98, 98), NodePath.RouteNodeType.Walk ),
+         new NodePath.RouteNode(new Vector2(98, 95), NodePath.RouteNodeType.Walk),
+         new NodePath.RouteNode(new Vector2(95, 95), NodePath.RouteNodeType.Walk),
+         new NodePath.RouteNode(new Vector2(95, 98), NodePath.RouteNodeType.Walk));
         StartFollowRoute();
     }
 
@@ -209,6 +210,7 @@ public class AI : MonoBehaviour
     {
         path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+
     }
 
     void FollowPath()
@@ -226,6 +228,7 @@ public class AI : MonoBehaviour
         Vector2 dir = (path[0].Position - (Vector2)transform.position).normalized;
         SetOffset(FindClosestAIInVision());
 
+        Debug.Log($"Moving towards node: ({path[0].Position}");
         Move(dir);
         if (Vector2.Distance(transform.position, path[0].Position) < 0.1f)
             FinishedNode();
@@ -280,7 +283,7 @@ public class AI : MonoBehaviour
 
     bool ShouldWaitForDoor()
     {
-        Debug.Log("ShouldWaitForDoor");
+       // Debug.Log("ShouldWaitForDoor");
 
         if (!walkingPassedDoor && PathingController.Instance.IsDoorNeighbour(path[0].Position))
         {
