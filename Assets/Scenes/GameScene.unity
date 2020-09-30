@@ -1388,9 +1388,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cd67d2e01eadf4ebdb483d511117dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNoticedDelay: 1
-  isInEmployeeAreaOnly: 0
-  rayCastOrigin: {fileID: 26510808}
+  _playerNoticedDelay: 1
+  _isInEmployeeAreaOnly: 0
+  _rayCastOrigin: {fileID: 26510808}
   _building: {fileID: 1149382528}
 --- !u!212 &199056437
 SpriteRenderer:
@@ -7897,7 +7897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _securityStation: {fileID: 761912892}
-  nodeHolder: {fileID: 817231395}
+  _nodeHolder: {fileID: 817231395}
 --- !u!1 &1193453251
 GameObject:
   m_ObjectHideFlags: 0
@@ -8151,7 +8151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1248590251
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8611,9 +8611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cd67d2e01eadf4ebdb483d511117dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNoticedDelay: 1
-  isInEmployeeAreaOnly: 0
-  rayCastOrigin: {fileID: 133677207}
+  _playerNoticedDelay: 1
+  _isInEmployeeAreaOnly: 0
+  _rayCastOrigin: {fileID: 133677207}
   _building: {fileID: 1149382528}
 --- !u!212 &1326455269
 SpriteRenderer:
@@ -13072,7 +13072,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1920875590}
-  - component: {fileID: 1920875596}
   - component: {fileID: 1920875586}
   - component: {fileID: 1920875588}
   - component: {fileID: 1920875589}
@@ -13082,6 +13081,7 @@ GameObject:
   - component: {fileID: 1920875593}
   - component: {fileID: 1920875594}
   - component: {fileID: 1920875595}
+  - component: {fileID: 1920875596}
   m_Layer: 0
   m_Name: SCRIPTS
   m_TagString: Untagged

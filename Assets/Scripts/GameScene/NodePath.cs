@@ -24,7 +24,7 @@ public class NodePath
     public List<RouteNode> Nodes { get; }
 
 
-    private int _nextNodeIndex;
+    private int _currentNodeIndex;
 
     public string Name { get; }
     public AI Guard { get;  set; }
@@ -42,9 +42,9 @@ public class NodePath
         Nodes = nodes;
     }
 
-    public int NextNodeIndex
+    public int CurrentNodeIndex
     {
-        get => _nextNodeIndex;
-        set => _nextNodeIndex = value >= Nodes.Count ? 0 : value;
+        get => _currentNodeIndex;
+        set => _currentNodeIndex = value >= Nodes.Count ? 0 : value;
     }
 }

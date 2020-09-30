@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Bank : Building
 {
+    public static Bank Instance;
     private readonly List<NodePath> _nodePaths = new List<NodePath>();
     [SerializeField] 
     private GameObject _nodeHolder;
@@ -14,10 +15,15 @@ public class Bank : Building
     // Start is called before the first frame update
     void Start()
     {
+        Instance = this;
+    }
+
+    public void start()
+    {
         var guard = GetComponentInChildren<AI>();
         LoadPathingNodes();
         _nodePaths[0].Guard = guard;
-        guard.SetNodePath(_nodePaths[0]);
+        guard.SetRoute(_nodePaths[0]);
     }
 
     // Update is called once per frame

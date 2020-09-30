@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum NodeType { Clear, Blocked, Door, DoorNeighbour, AvailableAction, Visited };
 public class Node 
@@ -68,12 +69,18 @@ public class PathingController : MonoBehaviour
     {
         Instance = this;
         CreateNodeGrid();
-        FindObjectOfType<AI>().Alert(new Vector2(30, 90), AlertType.Investigate);
+        //FindObjectOfType<AI>().Alert(new Vector2(30, 90), AlertType.Investigate);
     }
-
+    int t = 0;
     // Update is called once per frame
     void Update()
     {
+        if(t == 0)
+        {
+            Bank.Instance.start();
+            t++;
+        }
+
         if (waitingQueue.Count > 0)
         {
             delayBetweenPathFindings -= Time.deltaTime;
@@ -122,7 +129,8 @@ public class PathingController : MonoBehaviour
             }
         }
 
-        foreach(var v in doors)
+
+        foreach (var v in doors)
         {
             for(int i = 0; i < 8; i++)
             {

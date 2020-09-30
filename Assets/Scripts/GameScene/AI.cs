@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngineInternal;
 
-public enum AlertType { None, Investigate };
 public enum Action { None, Idle, FollowPath, LookAround };
 public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute };
 
@@ -34,7 +33,7 @@ public class AI : MonoBehaviour
     float forceMultiplierSpeed = 2f;
 
     // Move Variables
-    float walkingSpeed = 5f;
+    float walkingSpeed = 2f;
     float speedMultiplier = 1f;
 
     // Follow Path Variables
@@ -64,6 +63,14 @@ public class AI : MonoBehaviour
     float minLookAroundTime = 8f;
     float currentLookAroundTimer = 0f;
 
+    // Follow Route variables
+    NodePath currentRoute;
+    float waitTimer;
+
+    Vector2[] route = { new Vector2(17, 98), new Vector2(22, 98), new Vector2(17, 91), new Vector2(22, 91) };
+    int index = 0;
+    int indexChange = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +80,27 @@ public class AI : MonoBehaviour
     private void Update()
     {
        
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        // Reset variables that need to be reset every frame for functionality.
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+
+        switch (currentAction)
+        {
+            case Action.None:
+                break;
+            case Action.Idle:
+                break;
+            case Action.FollowPath:
+                FollowPath();
+                break;
+            case Action.LookAround:
+                LookAround();
+                break;
+        }
     }
 
 
@@ -91,15 +119,35 @@ public class AI : MonoBehaviour
         return false;
     }
 
-    public void GetNextAction()
+    public void GetNextAction(string from)
     {
-        Debug.Log("GetNextAction");
         switch (currentState)
         {
             case State.Investigate:
                 Investigate();
                 break;
+            case State.FollowRoute:
+                Debug.Log("We finished the path to the desired node");
+                FollowRoute();
+                break;
         }
+    }
+
+    void FollowRoute()
+    {
+        // We should start following the path to the next route node here
+        Debug.Log("Set path to next desired node");
+        SetPathToPosition(route[index]);
+        index += indexChange;
+        if (index % 3 == 0 || index == 0)
+            indexChange *= -1;
+    }
+
+    void StartFollowRoute()
+    {
+        currentState = State.FollowRoute;
+        currentAction = Action.FollowPath;
+        FollowRoute();
     }
 
     void CancelCurrentState()
@@ -113,9 +161,10 @@ public class AI : MonoBehaviour
         currentAction = Action.None;
     }
 
-    void SetRoute()
+    public void SetRoute(NodePath route)
     {
-
+        currentRoute = route;
+        StartFollowRoute();
     }
 
     void Investigate()
@@ -133,6 +182,13 @@ public class AI : MonoBehaviour
         }
     }
 
+    bool Wait()
+    {
+        Debug.Log("WAITING");
+        waitTimer -= Time.fixedDeltaTime;
+        return waitTimer <= 0f;
+    }
+
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
         CancelCurrentState();
@@ -141,51 +197,24 @@ public class AI : MonoBehaviour
         currentAction = Action.FollowPath;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        // Reset variables that need to be reset every frame for functionality.
-        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-
-        switch(currentAction)
-        {
-            case Action.None:
-                break;
-            case Action.Idle:
-                break;
-            case Action.FollowPath:
-                FollowPath();
-                break;
-            case Action.LookAround:
-                LookAround();
-                break;
-        }
-    }
-
     void LookAround()
     {
         currentLookAroundTimer -= Time.fixedDeltaTime;
         if (currentLookAroundTimer <= 0f)
-            GetNextAction();
+            GetNextAction("Lookaround");
         rotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
     }
 
     void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log("SetPathToPos");
         path.Clear();
-        if(PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this))
-        {
-            isWaitingForPath = true;
-        }
+        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
 
     void FollowPath()
     {
         if (path.Count <= 0)
             return;
-
-        isWaitingForPath = false;
 
         if (IsStuck())
             if (RecalculatePath())
@@ -202,7 +231,7 @@ public class AI : MonoBehaviour
             FinishedNode();
 
         if (path.Count <= 0)
-            GetNextAction();
+            GetNextAction("FollowPath");
     }
 
     bool RecalculatePath()
@@ -392,10 +421,6 @@ public class AI : MonoBehaviour
         
     }
 
-    public void SetNodePath(NodePath path)
-    {
-
-    }
     public void OnVisionEnter(Collider2D col)
     {
         if(CompareTag(col.tag))
