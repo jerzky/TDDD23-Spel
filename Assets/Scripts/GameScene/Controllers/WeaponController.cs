@@ -70,7 +70,6 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(uint weaponUID)
     {
-        Debug.Log(AnimationActive);
         if (AnimationActive || ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon) 
             return;
 

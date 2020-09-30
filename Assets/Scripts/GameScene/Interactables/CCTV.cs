@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum CCTVStatus
+{
+    NotMonitored,
+    Monitored,
+    Spotted
+}
 public class CCTV : Interactable
 {
     bool isRotating = true;
@@ -20,8 +27,18 @@ public class CCTV : Interactable
     [SerializeField]
     float playerNoticedDelay = 1f;
     bool timerActive = false;
+
+
     [SerializeField]
     bool isInEmployeeAreaOnly = false;
+
+    [SerializeField] 
+    private GameObject rayCastOrigin;
+
+    [SerializeField] 
+    private Building _building;
+
+    private bool _isMonitored;
 
     // Start is called before the first frame update
     void Start()
@@ -33,9 +50,22 @@ public class CCTV : Interactable
         locationType = LocationType.BANK;
     }
 
+    private bool isMonitored
+    {
+        get => _isMonitored;
+        set
+        {
+            
+            _isMonitored = value;
+            GetComponent<SpriteRenderer>().sprite = _isMonitored ? cameraSprites[4] : cameraSprites[2];
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+
+
         RotateCamera();
         if (timerActive)
             timer += Time.deltaTime;
@@ -46,7 +76,10 @@ public class CCTV : Interactable
             // player hostile and noticed
             HostilePlayerNoticed();
             timer = 0f;
-        }    
+        }
+
+        if (isMonitored != _building.IsSomeoneMonitoringCCTV)
+            isMonitored = _building.IsSomeoneMonitoringCCTV;
     }
 
     void SetCameraLookDir(Vector3 rotation)
@@ -76,14 +109,28 @@ public class CCTV : Interactable
 
     public void OnVisionEnter(Collider2D col)
     {
+        if (!_isMonitored)
+            return;
         if (col.CompareTag("Player"))
         {
+            RaycastHit2D hit = Physics2D.Raycast(rayCastOrigin.transform.position, col.transform.position - transform.position);
+        
+
+            if(hit.collider != null)
+                Debug.Log(hit.collider.name);
+
+
+            if (hit.collider == null || !hit.collider.CompareTag("Player"))
+                return;
+
+            GetComponent<SpriteRenderer>().sprite = cameraSprites[3];
             // Check if player is hostile
             // this bool should be kept in some kind of controller
             bool playerHasBeenSeenAsHostileBefore = false;
             if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
             {
-                HostilePlayerNoticed();
+                if(_building.IsSomeoneMonitoringCCTV)
+                    _building.OnAlert(AlertType.Investigate, col.transform.position);
             }
             else if (playerHasBeenSeenAsHostileBefore)
             {
@@ -106,6 +153,7 @@ public class CCTV : Interactable
         if (col.CompareTag("Player"))
         {
             timerActive = false;
+            isMonitored = _building.IsSomeoneMonitoringCCTV;
         }
     }
 
@@ -117,7 +165,6 @@ public class CCTV : Interactable
                 // Alarm guards
                 // Call Police
                 // Set off alarm
-                Debug.Log("ALARM ACTIVATED");
                 break;
         }
     }
