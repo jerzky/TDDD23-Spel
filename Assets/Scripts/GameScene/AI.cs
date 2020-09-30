@@ -53,10 +53,6 @@ public class AI : MonoBehaviour
     NodePath currentRoute;
     float waitTimer;
 
-    Vector2[] route = { new Vector2(17, 98), new Vector2(22, 98), new Vector2(17, 91), new Vector2(22, 91) };
-    int index = 0;
-    int indexChange = 1;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -65,7 +61,6 @@ public class AI : MonoBehaviour
         actions.Add(ActionE.LookAround, new LookAround(this));
         currentState = State.FollowRoute;
         currentActionE = ActionE.FollowPath;
-        SetPathToPosition(route[index++],"AIstart");
     }
 
     private void Update()
@@ -80,7 +75,7 @@ public class AI : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (actions[currentActionE].PerformAction())
-            GetNextActionE("FixedUpdate");
+            GetNextActionE();
     }
 
 
@@ -99,7 +94,7 @@ public class AI : MonoBehaviour
         return false;
     }
 
-    public void GetNextActionE(string from)
+    public void GetNextActionE()
     {
         switch (currentState)
         {
@@ -107,26 +102,25 @@ public class AI : MonoBehaviour
                 Investigate();
                 break;
             case State.FollowRoute:
-                if (index > 3)
-                    index = 0;
-                SetPathToPosition(route[index++], "GetNextActionE");
+                SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
                 currentActionE = ActionE.FollowPath;
                 break;
         }
     }
 
 
-    void SetPathToPosition(Vector2 pos, string from)
+    void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log("Setpathtopos called from" + from + " pos: " + pos);
         path.Clear();
-        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this, "SETPATHTOPOS");
+        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
 
-    void GoToNextNode(Vector2 pos)
+    public void SetRoute(NodePath route)
     {
-        path.Clear();
-        path.Add(new Node(pos, null, 0f, Vector2.zero));
+        currentRoute = route;
+        currentState = State.FollowRoute;
+        currentActionE = ActionE.FollowPath;
+        SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
     }
 
     void CancelCurrentState()
@@ -138,11 +132,6 @@ public class AI : MonoBehaviour
     void CancelCurrentActionE()
     {
         currentActionE = ActionE.None;
-    }
-
-    public void SetRoute(NodePath route)
-    {
-
     }
 
     void Investigate()
@@ -163,7 +152,7 @@ public class AI : MonoBehaviour
     {
         CancelCurrentState();
         currentState = State.Investigate;
-        SetPathToPosition(position, "startInvestigate");
+        SetPathToPosition(position);
         currentActionE = ActionE.FollowPath;
     }
 
@@ -189,7 +178,7 @@ public class AI : MonoBehaviour
 
     public void OnVisionEnter(Collider2D col)
     {
-        if(CompareTag(col.tag))
+        if(CompareTag(col.tag) || col.CompareTag("Player"))
         {
             justEnteredVision.Add(col.gameObject.name, 0f);
         }
@@ -210,7 +199,7 @@ public class AI : MonoBehaviour
 
     public void OnVisionExit(Collider2D col)
     {
-        if (CompareTag(col.tag))
+        if (CompareTag(col.tag) || col.CompareTag("Player"))
         {
             justEnteredVision.Remove(col.gameObject.name);
             inVision.Remove(col);

@@ -20,10 +20,10 @@ public class Bank : Building
 
     public void start()
     {
-        var guard = GetComponentInChildren<AI>();
+        var guard = FindObjectOfType<AI>();
         LoadPathingNodes();
-        _nodePaths[0].Guard = guard;
-       // guard.SetRoute(_nodePaths[0]);
+        _nodePaths[1].Guard = guard;
+        guard.SetRoute(_nodePaths[1]);
     }
 
     // Update is called once per frame
