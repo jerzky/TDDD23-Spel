@@ -113,6 +113,11 @@ public class AI : MonoBehaviour
         currentAction = Action.None;
     }
 
+    void SetRoute()
+    {
+
+    }
+
     void Investigate()
     {
         switch(currentAction)
@@ -177,8 +182,6 @@ public class AI : MonoBehaviour
 
     void FollowPath()
     {
-        Debug.Log("FollowPath");
-
         if (path.Count <= 0)
             return;
 
