@@ -9,7 +9,7 @@ public class Bank : Building
 {
     private readonly List<NodePath> _nodePaths = new List<NodePath>();
     [SerializeField] 
-    private GameObject nodeHolder;
+    private GameObject _nodeHolder;
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +30,10 @@ public class Bank : Building
     private void LoadPathingNodes()
     {
 
-        var rooms = nodeHolder.GetComponentsInChildren<Transform>();
+        var rooms = _nodeHolder.GetComponentsInChildren<Transform>();
         foreach (var r in rooms)
         {
-            if (r.childCount == 0 || r.name == nodeHolder.name)
+            if (r.childCount == 0 || r.name == _nodeHolder.name)
                 continue;
             var nodePath = new NodePath(r.name, null, new List<NodePath.RouteNode>());
             var nodes = r.GetComponentsInChildren<Transform>();

@@ -12,28 +12,27 @@ public enum CCTVStatus
 }
 public class CCTV : Interactable
 {
-    bool isRotating = true;
-    Sprite[] cameraSprites;
+    private Sprite[] _cameraSprites;
 
-    float maxRotation = 45f;
-    Vector3 direction = new Vector3(0f, 0f, 1f);
-    float rotationSpeed = 10f;
-    Vector3 originalRotation;
-    Vector3 currentAngle = Vector3.zero;
+    private Vector3 _direction = new Vector3(0f, 0f, 1f);
+    private const float RotationSpeed = 10f;
+    private Vector3 _originalRotation;
+    private Vector3 _currentAngle = Vector3.zero;
     public enum LocationType { BANK, STORE };
-    LocationType locationType;
+    LocationType _locationType;
 
-    float timer = 0f;
+    private float _timer = 0f;
     [SerializeField]
-    float playerNoticedDelay = 1f;
-    bool timerActive = false;
+    float _playerNoticedDelay = 1f;
+
+    bool _timerActive = false;
 
 
     [SerializeField]
-    bool isInEmployeeAreaOnly = false;
+    bool _isInEmployeeAreaOnly = false;
 
     [SerializeField] 
-    private GameObject rayCastOrigin;
+    private GameObject _rayCastOrigin;
 
     [SerializeField] 
     private Building _building;
@@ -43,21 +42,21 @@ public class CCTV : Interactable
     // Start is called before the first frame update
     void Start()
     {
-        cameraSprites = Resources.LoadAll<Sprite>("Textures/camerasprites");
-        GetComponent<SpriteRenderer>().sprite = cameraSprites[2];
+        _cameraSprites = Resources.LoadAll<Sprite>("Textures/camerasprites");
+        GetComponent<SpriteRenderer>().sprite = _cameraSprites[2];
         SetCameraLookDir(new Vector3(0f, 0f, -90f));
-        originalRotation = transform.rotation.eulerAngles;
-        locationType = LocationType.BANK;
+        _originalRotation = transform.rotation.eulerAngles;
+        _locationType = LocationType.BANK;
     }
 
-    private bool isMonitored
+    private bool IsMonitored
     {
         get => _isMonitored;
         set
         {
             
             _isMonitored = value;
-            GetComponent<SpriteRenderer>().sprite = _isMonitored ? cameraSprites[4] : cameraSprites[2];
+            GetComponent<SpriteRenderer>().sprite = _isMonitored ? _cameraSprites[4] : _cameraSprites[2];
         }
     }
 
@@ -67,33 +66,33 @@ public class CCTV : Interactable
 
 
         RotateCamera();
-        if (timerActive)
-            timer += Time.deltaTime;
-        else if (timer > 0)
-            timer -= Time.deltaTime;
+        if (_timerActive)
+            _timer += Time.deltaTime;
+        else if (_timer > 0)
+            _timer -= Time.deltaTime;
         else
         {
             // player hostile and noticed
             HostilePlayerNoticed();
-            timer = 0f;
+            _timer = 0f;
         }
 
-        if (isMonitored != _building.IsSomeoneMonitoringCCTV)
-            isMonitored = _building.IsSomeoneMonitoringCCTV;
+        if (IsMonitored != _building.IsSomeoneMonitoringCCTV)
+            IsMonitored = _building.IsSomeoneMonitoringCCTV;
     }
 
-    void SetCameraLookDir(Vector3 rotation)
+    private void SetCameraLookDir(Vector3 rotation)
     {
         transform.rotation = Quaternion.Euler(rotation);
     }
 
-    void RotateCamera()
+    private void RotateCamera()
     {
-        currentAngle += direction * Time.deltaTime * rotationSpeed;
-        transform.rotation = Quaternion.Euler(originalRotation + currentAngle);
-        if(direction.z > 0 && currentAngle.z > 45|| direction.z < 0 && currentAngle.z < -45)
+        _currentAngle += _direction * Time.deltaTime * RotationSpeed;
+        transform.rotation = Quaternion.Euler(_originalRotation + _currentAngle);
+        if(_direction.z > 0 && _currentAngle.z > 45|| _direction.z < 0 && _currentAngle.z < -45)
         {
-            direction *= -1;
+            _direction *= -1;
         }
     }
 
@@ -109,34 +108,30 @@ public class CCTV : Interactable
 
     public void OnVisionEnter(Collider2D col)
     {
-        if (!_isMonitored)
+        if (!_isMonitored || !col.CompareTag("Player"))
             return;
-        if (col.CompareTag("Player"))
-        {
-            RaycastHit2D hit = Physics2D.Raycast(rayCastOrigin.transform.position, col.transform.position - transform.position);
+
         
+        
+        var hit = Physics2D.Raycast(_rayCastOrigin.transform.position, col.transform.position - transform.position);
 
-            if(hit.collider != null)
-                Debug.Log(hit.collider.name);
 
+        if (hit.collider == null || !hit.collider.CompareTag("Player"))
+            return;
 
-            if (hit.collider == null || !hit.collider.CompareTag("Player"))
-                return;
-
-            GetComponent<SpriteRenderer>().sprite = cameraSprites[3];
-            // Check if player is hostile
-            // this bool should be kept in some kind of controller
-            bool playerHasBeenSeenAsHostileBefore = false;
-            if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
-            {
-                if(_building.IsSomeoneMonitoringCCTV)
-                    _building.OnAlert(AlertType.Investigate, col.transform.position);
-            }
-            else if (playerHasBeenSeenAsHostileBefore)
-            {
-                // start timer
-                timerActive = true;
-            }
+        GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
+        // Check if player is hostile
+        // this bool should be kept in some kind of controller
+        var playerHasBeenSeenAsHostileBefore = false;
+        if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
+        {
+            if(_building.IsSomeoneMonitoringCCTV)
+                _building.OnAlert(AlertType.Investigate, col.transform.position);
+        }
+        else if (playerHasBeenSeenAsHostileBefore)
+        {
+            // start timer
+            _timerActive = true;
         }
     }
 
@@ -150,16 +145,15 @@ public class CCTV : Interactable
 
     public void OnVisionExit(Collider2D col)
     {
-        if (col.CompareTag("Player"))
-        {
-            timerActive = false;
-            isMonitored = _building.IsSomeoneMonitoringCCTV;
-        }
+        if (!col.CompareTag("Player")) 
+            return;
+        _timerActive = false;
+        IsMonitored = _building.IsSomeoneMonitoringCCTV;
     }
 
     void HostilePlayerNoticed()
     {
-        switch (locationType)
+        switch (_locationType)
         {
             case LocationType.BANK:
                 // Alarm guards
