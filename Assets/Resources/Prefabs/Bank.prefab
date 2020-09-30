@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586057750063319}
   - component: {fileID: 3201586057750063313}
+  - component: {fileID: 6652489549809781739}
   - component: {fileID: 3201586057750063318}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +84,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6652489549809781739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586057750063316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586057750063318
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -155,10 +168,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586057836696586}
   - component: {fileID: 3201586057836696580}
+  - component: {fileID: 6033821785083057630}
   - component: {fileID: 3201586057836696581}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -228,6 +242,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6033821785083057630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586057836696587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586057836696581
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -264,10 +290,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586058563217839}
   - component: {fileID: 3201586058563217833}
+  - component: {fileID: 2801624373463035874}
   - component: {fileID: 3201586058563217838}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -337,6 +364,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2801624373463035874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586058563217836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586058563217838
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -373,10 +412,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586058625504787}
   - component: {fileID: 3201586058625504781}
+  - component: {fileID: 5754938165725670371}
   - component: {fileID: 3201586058625504786}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -446,6 +486,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5754938165725670371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586058625504784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586058625504786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -482,10 +534,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586058874644379}
   - component: {fileID: 3201586058874644373}
+  - component: {fileID: 1647446793809875521}
   - component: {fileID: 3201586058874644378}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -555,6 +608,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1647446793809875521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586058874644376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586058874644378
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -591,10 +656,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3201586059378593033}
   - component: {fileID: 3201586059378593035}
+  - component: {fileID: 7273300457571195474}
   - component: {fileID: 3201586059378593032}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bankcashier
-  m_TagString: Untagged
+  m_TagString: interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -664,6 +730,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7273300457571195474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201586059378593038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d99550f02b1f44e8af492bc21318f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &3201586059378593032
 BoxCollider2D:
   m_ObjectHideFlags: 0

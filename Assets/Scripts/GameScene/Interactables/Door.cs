@@ -71,6 +71,20 @@ public class Door : Openable
         }
     }
 
+    public bool IsOpen()
+    {
+        if (moving)
+            return false;
+        return open;
+    }
+
+    public bool IsClosed()
+    {
+        if (moving)
+            return false;
+        return !open;
+    }
+
     public override void Cancel()
     {
         timerActive = false;
@@ -82,6 +96,14 @@ public class Door : Openable
     {
         Debug.Log("OPEN IN DOOR");
         moving = true;
+    }
+
+    public void Close()
+    {
+        if(open)
+        {
+            moving = true;
+        }
     }
 
     public override void UnLock()

@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
         }
         else
             GetComponent<AudioSource>().enabled = false;
+
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
     }
 
     bool GetInput(Func<KeyCode, bool> func, ControlAction ca)
@@ -184,7 +186,7 @@ public class PlayerController : MonoBehaviour
         {
             foreach(var v in FindObjectsOfType<AI>())
             {
-                v.nextNode = null;
+                v.path.Clear();
                 v.isWaitingForPath = false;
             }
         }

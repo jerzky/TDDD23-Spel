@@ -14,7 +14,6 @@ public class Vision : MonoBehaviour
     void Start()
     {
         pc = GetComponent<PolygonCollider2D>();
-        visionType = VisionType.CCTV;
     }
 
     // Update is called once per frame
@@ -25,13 +24,14 @@ public class Vision : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().OnVisionEnter(col);
+                GetComponentInParent<Transform>().GetComponentInParent<AI>().OnVisionEnter(col);
                 break;
             case VisionType.CCTV:
-                gameObject.GetComponentInParent<CCTV>().OnVisionEnter(col);
+                GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionEnter(col);
                 break;
         }
     }
@@ -41,22 +41,23 @@ public class Vision : MonoBehaviour
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().OnVisionStay(col);
+                GetComponentInParent<Transform>().GetComponentInParent<AI>().OnVisionStay(col);
                 break;
             case VisionType.CCTV:
-                gameObject.GetComponentInParent<CCTV>().OnVisionStay(col);
+                GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionStay(col);
                 break;
         }
     }
     private void OnTriggerExit2D(Collider2D col)
     {
+
         switch (visionType)
         {
             case VisionType.GUARD:
-                gameObject.GetComponentInParent<AI>().OnVisionExit(col);
+                GetComponentInParent<Transform>().GetComponentInParent<AI>().OnVisionExit(col);
                 break;
             case VisionType.CCTV:
-                gameObject.GetComponentInParent<CCTV>().OnVisionExit(col);
+                GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionExit(col);
                 break;
         }
     }

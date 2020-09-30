@@ -5,240 +5,258 @@ using System.IO.MemoryMappedFiles;
 using System.Net.Sockets;
 using System.Transactions;
 using UnityEngine;
+using UnityEngineInternal;
 
 public class AI : MonoBehaviour
 {
-    public Node nextNode;
-    float walkingSpeed = 5f;
+    [SerializeField]
+    GameObject rotateVisionAround;
+    [SerializeField]
+    public Transform leftOffsetPoint;
+    [SerializeField]
+    public Transform rightOffsetPoint;
+
+    public List<Node> path = new List<Node>();
+    
     public bool isWaitingForPath = false;
+
     Vector2[] dirToLeft = { Vector2.down, Vector2.up, Vector2.left, Vector2.right, Vector2.down + Vector2.left, Vector2.up + Vector2.left, Vector2.down + Vector2.right, Vector2.up + Vector2.right };
     Vector2[] dirToRight = { Vector2.up, Vector2.down, Vector2.right, Vector2.left, Vector2.up + Vector2.left, Vector2.up + Vector2.right, Vector2.down + Vector2.left, Vector2.down + Vector2.right };
     float[] angle = { 270f, 90f, 180f, 0f, 225f, 135f, 315f, 45f };
-    public Vector2 offset = Vector2.zero;
-    float offsetMultiplier = 0f;
-    [SerializeField]
-    GameObject rotateVisionAround;
-    float timer;
-    bool isStayingPut = false;
-    Collision2D ai_collision = null;
+
+    float walkingSpeed = 5f;
+
+
+    Vector2 offset = Vector2.zero;
+    float offsetForceMultiplier = 0f;
+    float forceMultiplierSpeed = 2f;
+    
     List<Collider2D> inVision = new List<Collider2D>();
+    SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
 
-    Vector2 bankPos = new Vector2(9f, 83f);
-    List<Vector2> goals = new List<Vector2> { new Vector2(5f, -4f), new Vector2(2f, -4f), new Vector2(2f, 8f), new Vector2(5f, 8f), new Vector2(7f, 8f), new Vector2(8f, 8f), new Vector2(10f, 8f), new Vector2(10f, 15f) };
-    int orderIndex = 0;
-    int orderIndexChange = 1;
+    bool movingThroughDoor = false;
+    bool walkingPassedDoor = false;
+    float timer = 0f;
+    Vector3 lastMovePos = Vector3.zero;
 
+    Vector2 lastDoorPos = new Vector2(-1, -1);
+    Vector2 lastDoorNeighbourPos = new Vector2(-1, -1);
 
+    bool closeTheDoor = false;
     int health = 100;
     // Start is called before the first frame update
     void Start()
     {
         
     }
-
+    
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (nextNode == null && !isWaitingForPath)
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        if (path.Count <= 0 && !isWaitingForPath)
         {
             float x = UnityEngine.Random.Range(46, 123);
             float y = UnityEngine.Random.Range(34, 66);
             
-            if (PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), goals[orderIndex] + bankPos, this))
+            if (PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), new Vector2(x, y), this))
             {
                 isWaitingForPath = true;
-                orderIndex += orderIndexChange;
-                if (orderIndex >= goals.Count || orderIndex < 0)
-                {
-                    orderIndexChange *= -1;
-                    orderIndex += orderIndexChange*2;
-                }
             }
         }
-        if (nextNode == null)
+        if (path.Count <= 0)
         {
             return;
         }
         float speed = walkingSpeed;
         isWaitingForPath = false;
-        
 
-        Vector2 dir = (nextNode.Position - (Vector2)transform.position).normalized;
+        if (Vector2.Distance(lastMovePos, transform.position) > 1f)
+        {
+            lastMovePos = transform.position;
+            timer = 0f;
+        }
+        else
+        {
+            timer += Time.fixedDeltaTime;
+            if ((timer > 1f && !movingThroughDoor) || (timer > 2f))
+            {
+                timer = 0f;
+                Node current = path[0];
+                while(current.Child != null)
+                {
+                    current = current.Child;
+                }
+                NodeToPathList(PathingController.Instance.FindPathExcluding(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), current.Position, new List<Vector2>{ path[0].Position }));
+                if(lastDoorNeighbourPos != new Vector2(-1, -1))
+                {
+                    PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
+                }
+                if (path.Count == 0)
+                {
+                    isWaitingForPath = false;
+                    return;
+                }
+            }
+        }
+
+        if (!walkingPassedDoor && PathingController.Instance.IsDoorNeighbour(path[0].Position))
+        {
+            float distance = PathingController.Instance.RequestDoorAccess(path[0].Position, this);
+            if (distance > 0)
+            {
+                // We are heading for a door, and do not have door access yet.
+                lastDoorNeighbourPos = path[0].Position;
+                if(Vector2.Distance(transform.position, path[0].Position) <= distance)
+                    return;
+            }
+            else
+            {
+                walkingPassedDoor = true;
+                lastDoorNeighbourPos = path[0].Position;
+            }
+        }
+        else if(walkingPassedDoor)
+        {
+            if(PathingController.Instance.GetNodeType(path[0].Position) == NodeType.Door)
+            {
+                // Next node is door
+                Door door = PathingController.Instance.GetDoor(path[0].Position);
+                movingThroughDoor = true;
+                if (door.IsClosed())
+                {
+                    // open door if closed
+                    door.Open();
+                    return;
+                }
+                else if (!door.IsOpen())
+                {
+                    // wait for door to fully open
+                    return;
+                }
+            }
+        }
+
+        Vector2 dir = (path[0].Position - (Vector2)transform.position).normalized;
+        Collider2D closest = null;
+        if(true)
+        {
+            if (inVision.Count > 0)
+            {
+                speed *= 0.5f;
+
+                foreach (var v in inVision)
+                {
+                    Vector2 vDir = Vector2.zero;
+                    if (v.GetComponent<AI>().path.Count > 0 && v.GetComponent<AI>().path[0].Parent != null)
+                        vDir = v.GetComponent<AI>().path[0].Position - v.GetComponent<AI>().path[0].Parent.Position;
+                    Vector2 myDir = Vector2.one;
+                    if (path.Count > 0 && path[0].Parent != null)
+                        myDir = path[0].Position - path[0].Parent.Position;
+
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, v.transform.position - transform.position);
+                    if (hit.collider.gameObject.name.Substring(0, 2) != "AI")
+                        continue;
+
+                    if ((vDir != myDir || Vector2.Distance(transform.position, v.transform.position) < 1f) && (closest == null || Vector2.Distance(v.transform.position, transform.position) < Vector2.Distance(closest.transform.position, transform.position)))
+                    {
+                        closest = v;
+                    }
+                }
+            }
+        }
+        SetOffset(closest);
+        dir += offset.normalized * offsetForceMultiplier;
 
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
         rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        if(isStayingPut)
-        {
-            timer += Time.deltaTime;
-            if(timer >= 0.5)
-            {
-                isStayingPut = false;
-                ai_collision = null;
-                timer = 0f;
-            }
-            return;
-        }
-
         GetComponent<Rigidbody2D>().MovePosition(transform.position + new Vector3(dir.x, dir.y, 0f) * speed * Time.fixedDeltaTime);
-        if (Vector2.Distance(transform.position, nextNode.Position) < 0.25f)
+        if (Vector2.Distance(transform.position, path[0].Position) < 0.1f)
         {
-            nextNode = nextNode.Child;
-            offset = Vector2.zero;
-            timer = 0f;
-            GetComponent<CapsuleCollider2D>().enabled = true;
+            movingThroughDoor = false;
+            if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(path[0].Child.Position))
+            {
+                PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
+                walkingPassedDoor = false;
+                lastDoorNeighbourPos = new Vector2(-1, -1);
+            }
+            path.RemoveAt(0);
+        }
+    }
+
+    void SetOffset(Collider2D closest)
+    {
+        if(closest == null)
+        {
+            offsetForceMultiplier -= Time.fixedDeltaTime * forceMultiplierSpeed;
+            if (offsetForceMultiplier <= 0)
+            {
+                offsetForceMultiplier = 0f;
+                offset = Vector2.zero;
+            }
         }
         else
-            timer += Time.deltaTime;
-
-        if (timer >= 1f)
         {
-            Node current = nextNode;
-            while (current.Child != null)
-                current = current.Child;
-            while(!PathingController.Instance.FindPath(nextNode.Position, current.Position, this))
-            { }
+            Transform closestOffsetPoint = closest.GetComponent<AI>().leftOffsetPoint;
+            if (Vector2.Distance(closest.GetComponent<AI>().rightOffsetPoint.position, transform.position) < Vector2.Distance(closestOffsetPoint.position, transform.position))
+                closestOffsetPoint = closest.GetComponent<AI>().rightOffsetPoint;
+
+            offset = closestOffsetPoint.position - closest.transform.position;
+            offsetForceMultiplier += Time.fixedDeltaTime * forceMultiplierSpeed;
         }
+        
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        /*if (collision.collider.CompareTag(tag))
-        {
-            isCollidingWithAI = true;
-            if (offset == Vector2.zero)
-                OnCollisionEnter2D(collision);
-        }*/
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-
-       if (!collision.collider.CompareTag(tag))
-            return;
-        if (nextNode == null || nextNode.Parent == null)
-            return;
         
-        Vector2 left = Vector2.zero;
-        Vector2 right = Vector2.zero;
-        Vector2 dir = nextNode.Position - nextNode.Parent.Position;
-        for (int i = 0; i < PathingController.Instance.neighbours.Length; i++)
-        {
-            if(dir == PathingController.Instance.neighbours[i])
-            {
-                left = dirToLeft[i];
-                right = dirToRight[i];
-            }    
-        }
-        if (isStayingPut && ai_collision != null && collision.collider == ai_collision.collider)
-            return;
-        else if (PathingController.Instance.IsClear(nextNode.Position + left))
-        {
-            nextNode.Position += left;
-            collision.collider.GetComponent<AI>().TellToStay(collision);
-        }
-        else if (PathingController.Instance.IsClear(nextNode.Position + right))
-        {
-            nextNode.Position += right;
-            collision.collider.GetComponent<AI>().TellToStay(collision);
-        }
-        /*
-        if(inVision.Count > 0)
-            offsetMultiplier += Time.deltaTime;
-        else if (inVision.Count <= 0)
-            offsetMultiplier -= Time.deltaTime;
-        if (offsetMultiplier <= -1f)
-            offsetMultiplier = 0f;
-
-        RaycastHit2D hitLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + left/2, dir, 1f);
-        RaycastHit2D hitRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + right/2, dir, 1f);
-        dir = Vector2.zero;
-        if (hitLeft.collider != null && hitLeft.collider.CompareTag(tag))
-            dir += left;
-        if (hitRight.collider != null && hitRight.collider.CompareTag(tag))
-            dir += right;
-
-        if (dir == Vector2.zero && hitLeft.collider != null)
-        {
-            hitLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + left / 2, dir + left.normalized, 1f);
-            hitRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + right / 2, dir + right.normalized, 1f);
-            if (hitLeft.collider != null && hitLeft.collider.CompareTag(tag))
-                dir += left;
-            if (hitRight.collider != null && hitRight.collider.CompareTag(tag))
-                dir += right;
-
-            if (dir == Vector2.zero)
-            {
-                // Both hit what do we do in this case?
-                dir = left;
-            }
-        }
-        else
-            dir = left;
-
-        offset = dir;
-        
-        collision.collider.GetComponent<AI>().offset = offset * -1;
-        isCollidingWithAI = true;*/
     }
 
     public void TellToStay(Collision2D col)
     {
-        isStayingPut = true;
-        ai_collision = col;
+
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        /*if (!collision.collider.CompareTag(tag))
-            return;
-
-        isCollidingWithAI = false;*/
+        
     }
 
     public void OnVisionEnter(Collider2D col)
     {
-        /*
-        if (col.CompareTag(tag))
+        if(CompareTag(col.tag))
         {
-            // Can see AI
-            inVision.Add(col);
-            Vector2 colDir = col.GetComponent<AI>().nextNode.Position - col.GetComponent<AI>().nextNode.Parent.Position;
-            Vector2 myDir = nextNode.Position - nextNode.Parent.Position;
-            Vector2 myLeft = Vector2.zero;
-            for (int i = 0; i < PathingController.Instance.neighbours.Length; i++)
-            {
-                if (myDir == PathingController.Instance.neighbours[i])
-                {
-                    myLeft = dirToLeft[i];
-                }
-            }
-
-            offset = myLeft;
-            if(myDir - colDir == Vector2.zero)
-            {
-                col.GetComponent<AI>().offset = offset * -1;
-            }
-        }*/
+            justEnteredVision.Add(col.gameObject.name, 0f);
+            Debug.Log("ENTERED VISION");
+        }
     }
 
     public void OnVisionStay(Collider2D col)
-    {/*
-        if (col.CompareTag(tag))
+    {
+        if(justEnteredVision.ContainsKey(col.gameObject.name))
         {
-            offsetMultiplier += Time.deltaTime;
-            if (offsetMultiplier >= 1f)
-                offsetMultiplier = 1f;
-        }*/
+            justEnteredVision[col.gameObject.name] += Time.deltaTime;
+            if(justEnteredVision[col.gameObject.name] > 0.25f)
+            {
+                inVision.Add(col);
+                justEnteredVision.Remove(col.gameObject.name);
+            }
+        }
     }
 
     public void OnVisionExit(Collider2D col)
-    {/*
-        if (col.CompareTag(tag))
+    {
+        if (CompareTag(col.tag))
         {
+            justEnteredVision.Remove(col.gameObject.name);
             inVision.Remove(col);
-        }*/
+        }
     }
 
     public void Injure(int damage)
@@ -246,5 +264,34 @@ public class AI : MonoBehaviour
         health -= damage;
         if (health <= 0)
             Destroy(gameObject);
+    }
+
+    public void NodeToPathList(Node node)
+    {
+        if (node == null)
+            return;
+        path.Clear();
+        path.Add(node);
+        if (node.Child == null)
+            return;
+        Vector2 dir = node.Position - (Vector2)transform.position;
+        Vector2 prevdir = dir;
+        node = node.Child;
+        while (node != null)
+        {
+            dir = node.Position - node.Parent.Position;
+            // Add Node to list if the direction changes
+            if (dir != prevdir)
+            {
+                path.Add(node.Parent);
+            }
+            else if(PathingController.Instance.IsDoorNeighbour(node.Parent.Position))
+            {
+                // We should check for doornodes and add the closest nodes to it aswell as the door node.
+                path.Add(node.Parent);
+            }
+            node = node.Child;
+            prevdir = dir;
+        }
     }
 }
