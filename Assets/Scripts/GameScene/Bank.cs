@@ -20,7 +20,7 @@ public class Bank : Building
         var guard = FindObjectOfType<AI>();
         LoadPathingNodes();
         _nodePaths[0].Guard = guard;
-        guard.SetRoute(_nodePaths[0]);
+       // guard.SetRoute(_nodePaths[0]);
     }
 
 
