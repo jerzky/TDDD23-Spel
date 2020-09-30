@@ -117,7 +117,6 @@ public class CCTV : Interactable
                 // Alarm guards
                 // Call Police
                 // Set off alarm
-                Debug.Log("ALARM ACTIVATED");
                 break;
         }
     }

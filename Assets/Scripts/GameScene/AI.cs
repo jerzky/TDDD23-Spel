@@ -5,100 +5,250 @@ using System.IO.MemoryMappedFiles;
 using System.Net.Sockets;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngineInternal;
+
+public enum AlertType { None, Investigate };
+public enum Action { None, Idle, FollowPath, LookAround };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute };
+
 
 public class AI : MonoBehaviour
 {
+    // Vision Variables
     [SerializeField]
     GameObject rotateVisionAround;
+    List<Collider2D> inVision = new List<Collider2D>();
+    SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
+
+    // Collision Avoidance variables
     [SerializeField]
     public Transform leftOffsetPoint;
     [SerializeField]
     public Transform rightOffsetPoint;
-
-    public List<Node> path = new List<Node>();
-    
-    public bool isWaitingForPath = false;
-
     Vector2[] dirToLeft = { Vector2.down, Vector2.up, Vector2.left, Vector2.right, Vector2.down + Vector2.left, Vector2.up + Vector2.left, Vector2.down + Vector2.right, Vector2.up + Vector2.right };
     Vector2[] dirToRight = { Vector2.up, Vector2.down, Vector2.right, Vector2.left, Vector2.up + Vector2.left, Vector2.up + Vector2.right, Vector2.down + Vector2.left, Vector2.down + Vector2.right };
     float[] angle = { 270f, 90f, 180f, 0f, 225f, 135f, 315f, 45f };
-
-    float walkingSpeed = 5f;
-
-
     Vector2 offset = Vector2.zero;
     float offsetForceMultiplier = 0f;
     float forceMultiplierSpeed = 2f;
-    
-    List<Collider2D> inVision = new List<Collider2D>();
-    SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
 
+    // Move Variables
+    float walkingSpeed = 5f;
+    float speedMultiplier = 1f;
+
+    // Follow Path Variables
+    public List<Node> path = new List<Node>();
+    public bool isWaitingForPath = false;
     bool movingThroughDoor = false;
     bool walkingPassedDoor = false;
-    float timer = 0f;
+    float hasNotMovedTimer = 0f;
     Vector3 lastMovePos = Vector3.zero;
-
     Vector2 lastDoorPos = new Vector2(-1, -1);
     Vector2 lastDoorNeighbourPos = new Vector2(-1, -1);
 
-    bool closeTheDoor = false;
+    // Health
     int health = 100;
+    bool isIncapacitated = false;
+
+
+    // StateMachineVariables
+    State idleState = State.None;
+    State currentState = State.None;
+    Action currentAction = Action.None;
+    AlertType currentAlertType = AlertType.None;
+
+    // Investigate variables
+    float rotationSpeed = 90f;
+    float maxLookAroundTime = 4f;
+    float minLookAroundTime = 8f;
+    float currentLookAroundTimer = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
-    
+
+    private void Update()
+    {
+       
+    }
+
+
+    public bool Alert(Vector2 position, AlertType alertType)
+    {
+        if (isIncapacitated)
+            return false;
+
+        switch(alertType)
+        {
+            case AlertType.Investigate:
+                StartInvestigate(position, alertType);
+                break;
+        }
+
+        return false;
+    }
+
+    public void GetNextAction()
+    {
+        Debug.Log("GetNextAction");
+        switch (currentState)
+        {
+            case State.Investigate:
+                Investigate();
+                break;
+        }
+    }
+
+    void CancelCurrentState()
+    {
+        CancelCurrentAction();
+        currentState = idleState;
+    }
+
+    void CancelCurrentAction()
+    {
+        currentAction = Action.None;
+    }
+
+    void Investigate()
+    {
+        switch(currentAction)
+        {
+            case Action.FollowPath:
+                currentAction = Action.LookAround;
+                currentLookAroundTimer = UnityEngine.Random.Range(minLookAroundTime, maxLookAroundTime);
+                Debug.Log(currentLookAroundTimer);
+                break;
+            case Action.LookAround:
+                CancelCurrentState();
+                break;
+        }
+    }
+
+    void StartInvestigate(Vector2 position, AlertType alertType)
+    {
+        CancelCurrentState();
+        currentState = State.Investigate;
+        SetPathToPosition(position);
+        currentAction = Action.FollowPath;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Reset variables that need to be reset every frame for functionality.
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        if (path.Count <= 0 && !isWaitingForPath)
+
+        switch(currentAction)
         {
-            float x = UnityEngine.Random.Range(46, 123);
-            float y = UnityEngine.Random.Range(34, 66);
-            
-            if (PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), new Vector2(x, y), this))
-            {
-                isWaitingForPath = true;
-            }
+            case Action.None:
+                break;
+            case Action.Idle:
+                break;
+            case Action.FollowPath:
+                FollowPath();
+                break;
+            case Action.LookAround:
+                LookAround();
+                break;
         }
+    }
+
+    void LookAround()
+    {
+        currentLookAroundTimer -= Time.fixedDeltaTime;
+        if (currentLookAroundTimer <= 0f)
+            GetNextAction();
+        rotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
+    }
+
+    void SetPathToPosition(Vector2 pos)
+    {
+        Debug.Log("SetPathToPos");
+        path.Clear();
+        if(PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this))
+        {
+            isWaitingForPath = true;
+        }
+    }
+
+    void FollowPath()
+    {
+        Debug.Log("FollowPath");
+
         if (path.Count <= 0)
-        {
             return;
-        }
-        float speed = walkingSpeed;
+
         isWaitingForPath = false;
+
+        if (IsStuck())
+            if (RecalculatePath())
+                return;
+
+        if (ShouldWaitForDoor())
+            return;
+
+        Vector2 dir = (path[0].Position - (Vector2)transform.position).normalized;
+        SetOffset(FindClosestAIInVision());
+
+        Move(dir);
+        if (Vector2.Distance(transform.position, path[0].Position) < 0.1f)
+            FinishedNode();
+
+        if (path.Count <= 0)
+            GetNextAction();
+    }
+
+    bool RecalculatePath()
+    {
+        Debug.Log("Recalculating");
+
+        hasNotMovedTimer = 0f;
+        Node current = path[0];
+        while (current.Child != null)
+        {
+            current = current.Child;
+        }
+        NodeToPathList(PathingController.Instance.FindPathExcluding(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), current.Position, new List<Vector2> { path[0].Position }));
+        if (lastDoorNeighbourPos != new Vector2(-1, -1))
+        {
+            PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
+        }
+        if (path.Count == 0)
+        {
+            isWaitingForPath = false;
+            return true;
+        }
+        return false;
+    }
+
+    bool IsStuck()
+    {
+        
 
         if (Vector2.Distance(lastMovePos, transform.position) > 1f)
         {
             lastMovePos = transform.position;
-            timer = 0f;
+            hasNotMovedTimer = 0f;
         }
         else
         {
-            timer += Time.fixedDeltaTime;
-            if ((timer > 1f && !movingThroughDoor) || (timer > 2f))
+            hasNotMovedTimer += Time.fixedDeltaTime;
+            if ((hasNotMovedTimer > 10f && !movingThroughDoor) || (hasNotMovedTimer > 50f))
             {
-                timer = 0f;
-                Node current = path[0];
-                while(current.Child != null)
-                {
-                    current = current.Child;
-                }
-                NodeToPathList(PathingController.Instance.FindPathExcluding(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), current.Position, new List<Vector2>{ path[0].Position }));
-                if(lastDoorNeighbourPos != new Vector2(-1, -1))
-                {
-                    PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
-                }
-                if (path.Count == 0)
-                {
-                    isWaitingForPath = false;
-                    return;
-                }
+                hasNotMovedTimer = 0f;
+                return true;
             }
         }
+        return false;
+    }
+
+    bool ShouldWaitForDoor()
+    {
+        Debug.Log("ShouldWaitForDoor");
 
         if (!walkingPassedDoor && PathingController.Instance.IsDoorNeighbour(path[0].Position))
         {
@@ -107,8 +257,8 @@ public class AI : MonoBehaviour
             {
                 // We are heading for a door, and do not have door access yet.
                 lastDoorNeighbourPos = path[0].Position;
-                if(Vector2.Distance(transform.position, path[0].Position) <= distance)
-                    return;
+                if (Vector2.Distance(transform.position, path[0].Position) <= distance)
+                    return true;
             }
             else
             {
@@ -116,9 +266,9 @@ public class AI : MonoBehaviour
                 lastDoorNeighbourPos = path[0].Position;
             }
         }
-        else if(walkingPassedDoor)
+        else if (walkingPassedDoor)
         {
-            if(PathingController.Instance.GetNodeType(path[0].Position) == NodeType.Door)
+            if (PathingController.Instance.GetNodeType(path[0].Position) == NodeType.Door)
             {
                 // Next node is door
                 Door door = PathingController.Instance.GetDoor(path[0].Position);
@@ -127,23 +277,26 @@ public class AI : MonoBehaviour
                 {
                     // open door if closed
                     door.Open();
-                    return;
+                    return true;
                 }
                 else if (!door.IsOpen())
                 {
                     // wait for door to fully open
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-        Vector2 dir = (path[0].Position - (Vector2)transform.position).normalized;
+    Collider2D FindClosestAIInVision()
+    {
         Collider2D closest = null;
-        if(true)
+        if (true)
         {
             if (inVision.Count > 0)
             {
-                speed *= 0.5f;
+                speedMultiplier = 0.5f;
 
                 foreach (var v in inVision)
                 {
@@ -165,24 +318,32 @@ public class AI : MonoBehaviour
                 }
             }
         }
-        SetOffset(closest);
+        return closest;
+    }
+
+    void Move(Vector2 dir)
+    {
         dir += offset.normalized * offsetForceMultiplier;
 
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
         rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        GetComponent<Rigidbody2D>().MovePosition(transform.position + new Vector3(dir.x, dir.y, 0f) * speed * Time.fixedDeltaTime);
-        if (Vector2.Distance(transform.position, path[0].Position) < 0.1f)
+        GetComponent<Rigidbody2D>().MovePosition(transform.position + new Vector3(dir.x, dir.y, 0f) * walkingSpeed * speedMultiplier * Time.fixedDeltaTime);
+        speedMultiplier = 1f;
+    }
+
+    void FinishedNode()
+    {
+        movingThroughDoor = false;
+        if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(path[0].Child.Position))
         {
-            movingThroughDoor = false;
-            if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(path[0].Child.Position))
-            {
-                PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
-                walkingPassedDoor = false;
-                lastDoorNeighbourPos = new Vector2(-1, -1);
-            }
-            path.RemoveAt(0);
+            PathingController.Instance.DoorPassed(lastDoorNeighbourPos, this);
+            walkingPassedDoor = false;
+            lastDoorNeighbourPos = new Vector2(-1, -1);
         }
+        path.RemoveAt(0);
+        Debug.Log("Finished Node");
+
     }
 
     void SetOffset(Collider2D closest)

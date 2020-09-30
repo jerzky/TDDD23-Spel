@@ -67,6 +67,8 @@ public class PathingController : MonoBehaviour
     void Start()
     {
         Instance = this;
+        CreateNodeGrid();
+        FindObjectOfType<AI>().Alert(new Vector2(30, 90), AlertType.Investigate);
     }
 
     // Update is called once per frame
@@ -86,10 +88,6 @@ public class PathingController : MonoBehaviour
         delayBetweenDoorQueueChecks += Time.deltaTime;
         if(delayBetweenDoorQueueChecks > maxDelayBetweenDoorQueueChecks)
         {
-            foreach(var v in doors)
-            {
-                Debug.Log("VECTOR: " + v.Key + "QUEUE SIZE: " + v.Value.Count);
-            }
             delayBetweenDoorQueueChecks = 0f;
         }
     }
@@ -103,7 +101,6 @@ public class PathingController : MonoBehaviour
             {
                 Collider2D[] hits = Physics2D.OverlapCircleAll(new Vector2(x, y), 0.45f);
                 grid[x, y] = (uint)NodeType.Clear;
-                Debug.Log("Ray");
                 foreach (var v in hits)
                 {
                     BoxCollider2D bc = v.GetComponent<BoxCollider2D>();
@@ -117,7 +114,6 @@ public class PathingController : MonoBehaviour
                         }
                         else
                             grid[x, y] = NodeType.Blocked;
-                        Debug.Log("BoxCollider");
                         break;
                     }
                 }

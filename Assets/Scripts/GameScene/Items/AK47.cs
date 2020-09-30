@@ -1,12 +1,10 @@
-﻿using Assets.Items;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using Assets.Items;
 
-public class Pistol : Gun
+public class AK47 : Gun
 {
-
     // Start is called before the first frame update
     void Start()
     {
@@ -14,13 +12,13 @@ public class Pistol : Gun
         noAmmoAudio = Resources.Load<AudioClip>("Sounds/noammo");
         reloadAudio = Resources.Load<AudioClip>("Sounds/reload");
         shootAudio = Resources.Load<AudioClip>("Sounds/gunfire");
-        rateOfFire = 0.35f;
+        rateOfFire = 0.15f;
         cantShootTimer = rateOfFire;
-        reloadSpeed = 1f;
+        reloadSpeed = 1.5f;
 
-        magSize = 16;
-        currentMagSize = 16;
-        damage = ItemList.ITEM_SILENCED_PISTOL.HumanDamage;
+        magSize = 30;
+        currentMagSize = 30;
+        damage = ItemList.ITEM_AK47.HumanDamage;
         bulletPrefab = Resources.Load<GameObject>("Prefabs/bullet");
         if (bulletPrefab == null)
             Debug.Log("BULLET NULL????");

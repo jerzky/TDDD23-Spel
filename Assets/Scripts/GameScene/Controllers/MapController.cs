@@ -78,7 +78,6 @@ public class MapController : MonoBehaviour
         sr.size = new Vector2(bitMap.width, bitMap.height);
         ReadImageToMap("Maps/MapLayerOne", tileDictLevelOne, 0);
         ReadImageToMap("Maps/MapLayerTwo", tileDictLevelTwo, 1);
-        PathingController.Instance.CreateNodeGrid();
     }
 
     // Update is called once per frame

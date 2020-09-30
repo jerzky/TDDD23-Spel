@@ -121,29 +121,35 @@ namespace Assets.Items
             PurchaseAmount = 1
         };
 
-        public static readonly ItemInfo ITEM_LOCKPICK1 = new ItemInfo
+        public static readonly ItemInfo ITEM_SILENCED_PISTOL = new ItemInfo
         {
             UID = 7,
-            Name = "Lockpick1",
-            IconPath = "Textures/drilltesticon",
+            Name = "Silenced Pistol",
+            IconPath = "Textures/silencedpistol",
             IconIndex = 0,
-            AverageUseTime = 5f,
-            InventoryStackSize = 10,
-            SellPrice = 10,
-            BuyPrice = 100,
+            AverageUseTime = 0f,
+            HumanDamage = 50,
+            BreakableDamage = 0,
+            ItemType = ItemType.Weapon,
+            InventoryStackSize = 1,
+            SellPrice = 500,
+            BuyPrice = 2000,
             PurchaseAmount = 1
         };
 
-        public static readonly ItemInfo ITEM_LOCKPICK2 = new ItemInfo
+        public static readonly ItemInfo ITEM_AK47 = new ItemInfo
         {
             UID = 8,
-            Name = "Lockpick2",
-            IconPath = "Textures/drilltesticon",
+            Name = "AK47",
+            IconPath = "Textures/AK47",
             IconIndex = 0,
-            AverageUseTime = 5f,
-            InventoryStackSize = 10,
-            SellPrice = 10,
-            BuyPrice = 100,
+            AverageUseTime = 0f,
+            HumanDamage = 75,
+            BreakableDamage = 0,
+            ItemType = ItemType.Weapon,
+            InventoryStackSize = 1,
+            SellPrice = 1000,
+            BuyPrice = 6000,
             PurchaseAmount = 1
         };
 
@@ -207,10 +213,10 @@ namespace Assets.Items
                 ITEM_EXPLOSIVE_TIMED.UID, ITEM_EXPLOSIVE_TIMED
             },
             {
-                ITEM_LOCKPICK1.UID, ITEM_LOCKPICK1
+                ITEM_SILENCED_PISTOL.UID, ITEM_SILENCED_PISTOL
             },
             {
-                ITEM_LOCKPICK2.UID, ITEM_LOCKPICK2
+                ITEM_AK47.UID, ITEM_AK47
             },
             {
                 ITEM_LOCKPICK3.UID, ITEM_LOCKPICK3
