@@ -389,12 +389,15 @@ public class AI : MonoBehaviour
         
     }
 
+    public void SetNodePath(NodePath path)
+    {
+
+    }
     public void OnVisionEnter(Collider2D col)
     {
         if(CompareTag(col.tag))
         {
             justEnteredVision.Add(col.gameObject.name, 0f);
-            Debug.Log("ENTERED VISION");
         }
     }
 

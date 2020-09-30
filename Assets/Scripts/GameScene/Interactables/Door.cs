@@ -94,7 +94,6 @@ public class Door : Openable
 
     public override void Open()
     {
-        Debug.Log("OPEN IN DOOR");
         moving = true;
     }
 
