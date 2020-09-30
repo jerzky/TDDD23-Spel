@@ -179,17 +179,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // temporary
- 
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            foreach(var v in FindObjectsOfType<AI>())
-            {
-                v.path.Clear();
-                v.isWaitingForPath = false;
-            }
-        }
     }
 
     public void CancelCurrentInteractable()

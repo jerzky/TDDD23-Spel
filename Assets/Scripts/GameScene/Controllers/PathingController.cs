@@ -87,7 +87,7 @@ public class PathingController : MonoBehaviour
             if(delayBetweenPathFindings <= 0f)
             {
                 PathFindingQueueItem pfqi = waitingQueue.Dequeue();
-                pfqi.AI.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()));
+                pfqi.AI.followPath.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()), "pathing Controller");
                 delayBetweenPathFindings = maxDelayBetweenPathFindings;
             }
         }
@@ -249,7 +249,7 @@ public class PathingController : MonoBehaviour
 
     public Node FindPathExcluding(Vector2 s, Vector2 g, List<Vector2> excluding)
     {
-        if (grid[(int)g.x, (int)g.y] != NodeType.Clear)
+        if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
             return null;
 
         NodeType[,] gridCopy = (NodeType[,])grid.Clone();
@@ -260,10 +260,18 @@ public class PathingController : MonoBehaviour
         return FindPath(s, g, gridCopy);
     }
 
-    public bool FindPath(Vector2 s, Vector2 g, AI ai)
+    public bool FindPath(Vector2 s, Vector2 g, AI ai, string from)
     {
-        if (grid[(int)g.x, (int)g.y] != NodeType.Clear)
+        if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
             return false;
+
+        Debug.Log("FIND PATH FROM: " + from + " goalpos: " + g);
+
+        foreach(var v in waitingQueue)
+        {
+            if (v.AI.name == ai.name)
+                return true;
+        }
 
         waitingQueue.Enqueue(new PathFindingQueueItem(s, g, ai));
         return true;
@@ -271,8 +279,9 @@ public class PathingController : MonoBehaviour
 
     Node FindPath(Vector2 s, Vector2 g, NodeType[,] gridCopy)
     {
-        Vector2 startPos = new Vector2((int)s.x, (int)s.y);
-        Vector2 goalPos = new Vector2((int)g.x, (int)g.y);
+        Vector2 startPos = new Vector2((int)Mathf.Round(s.x), (int)Mathf.Round(s.y));
+        Vector2 goalPos = new Vector2((int)Mathf.Round(g.x), (int)Mathf.Round(g.y));
+        Debug.Log("FIND PATH INTERNAL: goalpos: " + g);
 
         LinkedList<Node> availableActions = new LinkedList<Node>();
         Node current = new Node(startPos, null, 0f, Vector2.zero);

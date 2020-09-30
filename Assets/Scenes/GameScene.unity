@@ -731,7 +731,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 726590806}
   leftOffsetPoint: {fileID: 945640583}
   rightOffsetPoint: {fileID: 961442284}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &81337312
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1785,7 +1787,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 96824232}
   leftOffsetPoint: {fileID: 1461848810}
   rightOffsetPoint: {fileID: 522818552}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &266010970
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2052,7 +2056,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 352692615}
   leftOffsetPoint: {fileID: 2010837870}
   rightOffsetPoint: {fileID: 187048179}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &281679143
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2832,7 +2838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &367704005
 Transform:
   m_ObjectHideFlags: 0
@@ -2900,7 +2906,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 1330337229}
   leftOffsetPoint: {fileID: 902402199}
   rightOffsetPoint: {fileID: 708382850}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &367704009
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3283,7 +3291,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 65487801}
   leftOffsetPoint: {fileID: 1621696320}
   rightOffsetPoint: {fileID: 866045146}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &454349646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5841,7 +5851,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 1494016802}
   leftOffsetPoint: {fileID: 1930230083}
   rightOffsetPoint: {fileID: 1408595407}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &874082232
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6247,7 +6259,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 968435225}
   leftOffsetPoint: {fileID: 740060852}
   rightOffsetPoint: {fileID: 1905981581}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &931919724
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8151,7 +8165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1248590251
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8233,7 +8247,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 185234940}
   leftOffsetPoint: {fileID: 1055855744}
   rightOffsetPoint: {fileID: 1555999348}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!70 &1248590254
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -10659,7 +10675,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 1455387410}
   leftOffsetPoint: {fileID: 1722138676}
   rightOffsetPoint: {fileID: 1018513007}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &1654736794
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11371,7 +11389,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 488440288}
   leftOffsetPoint: {fileID: 2104864663}
   rightOffsetPoint: {fileID: 538182924}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &1713936927
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11973,7 +11993,9 @@ MonoBehaviour:
   rotateVisionAround: {fileID: 1225103978}
   leftOffsetPoint: {fileID: 800043219}
   rightOffsetPoint: {fileID: 32144654}
-  isWaitingForPath: 0
+  inVision: []
+  walkingSpeed: 2
+  speedMultiplier: 1
 --- !u!212 &1743525563
 SpriteRenderer:
   m_ObjectHideFlags: 0

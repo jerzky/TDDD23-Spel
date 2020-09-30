@@ -23,7 +23,7 @@ public class Bank : Building
         var guard = GetComponentInChildren<AI>();
         LoadPathingNodes();
         _nodePaths[0].Guard = guard;
-        guard.SetRoute(_nodePaths[0]);
+       // guard.SetRoute(_nodePaths[0]);
     }
 
     // Update is called once per frame
