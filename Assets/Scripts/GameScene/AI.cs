@@ -206,7 +206,7 @@ public class AI : MonoBehaviour
         }
     }
 
-    public void Injure(int damage)
+    public void Injure(int damage, Vector3 dir)
     {
         health -= damage;
         if (health <= 0)
@@ -218,12 +218,12 @@ public class AI : MonoBehaviour
             temp.transform.position = transform.position + Vector3.forward * 11f;
             temp.AddComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
             temp = new GameObject("GuardHat");
-            float y = UnityEngine.Random.Range(0.7f, 1.3f);
-            float x = UnityEngine.Random.Range(-1f, 1f);
-            float r = -90f;
-            r *= x;
-            temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, r));
-            temp.transform.position = transform.position + new Vector3(x, y, 9f);
+            float r = UnityEngine.Random.Range(0.4f, 0.8f);
+            Vector3 hatDir = new Vector3(r * dir.normalized.x, dir.normalized.y * r, 9f);
+            float rot = -90f;
+            rot *= hatDir.x;
+            temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rot));
+            temp.transform.position = transform.position + hatDir;
             temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/guardhat");
             Destroy(gameObject);
         }

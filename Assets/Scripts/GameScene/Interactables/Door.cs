@@ -17,7 +17,7 @@ public class Door : Openable
     protected float timeLeft = 0f;
     public float timerMultiplier = 1f;
     [SerializeField]
-    bool isVertical;
+    public bool isVertical = false;
 
     // Start is called before the first frame update
     void Start()
