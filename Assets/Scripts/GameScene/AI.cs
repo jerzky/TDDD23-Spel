@@ -40,7 +40,7 @@ public class AI : MonoBehaviour
 
 
     // StateMachineVariables
-    State idleState = State.None;
+    State idleState = State.FollowRoute;
     State currentState = State.None;
     ActionE currentActionE = ActionE.None;
     AlertType currentAlertType = AlertType.None;
@@ -52,7 +52,6 @@ public class AI : MonoBehaviour
     public List<Node> path = new List<Node>();
     NodePath currentRoute;
     float waitTimer;
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -102,7 +101,7 @@ public class AI : MonoBehaviour
                 Investigate();
                 break;
             case State.FollowRoute:
-                SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
+                SetPathToPosition(currentRoute.NextNode.Position);
                 currentActionE = ActionE.FollowPath;
                 break;
         }
@@ -111,10 +110,8 @@ public class AI : MonoBehaviour
 
     void SetPathToPosition(Vector2 pos)
     {
-        // We should start following the path to the next route node here
         path.Clear();
-        followPath.SetPathToPosition(currentRoute.GetNextNode("FollowRoute").Position);
-        Debug.Log($"Set path to next desired node ({currentRoute.CurrentNode.Position.x}, {currentRoute.CurrentNode.Position.y})");
+        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
 
     public void SetRoute(NodePath route)
@@ -122,24 +119,19 @@ public class AI : MonoBehaviour
         currentRoute = route;
         currentState = State.FollowRoute;
         currentActionE = ActionE.FollowPath;
-        SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
+        SetPathToPosition(currentRoute.NextNode.Position);
     }
 
     void CancelCurrentState()
     {
         CancelCurrentActionE();
         currentState = idleState;
+        GetNextActionE();
     }
 
     void CancelCurrentActionE()
     {
-     //   currentRoute = route;
-        currentRoute = new NodePath("test", this, 
-         new NodePath.RouteNode(new Vector2(98, 98), NodePath.RouteNodeType.Walk ),
-         new NodePath.RouteNode(new Vector2(98, 95), NodePath.RouteNodeType.Walk),
-         new NodePath.RouteNode(new Vector2(95, 95), NodePath.RouteNodeType.Walk),
-         new NodePath.RouteNode(new Vector2(95, 98), NodePath.RouteNodeType.Walk));
-        StartFollowRoute();
+        currentActionE = ActionE.None;
     }
 
     void Investigate()
@@ -158,7 +150,6 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
-        CancelCurrentState();
         currentState = State.Investigate;
         SetPathToPosition(position);
         currentActionE = ActionE.FollowPath;

@@ -9,18 +9,29 @@ public class Bank : Building
 {
     public static Bank Instance;
     private readonly List<NodePath> _nodePaths = new List<NodePath>();
+    private readonly List<AI> _guards = new List<AI>();
+
+
     [SerializeField] 
     private GameObject _nodeHolder;
-
 
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
-        var guard = FindObjectOfType<AI>();
         LoadPathingNodes();
-        _nodePaths[1].Guard = guard;
-        guard.SetRoute(_nodePaths[1]);
+        var allGuards = GetComponentsInChildren<AI>();
+
+        foreach (var guard in allGuards)
+        {
+            _guards.Add(guard);
+        }
+
+        _nodePaths[0].Guard = _guards[0];
+        _nodePaths[1].Guard = _guards[1];
+
+        _guards[0].SetRoute(_nodePaths[0]);
+        _guards[1].SetRoute(_nodePaths[1]);
     }
 
 
@@ -88,7 +99,7 @@ public class Bank : Building
 
     public override void OnAlert(AlertType alertType, Vector2 pos)
     {
-        Debug.Log("CCTV OnAlert");
+        Debug.Log("BANK CCTV OnAlert");
         switch(alertType)
         {
             case AlertType.Investigate:
@@ -104,7 +115,11 @@ public class Bank : Building
 
     private void SendGuardToInvestigate(Vector2 pos)
     {
-
+        foreach (var guard in _guards.Where(guard => guard != null))
+        {
+            //Alerts guards d
+            guard.Alert(pos, AlertType.Investigate);
+        }
     }
 
 }

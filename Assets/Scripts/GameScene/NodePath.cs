@@ -52,12 +52,7 @@ public class NodePath
     }
 
     public RouteNode CurrentNode => Nodes[CurrentNodeIndex];
-    //public RouteNode NextNode => Nodes[CurrentNodeIndex++];
+    public RouteNode NextNode => Nodes[CurrentNodeIndex++];
 
-    public RouteNode GetNextNode(string name)
-    {
-        Debug.Log("GetNextNode Called from " + name);
-        return Nodes[CurrentNodeIndex++];
-    }
 
 }
