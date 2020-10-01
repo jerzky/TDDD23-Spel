@@ -40,7 +40,7 @@ public class AI : MonoBehaviour
 
 
     // StateMachineVariables
-    State idleState = State.None;
+    State idleState = State.FollowRoute;
     State currentState = State.None;
     ActionE currentActionE = ActionE.None;
     AlertType currentAlertType = AlertType.None;
@@ -102,7 +102,7 @@ public class AI : MonoBehaviour
                 Investigate();
                 break;
             case State.FollowRoute:
-                SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
+                SetPathToPosition(currentRoute.NextNode.Position);
                 currentActionE = ActionE.FollowPath;
                 break;
         }
@@ -120,13 +120,14 @@ public class AI : MonoBehaviour
         currentRoute = route;
         currentState = State.FollowRoute;
         currentActionE = ActionE.FollowPath;
-        SetPathToPosition(currentRoute.Nodes[currentRoute.CurrentNodeIndex++].Position);
+        SetPathToPosition(currentRoute.NextNode.Position);
     }
 
     void CancelCurrentState()
     {
         CancelCurrentActionE();
         currentState = idleState;
+        GetNextActionE();
     }
 
     void CancelCurrentActionE()
@@ -150,7 +151,6 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
-        CancelCurrentState();
         currentState = State.Investigate;
         SetPathToPosition(position);
         currentActionE = ActionE.FollowPath;
