@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
         if(collision.collider.CompareTag("humanoid"))
         {
             CreateBloodSplatter(collision);
-            collision.collider.GetComponent<AI>().Injure(damage);
+            collision.collider.GetComponent<AI>().Injure(damage, new Vector3(BulletDirection.x, BulletDirection.y, 0f));
         }
         else if(collision.collider.CompareTag("Player"))
         {
