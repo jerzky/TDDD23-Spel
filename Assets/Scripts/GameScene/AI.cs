@@ -210,6 +210,22 @@ public class AI : MonoBehaviour
     {
         health -= damage;
         if (health <= 0)
+        {
+            GameObject temp = new GameObject("DeadHead");
+            temp.transform.position = transform.position + Vector3.forward * 10f;
+            temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/deadhead");
+            temp = new GameObject("DeadBody");
+            temp.transform.position = transform.position + Vector3.forward * 11f;
+            temp.AddComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+            temp = new GameObject("GuardHat");
+            float y = UnityEngine.Random.Range(0.7f, 1.3f);
+            float x = UnityEngine.Random.Range(-1f, 1f);
+            float r = -90f;
+            r *= x;
+            temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, r));
+            temp.transform.position = transform.position + new Vector3(x, y, 9f);
+            temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/guardhat");
             Destroy(gameObject);
+        }
     }
 }

@@ -40,13 +40,24 @@ public class Bullet : MonoBehaviour
     {
         if(collision.collider.CompareTag("humanoid"))
         {
+            CreateBloodSplatter(collision);
             collision.collider.GetComponent<AI>().Injure(damage);
         }
         else if(collision.collider.CompareTag("Player"))
         {
+            CreateBloodSplatter(collision);
             PlayerController.Instance.Injure(damage);
         }
         Destroy(gameObject);
+    }
+
+    void CreateBloodSplatter(Collision2D col)
+    {
+        GameObject blood = new GameObject("Blood");
+        blood.transform.parent = transform.parent;
+        blood.transform.position = col.transform.position + Vector3.back;
+        blood.AddComponent<SpriteRenderer>();
+        blood.AddComponent<Blood>();
     }
 
     public void SetBulletInfo(float muzzleVelocity, float maxTravelDistance, int damage)

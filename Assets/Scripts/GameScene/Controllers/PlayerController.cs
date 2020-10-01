@@ -179,6 +179,15 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            GameObject blood = new GameObject("Blood");
+            blood.transform.parent = transform.parent;
+            blood.transform.position = transform.position + Vector3.back;
+            blood.AddComponent<SpriteRenderer>();
+            blood.AddComponent<Blood>();
+        }
+
     }
 
     public void CancelCurrentInteractable()
