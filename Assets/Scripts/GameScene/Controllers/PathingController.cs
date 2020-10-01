@@ -45,7 +45,7 @@ public class PathingController : MonoBehaviour
     NodeType[,] grid;
     Queue<PathFindingQueueItem> waitingQueue = new Queue<PathFindingQueueItem>();
     float delayBetweenPathFindings = 0;
-    float maxDelayBetweenPathFindings = 0.012f;
+    private float maxDelayBetweenPathFindings = 0.012f;
 
     float delayBetweenDoorQueueChecks = 0f;
     float maxDelayBetweenDoorQueueChecks = 5f;
@@ -75,11 +75,6 @@ public class PathingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(t == 0)
-        {
-            Bank.Instance.start();
-            t++;
-        }
 
         if (waitingQueue.Count > 0)
         {

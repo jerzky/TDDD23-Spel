@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class NodePath
@@ -31,12 +32,14 @@ public class NodePath
 
     public NodePath(string name, AI guard, params RouteNode[] nodes)
     {
+        _currentNodeIndex = 0;
         Name = name;
         Guard = guard;
         Nodes = new List<RouteNode>(nodes);
     }
     public NodePath(string name, AI guard, List<RouteNode> nodes)
     {
+        _currentNodeIndex = 0;
         Name = name;
         Guard = guard;
         Nodes = nodes;
@@ -45,6 +48,16 @@ public class NodePath
     public int CurrentNodeIndex
     {
         get => _currentNodeIndex;
-        set => _currentNodeIndex = value >= Nodes.Count ? 0 : value;
+        private set => _currentNodeIndex = value >= Nodes.Count ? 0 : value;
     }
+
+    public RouteNode CurrentNode => Nodes[CurrentNodeIndex];
+    //public RouteNode NextNode => Nodes[CurrentNodeIndex++];
+
+    public RouteNode GetNextNode(string name)
+    {
+        Debug.Log("GetNextNode Called from " + name);
+        return Nodes[CurrentNodeIndex++];
+    }
+
 }
