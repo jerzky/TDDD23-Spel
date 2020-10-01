@@ -82,7 +82,7 @@ public class PathingController : MonoBehaviour
             if(delayBetweenPathFindings <= 0f)
             {
                 PathFindingQueueItem pfqi = waitingQueue.Dequeue();
-                pfqi.AI.followPath.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()), "pathing Controller");
+                pfqi.AI.followPath.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()));
                 delayBetweenPathFindings = maxDelayBetweenPathFindings;
             }
         }
@@ -255,12 +255,11 @@ public class PathingController : MonoBehaviour
         return FindPath(s, g, gridCopy);
     }
 
-    public bool FindPath(Vector2 s, Vector2 g, AI ai, string from)
+    public bool FindPath(Vector2 s, Vector2 g, AI ai)
     {
         if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
             return false;
 
-        Debug.Log("FIND PATH FROM: " + from + " goalpos: " + g);
 
         foreach(var v in waitingQueue)
         {
@@ -276,7 +275,6 @@ public class PathingController : MonoBehaviour
     {
         Vector2 startPos = new Vector2((int)Mathf.Round(s.x), (int)Mathf.Round(s.y));
         Vector2 goalPos = new Vector2((int)Mathf.Round(g.x), (int)Mathf.Round(g.y));
-        Debug.Log("FIND PATH INTERNAL: goalpos: " + g);
 
         LinkedList<Node> availableActions = new LinkedList<Node>();
         Node current = new Node(startPos, null, 0f, Vector2.zero);
@@ -328,7 +326,7 @@ public class PathingController : MonoBehaviour
             {
                 float distance = actionDistance[i];
                 if (gridCopy[(int)current.x, (int)current.y] == NodeType.DoorNeighbour)
-                    distance += 1;
+                    distance += 1.5f;
                 availableActions.AddFirst(new Node(current, origin, origin.Distance + distance, neighbours[i])); 
                 gridCopy[(int)current.x, (int)current.y] = NodeType.Blocked;
             }

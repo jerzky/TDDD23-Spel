@@ -12,7 +12,7 @@ public class AK47 : Gun
         noAmmoAudio = Resources.Load<AudioClip>("Sounds/noammo");
         reloadAudio = Resources.Load<AudioClip>("Sounds/reload");
         shootAudio = Resources.Load<AudioClip>("Sounds/gunfire");
-        rateOfFire = 0.15f;
+        rateOfFire = 0.046f;
         cantShootTimer = rateOfFire;
         reloadSpeed = 1.5f;
 
