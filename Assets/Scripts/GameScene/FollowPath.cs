@@ -83,14 +83,14 @@ public class FollowPath : Action
 
                 foreach (var v in ai.inVision)
                 {
-                    if(v.CompareTag("Player"))
+                   /* if(v.CompareTag("Player"))
                     {
                         if (closest == null || (Vector2.Distance(ai.transform.position, v.transform.position) < 1.5f) && Vector2.Distance(v.transform.position, ai.transform.position) < Vector2.Distance(closest.transform.position, ai.transform.position))
                         {
                             closest = v;
                         }
                         continue;
-                    }
+                    }*/
                     Vector2 vDir = Vector2.zero;
                     if (v.GetComponent<AI>().path.Count > 0 && v.GetComponent<AI>().path[0].Parent != null)
                         vDir = v.GetComponent<AI>().path[0].Position - v.GetComponent<AI>().path[0].Parent.Position;
@@ -212,13 +212,13 @@ public class FollowPath : Action
         }
         else
         {
-            if(closest.CompareTag("Player"))
+          /*  if(closest.CompareTag("Player"))
             {
                 // TODO: FIX A BETTER OFFSET
                 offset = ai.rotateVisionAround.transform.right;
                 offsetForceMultiplier += Time.fixedDeltaTime * forceMultiplierSpeed;
                 return;
-            }
+            }*/
             Transform closestOffsetPoint = closest.GetComponent<AI>().leftOffsetPoint;
             if (Vector2.Distance(closest.GetComponent<AI>().rightOffsetPoint.position, ai.transform.position) < Vector2.Distance(closestOffsetPoint.position, ai.transform.position))
                 closestOffsetPoint = closest.GetComponent<AI>().rightOffsetPoint;

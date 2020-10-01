@@ -30,7 +30,7 @@ public class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float walkingSpeed = 2f;
+    public float walkingSpeed = 5f;
     public float speedMultiplier = 1f;
 
 
@@ -177,7 +177,7 @@ public class AI : MonoBehaviour
 
     public void OnVisionEnter(Collider2D col)
     {
-        if(CompareTag(col.tag) || col.CompareTag("Player"))
+        if(CompareTag(col.tag))
         {
             justEnteredVision.Add(col.gameObject.name, 0f);
         }
@@ -198,7 +198,7 @@ public class AI : MonoBehaviour
 
     public void OnVisionExit(Collider2D col)
     {
-        if (CompareTag(col.tag) || col.CompareTag("Player"))
+        if (CompareTag(col.tag))
         {
             justEnteredVision.Remove(col.gameObject.name);
             inVision.Remove(col);

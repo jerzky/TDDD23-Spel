@@ -28,6 +28,7 @@ public class Door : Openable
         {
             openingDir = Vector2.up;
         }
+        AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID });
     }
 
     // Update is called once per frame
