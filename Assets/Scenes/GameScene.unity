@@ -477,7 +477,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000076293945, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1211,7 +1211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 185234941}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: rotateAround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3014,7 +3014,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 417663388}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: rotateAround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3759,8 +3759,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.01, y: 0.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 949085733}
+  m_Children: []
   m_Father: {fileID: 812849252}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3833,7 +3832,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 555427710}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: rotateAround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3866,7 +3865,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 597792492}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RightOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5289,7 +5288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 821097028}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LeftOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6245,36 +6244,6 @@ Transform:
   m_Father: {fileID: 726590807}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &949085732
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 949085733}
-  m_Layer: 2
-  m_Name: Weapon End Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &949085733
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949085732}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 1}
-  m_Children: []
-  m_Father: {fileID: 524266240}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &961442283
 GameObject:
   m_ObjectHideFlags: 0
@@ -6433,7 +6402,7 @@ GameObject:
   - component: {fileID: 974805177}
   - component: {fileID: 974805176}
   - component: {fileID: 974805175}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BANK_GUARD_2
   m_TagString: humanoid
   m_Icon: {fileID: 0}
@@ -7131,7 +7100,7 @@ GameObject:
   - component: {fileID: 1031282166}
   - component: {fileID: 1031282165}
   - component: {fileID: 1031282164}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AIVision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7342,7 +7311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1055855744}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LeftOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8066,7 +8035,7 @@ GameObject:
   - component: {fileID: 1239923864}
   - component: {fileID: 1239923863}
   - component: {fileID: 1239923862}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AIVision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8322,7 +8291,7 @@ GameObject:
   - component: {fileID: 1248590253}
   - component: {fileID: 1248590255}
   - component: {fileID: 1248590254}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AI_TEST
   m_TagString: humanoid
   m_Icon: {fileID: 0}
@@ -8545,7 +8514,7 @@ GameObject:
   - component: {fileID: 1261887151}
   - component: {fileID: 1261887150}
   - component: {fileID: 1261887149}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BANK_GUARD_1
   m_TagString: humanoid
   m_Icon: {fileID: 0}
@@ -10177,7 +10146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1536031917}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LeftOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10414,7 +10383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1555999348}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RightOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10717,7 +10686,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1650087747
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11775,7 +11744,7 @@ GameObject:
   - component: {fileID: 1722568192}
   - component: {fileID: 1722568191}
   - component: {fileID: 1722568190}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AIVision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13603,7 +13572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1994293404}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RightOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

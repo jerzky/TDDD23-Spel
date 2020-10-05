@@ -16,7 +16,7 @@ public class BreakableController : MonoBehaviour
 
     public bool HitObject(GameObject go, uint itemID)
     {
-        if(go.tag == "breakable" && !brokenObjects.Contains(go.transform.position.ToString()))
+        if(go.CompareTag("breakable") && !brokenObjects.Contains(go.transform.position.ToString()))
         {   
             int damage = ItemList.AllItems[itemID].BreakableDamage;
             if(damage == 0f)

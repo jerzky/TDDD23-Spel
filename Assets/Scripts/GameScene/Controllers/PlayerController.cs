@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
         if (movementDirection != Vector2.zero)
         {
             CancelCurrentInteractable();
-            PlayerMotor.Instance.PlayerMove(movementDirection, currentSpeed);
+            PlayerMotor.Instance.PlayerMove(movementDirection.normalized, currentSpeed);
             movementDirection = Vector2.zero;
             currentSpeed = speed;
             GetComponent<AudioSource>().enabled = true;
@@ -128,20 +128,7 @@ public class PlayerController : MonoBehaviour
 
         if (GetInput(Input.GetKeyDown, ControlAction.UseItem))
         {
-            var item = Inventory.Instance.GetCurrentItem();
-            if(item != null)
-            {
-                if (item.ItemType == ItemType.Usable)
-                {
-                    //PlayerMotor.Instance.UseItem(currentSelectedItem);
-                    ItemController.Instance.Use(item, transform.position);
-                }
-                else if (item.ItemType != ItemType.Usable)
-                {
-                    CancelCurrentInteractable();
-                    PlayerMotor.Instance.Interact(lookDir, item.UID);
-                }
-            }
+            PlayerMotor.Instance.UseItem(lookDir);
         }
 
 
@@ -172,11 +159,16 @@ public class PlayerController : MonoBehaviour
                 // NOT over UI element
                 Inventory.Instance.DeSelectItem();
                 bool storeIsOpen = StoreController.Instance.IsOpen();
-                CancelCurrentInteractable();
                 // attack?
                 if (!storeIsOpen)
                     PlayerMotor.Instance.Attack(Inventory.Instance.GetCurrentItem());
+                CancelCurrentInteractable();
             }
+        }
+
+        if(GetInput(Input.GetKeyDown, ControlAction.TakeDown))
+        {
+            PlayerMotor.Instance.TakeDown(lookDir);
         }
 
         if(Input.GetKeyDown(KeyCode.G))

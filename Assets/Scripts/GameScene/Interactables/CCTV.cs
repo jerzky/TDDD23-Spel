@@ -126,7 +126,7 @@ public class CCTV : Interactable
         if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
         {
             if(_building.IsSomeoneMonitoringCCTV)
-                _building.OnAlert(AlertType.Investigate, col.transform.position);
+                _building.OnAlert(AlertType.Guard_CCTV, col.transform.position);
         }
         else if (playerHasBeenSeenAsHostileBefore)
         {

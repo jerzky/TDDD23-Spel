@@ -34,6 +34,11 @@
     "KeyCode1": 102,
     "KeyCode2": 0
   },
+  "TakeDown": {
+    "Action": "TakeDown",
+    "KeyCode1": 116,
+    "KeyCode2": 0
+  },
   "Sneak": {
     "Action": "Sneak",
     "KeyCode1": 304,

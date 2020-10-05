@@ -9,7 +9,7 @@ using UnityEditor.U2D.Path.GUIFramework;
 using Newtonsoft.Json.Converters;
 
 
-public enum ControlAction { Up, Down, Left, Right, Interact, Shoot, UseItem, Sneak, Inventory, Itembar_1, Itembar_2, Itembar_3, Itembar_4, Itembar_5, Itembar_6, Itembar_7, Itembar_8 }
+public enum ControlAction { Up, Down, Left, Right, Interact, Shoot, UseItem, TakeDown, Sneak, Inventory, Itembar_1, Itembar_2, Itembar_3, Itembar_4, Itembar_5, Itembar_6, Itembar_7, Itembar_8 }
 
 public class ControlInfo
 {

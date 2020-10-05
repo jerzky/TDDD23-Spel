@@ -32,7 +32,7 @@ public class WeaponController : MonoBehaviour
     private readonly List<Bullet> ActiveBullets = new List<Bullet>();
 
 
-    Vector3 playerOffset = new Vector3(-0.08f, 0.2f, 0f);
+    Vector3 playerOffset = new Vector3(-0.08f, 0.1f, 0f);
     bool WeaponEquiped = true;
     float previousAngle = 0f;
     // Start is called before the first frame update

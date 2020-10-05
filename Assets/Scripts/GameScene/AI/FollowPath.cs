@@ -181,8 +181,7 @@ public class FollowPath : Action
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
         ai.rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f) * ai.walkingSpeed * ai.speedMultiplier * Time.fixedDeltaTime);
-        ai.speedMultiplier = 1f;
+        ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f).normalized * ai.walkingSpeed * ai.speedMultiplier * Time.fixedDeltaTime);
     }
 
     void FinishedNode()
@@ -212,13 +211,6 @@ public class FollowPath : Action
         }
         else
         {
-          /*  if(closest.CompareTag("Player"))
-            {
-                // TODO: FIX A BETTER OFFSET
-                offset = ai.rotateVisionAround.transform.right;
-                offsetForceMultiplier += Time.fixedDeltaTime * forceMultiplierSpeed;
-                return;
-            }*/
             Transform closestOffsetPoint = closest.GetComponent<AI>().leftOffsetPoint;
             if (Vector2.Distance(closest.GetComponent<AI>().rightOffsetPoint.position, ai.transform.position) < Vector2.Distance(closestOffsetPoint.position, ai.transform.position))
                 closestOffsetPoint = closest.GetComponent<AI>().rightOffsetPoint;
@@ -265,16 +257,5 @@ public class FollowPath : Action
             node = node.Child;
             prevdir = dir;
         }
-
-        Debug.Log(counter ++ + "PATH LIST CREATED WITH SIZE: " + ai.path.Count);
-        foreach(var v in ai.path)
-        {
-            Debug.Log(counter++ + " " + v.Position);
-        }
-    }
-    int counter = 0;
-    public override void SetUp()
-    {
-        throw new System.NotImplementedException();
     }
 }

@@ -9,6 +9,7 @@ public class LookAround : Action
     float maxLookAroundTime = 4f;
     float minLookAroundTime = 8f;
     float currentLookAroundTimer = 0f;
+    bool firstRun = true;
 
     public LookAround(AI ai) : base(ai)
     {
@@ -17,16 +18,20 @@ public class LookAround : Action
 
     public override bool PerformAction()
     {
+        if(firstRun)
+        {
+            firstRun = false;
+            currentLookAroundTimer = UnityEngine.Random.Range(minLookAroundTime, maxLookAroundTime);
+        }
         currentLookAroundTimer -= Time.fixedDeltaTime;
         if (currentLookAroundTimer <= 0f)
+        {
+            firstRun = true;
             return true;
+        }
 
         ai.rotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
-        return false;
-    }
 
-    public override void SetUp()
-    {
-        currentLookAroundTimer = UnityEngine.Random.Range(minLookAroundTime, maxLookAroundTime);
+        return false;
     }
 }

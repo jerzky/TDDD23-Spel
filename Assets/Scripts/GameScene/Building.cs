@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public enum AlertType { None, Investigate };
+
 public class Building : MonoBehaviour
 {
 

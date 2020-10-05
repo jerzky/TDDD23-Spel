@@ -8,9 +8,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngineInternal;
 
-public enum ActionE { None, Idle, FollowPath, LookAround };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute };
-
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit };
+public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
+public enum AlertIntesity { Nonexistant, NonHostile, ConfirmedHostile }
 
 public class AI : MonoBehaviour
 {
@@ -31,35 +32,38 @@ public class AI : MonoBehaviour
 
     // Move Variables
     public float walkingSpeed = 5f;
-    public float speedMultiplier = 1f;
+    public float speedMultiplier = 7f;
 
 
     // Health
     int health = 100;
     bool isIncapacitated = false;
+    GameObject cuffs;
 
 
     // StateMachineVariables
     State idleState = State.FollowRoute;
     State currentState = State.None;
-    ActionE currentActionE = ActionE.None;
+    ActionE currentAction = ActionE.None;
+    AlertType currentAlertIntesity = AlertType.None;
     AlertType currentAlertType = AlertType.None;
-
-    // Investigate variables
     
 
     // Follow Route variables
     public List<Node> path = new List<Node>();
     NodePath currentRoute;
-    float waitTimer;
+
     // Start is called before the first frame update
     void Start()
     {
         followPath = new FollowPath(this);
         actions.Add(ActionE.FollowPath, followPath);
         actions.Add(ActionE.LookAround, new LookAround(this));
+        actions.Add(ActionE.Pursue, new Pursue(this, FindObjectOfType<PlayerController>().transform, followPath));
         currentState = State.FollowRoute;
-        currentActionE = ActionE.FollowPath;
+        currentAction = ActionE.FollowPath;
+        cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
+        cuffs.SetActive(false);
     }
 
     private void Update()
@@ -73,20 +77,34 @@ public class AI : MonoBehaviour
         // Reset variables that need to be reset every frame for functionality.
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
-        if (actions[currentActionE].PerformAction())
+        if (isIncapacitated)
+            return;
+
+        if (actions[currentAction].PerformAction())
             GetNextActionE();
+
+    }
+
+    public bool Alert(Sound sound)
+    {
+        AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
+
+        Alert(sound.origin, AlertType.Sound, alertIntesity);
+        return true;
     }
 
 
-    public bool Alert(Vector2 position, AlertType alertType)
+    public bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
     {
-        if (isIncapacitated)
-            return false;
-
         switch(alertType)
         {
-            case AlertType.Investigate:
+            case AlertType.Guard_CCTV:
+            case AlertType.Guard_Radio:
                 StartInvestigate(position, alertType);
+                break;
+            case AlertType.Sound:
+                // we need to check the current location, if we are in a common space, only confirmed hostile would trigger reaction
+                // if we care in a staff only space, investigate it?
                 break;
         }
 
@@ -102,14 +120,29 @@ public class AI : MonoBehaviour
                 break;
             case State.FollowRoute:
                 SetPathToPosition(currentRoute.NextNode.Position);
-                currentActionE = ActionE.FollowPath;
+                currentAction = ActionE.FollowPath;
+                break;
+            case State.Pursuit:
+                Pursuit();
+                break;
+        }
+    }
+
+    void Pursuit()
+    {
+        switch(currentAction)
+        {
+            case ActionE.Pursue:
+                // Completely Lost Player
+                // TODO: Search Action Here maybe?
                 break;
         }
     }
 
 
-    void SetPathToPosition(Vector2 pos)
+    public void SetPathToPosition(Vector2 pos)
     {
+        Debug.Log("Start following path");
         path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
@@ -118,7 +151,7 @@ public class AI : MonoBehaviour
     {
         currentRoute = route;
         currentState = State.FollowRoute;
-        currentActionE = ActionE.FollowPath;
+        currentAction = ActionE.FollowPath;
         SetPathToPosition(currentRoute.NextNode.Position);
     }
 
@@ -131,18 +164,19 @@ public class AI : MonoBehaviour
 
     void CancelCurrentActionE()
     {
-        currentActionE = ActionE.None;
+        currentAction = ActionE.None;
     }
 
     void Investigate()
     {
-        switch(currentActionE)
+        switch(currentAction)
         {
             case ActionE.FollowPath:
-                currentActionE = ActionE.LookAround;
-                actions[currentActionE].SetUp();
+                Debug.Log("Start LookAround");
+                currentAction = ActionE.LookAround;
                 break;
             case ActionE.LookAround:
+                Debug.Log("Finished LookAround");
                 CancelCurrentState();
                 break;
         }
@@ -150,29 +184,10 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
+        Debug.Log("Start investigate");
         currentState = State.Investigate;
         SetPathToPosition(position);
-        currentActionE = ActionE.FollowPath;
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
-    }
-
-    public void TellToStay(Collision2D col)
-    {
-
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        
+        currentAction = ActionE.FollowPath;
     }
 
     public void OnVisionEnter(Collider2D col)
@@ -181,6 +196,10 @@ public class AI : MonoBehaviour
         {
             justEnteredVision.Add(col.gameObject.name, 0f);
         }
+        if (col.CompareTag("Player"))
+        {
+            PlayerSeen();
+        }
     }
 
     public void OnVisionStay(Collider2D col)
@@ -188,7 +207,7 @@ public class AI : MonoBehaviour
         if(justEnteredVision.ContainsKey(col.gameObject.name))
         {
             justEnteredVision[col.gameObject.name] += Time.deltaTime;
-            if(justEnteredVision[col.gameObject.name] > 0.25f)
+            if(justEnteredVision[col.gameObject.name] > 0.15f)
             {
                 inVision.Add(col);
                 justEnteredVision.Remove(col.gameObject.name);
@@ -225,6 +244,39 @@ public class AI : MonoBehaviour
             temp.transform.position = transform.position + hatDir;
             temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/guardhat");
             Destroy(gameObject);
+        }
+    }
+
+    public void Incapacitate()
+    {
+        // raycast behind me
+        Vector3 dir = transform.position - GetComponentInChildren<Vision>().transform.position;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + dir * 0.3f, dir, 1f);
+        if (hit.collider == null ||!hit.collider.CompareTag("Player"))
+        {
+            // shoot that motherfucker
+            return;
+        }
+        isIncapacitated = true;
+        cuffs.SetActive(true);
+    }
+
+    public void ReleaseCuffs()
+    {
+        isIncapacitated = false;
+        cuffs.SetActive(false);
+    }
+
+
+    void PlayerSeen() // guard implementation
+    {
+        Debug.Log("Player Seen");
+        switch (currentState)
+        {
+            case State.Investigate:
+                currentState = State.Pursuit;
+                currentAction = ActionE.Pursue;
+                break;
         }
     }
 }

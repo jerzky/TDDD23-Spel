@@ -102,7 +102,7 @@ public class Bank : Building
         Debug.Log("BANK CCTV OnAlert");
         switch(alertType)
         {
-            case AlertType.Investigate:
+            case AlertType.Guard_CCTV:
                 SendGuardToInvestigate(pos);
                 break;
             default:
@@ -118,7 +118,7 @@ public class Bank : Building
         foreach (var guard in _guards.Where(guard => guard != null))
         {
             //Alerts guards d
-            guard.Alert(pos, AlertType.Investigate);
+            guard.Alert(pos, AlertType.Guard_CCTV, AlertIntesity.NonHostile);
         }
     }
 

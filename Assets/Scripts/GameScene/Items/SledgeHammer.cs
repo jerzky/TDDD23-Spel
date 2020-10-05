@@ -39,7 +39,12 @@ public class SledgeHammer : MeleeWeapon
             
             if (hit.collider != null)
             {
-                BreakableController.Instance.HitObject(hit.collider.gameObject, ItemList.ITEM_SLEDGEHAMMER.UID);
+                if (hit.collider.CompareTag("breakable"))
+                    BreakableController.Instance.HitObject(hit.collider.gameObject, ItemList.ITEM_SLEDGEHAMMER.UID);
+                else if (hit.collider.CompareTag("humanoid"))
+                    hit.collider.GetComponent<AI>().Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage, hit.collider.transform.position - transform.position);
+                else if (hit.collider.CompareTag("Player"))
+                    PlayerController.Instance.Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage);
             }
             Destroy(animationObject);
             return true;

@@ -12,5 +12,4 @@ public abstract class Action
     }
 
     public abstract bool PerformAction();
-    public abstract void SetUp();
 }

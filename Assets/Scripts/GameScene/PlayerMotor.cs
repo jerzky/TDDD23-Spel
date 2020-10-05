@@ -77,11 +77,32 @@ public class PlayerMotor : MonoBehaviour
             return;
         WeaponController.Instance.Shoot(currentItem.UID);
     }
-   /* public void UseItem(ItemInfo currentItem)
+
+    public void TakeDown(Vector2 lookDir)
     {
-     var prefab = Resources.Load<GameObject>(currentItem.PrefabPath);
-     //GameObject bullet = Instantiate(PrefabUtility.GetPrefabObject(prefab, transform.position, WeaponEnd.transform.rotation, bulletHolder.transform);
-    
-    }*/
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + lookDir * 0.5f, lookDir, 0.5f);
+        if(hit.collider.CompareTag("humanoid"))
+        {
+            hit.collider.GetComponent<AI>().Incapacitate();
+        }
+    }
+
+    public void UseItem(Vector2 lookDir)
+    {
+        var item = Inventory.Instance.GetCurrentItem();
+        if (item != null)
+        {
+            if (item.ItemType == ItemType.Usable)
+            {
+                //PlayerMotor.Instance.UseItem(currentSelectedItem);
+                ItemController.Instance.Use(item, transform.position);
+            }
+            else if (item.ItemType != ItemType.Usable)
+            {
+                PlayerController.Instance.CancelCurrentInteractable();
+                Interact(lookDir, item.UID);
+            }
+        }
+    }
 }
 
