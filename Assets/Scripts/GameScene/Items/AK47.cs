@@ -10,11 +10,11 @@ public class AK47 : Gun
     {
         ammoUID = ItemList.ITEM_PISTOL_AMMO.UID;
         noAmmoAudio = Resources.Load<AudioClip>("Sounds/noammo");
-        reloadAudio = Resources.Load<AudioClip>("Sounds/reload");
-        shootAudio = Resources.Load<AudioClip>("Sounds/gunfire");
-        rateOfFire = 0.046f;
+        reloadAudio = Resources.Load<AudioClip>("Sounds/riflereload2");
+        shootAudio = Resources.Load<AudioClip>("Sounds/riflefire2");
+        rateOfFire = (60f/600f);
         cantShootTimer = rateOfFire;
-        reloadSpeed = 1.5f;
+        reloadSpeed = 3.2f; // lowest reload time which allows sound to finish = 4.5f
 
         magSize = 30;
         currentMagSize = 30;

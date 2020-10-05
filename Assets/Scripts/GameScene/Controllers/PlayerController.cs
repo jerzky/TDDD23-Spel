@@ -159,10 +159,11 @@ public class PlayerController : MonoBehaviour
                 // NOT over UI element
                 Inventory.Instance.DeSelectItem();
                 bool storeIsOpen = StoreController.Instance.IsOpen();
+                CancelCurrentInteractable();
                 // attack?
                 if (!storeIsOpen)
                     PlayerMotor.Instance.Attack(Inventory.Instance.GetCurrentItem());
-                CancelCurrentInteractable();
+                
             }
         }
 
