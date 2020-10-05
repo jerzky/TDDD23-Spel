@@ -14,6 +14,9 @@ public class GeneralUI : MonoBehaviour
     int health;
     int credits;
 
+    float timer = 0f;
+    float timeUntilPlayerHpReset = 5f;
+
     public int Credits { get => credits; set { credits = value; creditText.text = "$" + credits;  } }
     public int Health { get => health; set { health = value; healthSlider.value = health; } }
 
@@ -28,5 +31,10 @@ public class GeneralUI : MonoBehaviour
 
         Health = 100;
         Credits = 1000;
+    }
+
+    void Update()
+    {
+
     }
 }

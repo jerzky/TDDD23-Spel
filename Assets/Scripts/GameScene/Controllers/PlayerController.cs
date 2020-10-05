@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEditor.U2D.Path.GUIFramework;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,6 +30,12 @@ public class PlayerController : MonoBehaviour
 
     ItemController itemController;
 
+    [SerializeField]
+    GameObject heartbeat;
+
+
+    float healthResetTimer = 0f;
+    float healthResetMaxTime = 5f;
     
     // Start is called before the first frame update
     void Start()
@@ -60,6 +67,14 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleKeyInputs();
+
+        healthResetTimer += Time.deltaTime;
+        if(healthResetTimer > healthResetMaxTime)
+        {
+            heartbeat.SetActive(false);
+            healthResetTimer = 0f;
+            GeneralUI.Instance.Health = 100;
+        }
     }
 
     private void FixedUpdate()
@@ -147,15 +162,21 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (GetInput(Input.GetKey, ControlAction.Shoot))
+        // HANDLES UI CLICKS
+        if (GetInput(Input.GetKeyDown, ControlAction.Shoot))
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 // over UI element
                 Inventory.Instance.SelectItem();
             }
-            else
+        }
+        // HANDLES INGAME CLICKS
+        if (GetInput(Input.GetKey, ControlAction.Shoot))
+        {
+            if(!EventSystem.current.IsPointerOverGameObject())
             {
+                Debug.Log("notoverui");
                 // NOT over UI element
                 Inventory.Instance.DeSelectItem();
                 bool storeIsOpen = StoreController.Instance.IsOpen();
@@ -194,11 +215,16 @@ public class PlayerController : MonoBehaviour
 
     public void Injure(int damage)
     {
+        healthResetTimer = 0f;
         GeneralUI.Instance.Health -= damage;
         if (GeneralUI.Instance.Health <= 0)
         {
             // you lost motherfucker
             Destroy(gameObject);
+        }
+        else if(GeneralUI.Instance.Health <= 50)
+        {
+            heartbeat.SetActive(true);
         }
     }
 }

@@ -142,7 +142,6 @@ public class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log("Start following path");
         path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
@@ -172,11 +171,9 @@ public class AI : MonoBehaviour
         switch(currentAction)
         {
             case ActionE.FollowPath:
-                Debug.Log("Start LookAround");
                 currentAction = ActionE.LookAround;
                 break;
             case ActionE.LookAround:
-                Debug.Log("Finished LookAround");
                 CancelCurrentState();
                 break;
         }
@@ -184,7 +181,6 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
-        Debug.Log("Start investigate");
         currentState = State.Investigate;
         SetPathToPosition(position);
         currentAction = ActionE.FollowPath;
@@ -270,7 +266,6 @@ public class AI : MonoBehaviour
 
     void PlayerSeen() // guard implementation
     {
-        Debug.Log("Player Seen");
         switch (currentState)
         {
             case State.Investigate:

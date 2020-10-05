@@ -52,7 +52,6 @@ public class FollowPath : Action
 
     bool RecalculatePath()
     {
-        Debug.Log("Recalculating");
         hasNotMovedTimer = 0f;
         Node current = ai.path[0];
         while (current.Child != null)
@@ -194,8 +193,6 @@ public class FollowPath : Action
             lastDoorNeighbourPos = new Vector2(-1, -1);
         }
         ai.path.RemoveAt(0);
-        Debug.Log("Finished Node");
-
     }
 
     void SetOffset(Collider2D closest)

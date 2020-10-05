@@ -51,7 +51,6 @@ public class Inventory
             }
             else
             {
-                Debug.Log("Reached max value of item");
                 return false;
             }
         }
@@ -185,6 +184,7 @@ public class Inventory
             ItemBar.AddItem(second, firstInfo);
             ItemBar.UpdateCount(second, firstInfo.Count);
             DeSelectItem();
+            WeaponController.Instance.ChangeWeaponSprite();
         }
     }
 

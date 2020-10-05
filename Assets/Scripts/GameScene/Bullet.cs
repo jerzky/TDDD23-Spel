@@ -62,7 +62,6 @@ public class Bullet : MonoBehaviour
 
     public void SetBulletInfo(float muzzleVelocity, float maxTravelDistance, int damage)
     {
-        Debug.Log("SET BULLET INFO CALLED");
         this.muzzleVelocity = muzzleVelocity;
         this.maxTravelDistance = maxTravelDistance;
         this.damage = damage;
