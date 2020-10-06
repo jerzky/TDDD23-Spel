@@ -24,6 +24,11 @@
     "KeyCode1": 101,
     "KeyCode2": 0
   },
+    "R": {
+    "Action": "Interact",
+    "KeyCode1": 101,
+    "KeyCode2": 0
+  },
   "Shoot": {
     "Action": "Shoot",
     "KeyCode1": 323,

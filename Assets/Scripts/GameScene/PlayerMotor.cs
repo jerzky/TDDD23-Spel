@@ -110,5 +110,15 @@ public class PlayerMotor : MonoBehaviour
             }
         }
     }
+
+    public void Reload()
+    {
+        var item = Inventory.Instance.GetCurrentItem();
+        if (item == null)
+            return;
+
+        if(item.ItemType == ItemType.Weapon)
+            ItemController.Instance.Reload(item);
+    }
 }
 

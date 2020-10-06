@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeed = speed * sneakMultiplier;
         }
-
+       
 
 
         if (GetInput(Input.GetKeyDown, ControlAction.Interact))
@@ -151,6 +151,12 @@ public class PlayerController : MonoBehaviour
         {
             PlayerMotor.Instance.Inventory.OpenInventory();
         }
+
+        if (GetInput(Input.GetKeyDown, ControlAction.Reload))
+        {
+            PlayerMotor.Instance.Reload();
+        }
+        
 
         for (uint i = 0; i < itemBarActions.Length; i++)
         {
