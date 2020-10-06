@@ -40,7 +40,7 @@ public class AIWeaponHandler
         _audioSource.Play();
 
         _haltTimer.Reset();
-
+      
         
         return false;
     }

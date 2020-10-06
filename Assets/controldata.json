@@ -54,6 +54,11 @@
     "KeyCode1": 49,
     "KeyCode2": 0
   },
+  "Reload": {
+    "Action": "Reload",
+    "KeyCode1": 114,
+    "KeyCode2": 0
+  },
   "Itembar_2": {
     "Action": "Itembar_2",
     "KeyCode1": 50,

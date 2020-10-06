@@ -49,6 +49,16 @@ public class ItemController : MonoBehaviour
         currentItem = item;
     }
 
+    public void Reload(ItemInfo itemInfo)
+    {
+        var gun = Items[itemInfo.UID] as Gun;
+        if (gun == null)
+            return;
+
+        gun.Reload();
+    }
+
+
     public void SecondaryUse(ItemInfo item, Vector3 pos)
     {
         Items[item.UID].SecondaryUse(item, pos);

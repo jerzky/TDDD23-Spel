@@ -68,6 +68,7 @@ public class WeaponController : MonoBehaviour
     }
 
 
+
     public void Shoot(uint weaponUID)
     {
         if (AnimationActive || (ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon && ItemList.AllItems[weaponUID].ItemType != ItemType.MeleeWeapon)) 
@@ -90,4 +91,6 @@ public class WeaponController : MonoBehaviour
         else
             weaponGO.GetComponent<SpriteRenderer>().enabled = false;
     }
+
+
 }
