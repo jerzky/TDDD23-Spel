@@ -7,6 +7,7 @@ public class ItemController : MonoBehaviour
 {
     public static ItemController Instance;
     private SortedDictionary<uint, UsableItem> Items = new SortedDictionary<uint, UsableItem>();
+    private ItemInfo currentItem;
 
     private void Start()
     {
@@ -29,11 +30,17 @@ public class ItemController : MonoBehaviour
     public void Use(ItemInfo item, Vector3 pos)
     {
         Items[item.UID].Use(item, pos);
+        currentItem = item;
     }
 
     public void SecondaryUse(ItemInfo item, Vector3 pos)
     {
         Items[item.UID].SecondaryUse(item, pos);
 
+    }
+
+    public void CancelCurrentItem()
+    {
+        Items[currentItem.UID].Cancel();
     }
 }

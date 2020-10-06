@@ -107,7 +107,7 @@ public class Explosive : UsableItem
 
     void Explode(ExplosiveInfo info)
     {
-
+        SoundController.Instance.GenerateSound(new Sound(info.GameObject.transform.position, ItemList.ITEM_EXPLOSIVE_TIMED.SoundRadius, Sound.SoundType.Weapon));
         var colliders = Physics2D.OverlapCircleAll(info.GameObject.transform.position, EXPLOSIVE_RADIUS_HUMANOID);
         foreach (var c in colliders)
         {
@@ -124,5 +124,10 @@ public class Explosive : UsableItem
 
         }
 
+    }
+
+    public override void Cancel()
+    {
+        
     }
 }

@@ -52,7 +52,6 @@ public class FollowPath : Action
 
     bool RecalculatePath()
     {
-        Debug.Log("Recalculating");
         hasNotMovedTimer = 0f;
         Node current = ai.path[0];
         while (current.Child != null)
@@ -79,7 +78,7 @@ public class FollowPath : Action
         {
             if (ai.inVision.Count > 0)
             {
-                ai.speedMultiplier = 0.5f;
+                ai.speedMultiplier = 1f;
 
                 foreach (var v in ai.inVision)
                 {
@@ -99,7 +98,7 @@ public class FollowPath : Action
                         myDir = ai.path[0].Position - ai.path[0].Parent.Position;
 
                     RaycastHit2D hit = Physics2D.Raycast(ai.transform.position, v.transform.position - ai.transform.position);
-                    if (hit.collider.gameObject.name.Substring(0, 2) != "AI")
+                    if (!hit.collider.CompareTag("humanoid"))
                         continue;
 
                     if ((vDir != myDir || Vector2.Distance(ai.transform.position, v.transform.position) < 1f) && (closest == null || Vector2.Distance(v.transform.position, ai.transform.position) < Vector2.Distance(closest.transform.position, ai.transform.position)))
@@ -181,7 +180,7 @@ public class FollowPath : Action
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
         ai.rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f).normalized * ai.walkingSpeed * ai.speedMultiplier * Time.fixedDeltaTime);
+        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.moveSpeed * Time.fixedDeltaTime);
     }
 
     void FinishedNode()
@@ -194,8 +193,6 @@ public class FollowPath : Action
             lastDoorNeighbourPos = new Vector2(-1, -1);
         }
         ai.path.RemoveAt(0);
-        Debug.Log("Finished Node");
-
     }
 
     void SetOffset(Collider2D closest)

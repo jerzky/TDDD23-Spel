@@ -24,7 +24,7 @@ public class WeaponController : MonoBehaviour
     uint currentWeapon = 0;
     bool animationActive = false;
     int debugCounter = 0;
-    public bool AnimationActive { get { return animationActive; } set { Debug.Log("AnimationActive Changed From" + debugCounter++ + ": " + animationActive + " To: " + value); animationActive = value; } }
+    public bool AnimationActive { get { return animationActive; } set { animationActive = value; } }
     GameObject animationObject;
 
 

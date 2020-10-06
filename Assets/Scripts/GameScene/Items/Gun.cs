@@ -26,7 +26,7 @@ public abstract class Gun : UsableItem
         uint temp = OutOfAmmo();
         if (temp == 0)
         {
-            Shoot();
+            Shoot(item.SoundRadius);
             cantShootTimer = rateOfFire;
             WeaponController.Instance.AudioSource.clip = shootAudio;
             WeaponController.Instance.AudioSource.Play();
@@ -37,8 +37,9 @@ public abstract class Gun : UsableItem
         }
         return 0;
     }
-    public uint Shoot()
+    public uint Shoot(float soundRadius)
     {
+        SoundController.Instance.GenerateSound(new Sound(WeaponController.Instance.WeaponEnd.transform.position, soundRadius, Sound.SoundType.Weapon));
         GameObject bullet = Instantiate(bulletPrefab, WeaponController.Instance.WeaponEnd.transform.position, WeaponController.Instance.WeaponEnd.transform.rotation, WeaponController.Instance.bulletHolder.transform);
         bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance, damage);
         return 1;
@@ -73,5 +74,10 @@ public abstract class Gun : UsableItem
         WeaponController.Instance.AudioSource.clip = noAmmoAudio;
         WeaponController.Instance.AudioSource.Play();
         return 2;
+    }
+
+    public override void Cancel()
+    {
+        
     }
 }

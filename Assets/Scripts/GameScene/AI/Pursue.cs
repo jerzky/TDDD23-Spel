@@ -18,10 +18,9 @@ public class Pursue : Action
     {
         if(LineOfSight())
         {
-            Debug.Log("Pursuing, in line of sight");
             // Player is in line of sight, move towards player.
             Vector2 dir = player.position - ai.transform.position;
-            ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f).normalized * ai.walkingSpeed * Time.fixedDeltaTime);
+            ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.moveSpeed * Time.fixedDeltaTime);
             lastPlayerPos = player.position;
             return false;
         }
@@ -43,7 +42,6 @@ public class Pursue : Action
         Vector2 dir = (player.position - ai.transform.position).normalized;
         int layerMask = ~LayerMask.GetMask("AI");
         RaycastHit2D hit = Physics2D.Raycast((Vector2)ai.transform.position, dir, Mathf.Infinity, layerMask);
-        Debug.Log(hit.collider.name);
         if (hit.collider.CompareTag("Player"))
             return true;
         return false;

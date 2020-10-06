@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Transactions;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -31,8 +32,15 @@ public class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float walkingSpeed = 5f;
-    public float speedMultiplier = 7f;
+    public float moveSpeed { 
+        get
+        {
+            return currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
+        }
+    }
+    public const float pursueSpeed = 5f;
+    public const float patrolSpeed = 3f;
+    public float speedMultiplier = 1f;
 
 
     // Health
@@ -96,6 +104,8 @@ public class AI : MonoBehaviour
 
     public bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
     {
+        // TODO: SOMETHING NEEDS TO STOP AI FROM RESTARTING INVESTIGATION, BUT SOMEHOW CHANGE PATH SMOOTHLY, 
+        // RIGHT NOW IT STOPS EVERY TIME IT HEARS A BULLET AND RECALCULATES PATH
         switch(alertType)
         {
             case AlertType.Guard_CCTV:
@@ -103,8 +113,9 @@ public class AI : MonoBehaviour
                 StartInvestigate(position, alertType);
                 break;
             case AlertType.Sound:
-                // we need to check the current location, if we are in a common space, only confirmed hostile would trigger reaction
-                // if we care in a staff only space, investigate it?
+                StartInvestigate(position, alertType);
+                // we need to check the current location, if we are in a common space, only confirmed hostile and maybe construction would trigger reaction
+                // if we care in a staff only space, investigate it no matter what.
                 break;
         }
 
@@ -142,7 +153,6 @@ public class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log("Start following path");
         path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
@@ -172,11 +182,9 @@ public class AI : MonoBehaviour
         switch(currentAction)
         {
             case ActionE.FollowPath:
-                Debug.Log("Start LookAround");
                 currentAction = ActionE.LookAround;
                 break;
             case ActionE.LookAround:
-                Debug.Log("Finished LookAround");
                 CancelCurrentState();
                 break;
         }
@@ -184,7 +192,6 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
-        Debug.Log("Start investigate");
         currentState = State.Investigate;
         SetPathToPosition(position);
         currentAction = ActionE.FollowPath;
@@ -226,6 +233,7 @@ public class AI : MonoBehaviour
 
     public void Injure(int damage, Vector3 dir)
     {
+        CreateBloodSplatter();
         health -= damage;
         if (health <= 0)
         {
@@ -270,7 +278,6 @@ public class AI : MonoBehaviour
 
     void PlayerSeen() // guard implementation
     {
-        Debug.Log("Player Seen");
         switch (currentState)
         {
             case State.Investigate:
@@ -278,5 +285,14 @@ public class AI : MonoBehaviour
                 currentAction = ActionE.Pursue;
                 break;
         }
+    }
+
+    void CreateBloodSplatter()
+    {
+        GameObject blood = new GameObject("Blood");
+        blood.transform.parent = transform;
+        blood.transform.position = transform.position + Vector3.back;
+        blood.AddComponent<SpriteRenderer>();
+        blood.AddComponent<Blood>();
     }
 }
