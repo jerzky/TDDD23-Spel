@@ -20,7 +20,7 @@ public class Pursue : Action
         {
             // Player is in line of sight, move towards player.
             Vector2 dir = player.position - ai.transform.position;
-            ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f).normalized * ai.walkingSpeed * Time.fixedDeltaTime);
+            ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.moveSpeed * Time.fixedDeltaTime);
             lastPlayerPos = player.position;
             return false;
         }

@@ -180,7 +180,7 @@ public class FollowPath : Action
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
         ai.rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        ai.GetComponent<Rigidbody2D>().MovePosition(ai.transform.position + new Vector3(dir.x, dir.y, 0f).normalized * ai.walkingSpeed * ai.speedMultiplier * Time.fixedDeltaTime);
+        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.moveSpeed * Time.fixedDeltaTime);
     }
 
     void FinishedNode()

@@ -75,4 +75,9 @@ public abstract class Gun : UsableItem
         WeaponController.Instance.AudioSource.Play();
         return 2;
     }
+
+    public override void Cancel()
+    {
+        
+    }
 }

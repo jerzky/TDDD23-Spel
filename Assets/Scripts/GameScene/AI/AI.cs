@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Transactions;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -31,7 +32,14 @@ public class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float walkingSpeed = 10f;
+    public float moveSpeed { 
+        get
+        {
+            return currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
+        }
+    }
+    public const float pursueSpeed = 5f;
+    public const float patrolSpeed = 3f;
     public float speedMultiplier = 1f;
 
 

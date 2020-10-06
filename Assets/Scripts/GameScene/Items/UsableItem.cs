@@ -12,4 +12,6 @@ public abstract class UsableItem : MonoBehaviour
         return 0;
     }
 
+    public abstract void Cancel();
+
 }

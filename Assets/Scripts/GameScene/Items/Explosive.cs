@@ -125,4 +125,9 @@ public class Explosive : UsableItem
         }
 
     }
+
+    public override void Cancel()
+    {
+        
+    }
 }

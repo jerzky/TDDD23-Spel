@@ -211,6 +211,7 @@ public class PlayerController : MonoBehaviour
             CurrentInteractable.Cancel();
             CurrentInteractable = null;
         }
+        //ItemController.Instance.CancelCurrentItem();
     }
 
     public void Injure(int damage)

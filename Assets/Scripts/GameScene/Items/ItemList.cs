@@ -53,7 +53,7 @@ namespace Assets.Items
             IconPath = "Textures/sledgeHammer",
             IconIndex = 0,
             AverageUseTime = 0f,
-            HumanDamage = 10,
+            HumanDamage = 25,
             BreakableDamage = 10,
             ItemType = ItemType.Weapon,
             InventoryStackSize = 1,
@@ -162,16 +162,16 @@ namespace Assets.Items
             SoundRadius = 80f
         };
 
-        public static readonly ItemInfo ITEM_LOCKPICK3 = new ItemInfo
+        public static readonly ItemInfo ITEM_DRILL = new ItemInfo
         {
             UID = 9,
-            Name = "Lockpick3",
+            Name = "Drill",
             IconPath = "Textures/drilltesticon",
             IconIndex = 0,
-            AverageUseTime = 5f,
-            InventoryStackSize = 10,
-            SellPrice = 10,
-            BuyPrice = 100,
+            AverageUseTime = 10f,
+            InventoryStackSize = 1,
+            SellPrice = 2000,
+            BuyPrice = 5000,
             PurchaseAmount = 1
         };
 
@@ -228,7 +228,7 @@ namespace Assets.Items
                 ITEM_AK47.UID, ITEM_AK47
             },
             {
-                ITEM_LOCKPICK3.UID, ITEM_LOCKPICK3
+                ITEM_DRILL.UID, ITEM_DRILL
             },
             {
                 ITEM_LOCKPICK4.UID, ITEM_LOCKPICK4

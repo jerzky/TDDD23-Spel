@@ -44,12 +44,15 @@ public class SledgeHammer : MeleeWeapon
                 }
                 else if (hit.collider.CompareTag("humanoid"))
                 {
+                    SoundController.Instance.GenerateSound(new Sound(PlayerController.Instance.transform.position, ItemList.ITEM_SLEDGEHAMMER.SoundRadius, Sound.SoundType.Construction));
                     AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/hit4"), hit.collider.transform.position, 0.25f);
                     hit.collider.GetComponent<AI>().Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage, hit.collider.transform.position - transform.position);
                     
                 }
                 else if (hit.collider.CompareTag("Player"))
                 {
+                    SoundController.Instance.GenerateSound(new Sound(PlayerController.Instance.transform.position, ItemList.ITEM_SLEDGEHAMMER.SoundRadius, Sound.SoundType.Construction));
+                    AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/hit4"), hit.collider.transform.position, 0.25f);
                     PlayerController.Instance.Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage);
                 }
             }
@@ -68,5 +71,10 @@ public class SledgeHammer : MeleeWeapon
         dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - animationObject.transform.position;
         SwingAnimation();
         return 0;
+    }
+
+    public override void Cancel()
+    {
+
     }
 }
