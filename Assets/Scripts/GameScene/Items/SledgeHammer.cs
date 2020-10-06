@@ -25,8 +25,6 @@ public class SledgeHammer : MeleeWeapon
         if(!WeaponController.Instance.AnimationActive)
         {
             Debug.Log("CHANGING ANIMATION ACTIVE TO TRUE IN SLEDGEHAMMER:");
-
-            
         }
 
 
@@ -40,11 +38,20 @@ public class SledgeHammer : MeleeWeapon
             if (hit.collider != null)
             {
                 if (hit.collider.CompareTag("breakable"))
+                {
+                    SoundController.Instance.GenerateSound(new Sound(PlayerController.Instance.transform.position, ItemList.ITEM_SLEDGEHAMMER.SoundRadius, Sound.SoundType.Construction));
                     BreakableController.Instance.HitObject(hit.collider.gameObject, ItemList.ITEM_SLEDGEHAMMER.UID);
+                }
                 else if (hit.collider.CompareTag("humanoid"))
+                {
+                    AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/hit4"), hit.collider.transform.position, 0.25f);
                     hit.collider.GetComponent<AI>().Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage, hit.collider.transform.position - transform.position);
+                    
+                }
                 else if (hit.collider.CompareTag("Player"))
+                {
                     PlayerController.Instance.Injure(ItemList.ITEM_SLEDGEHAMMER.HumanDamage);
+                }
             }
             Destroy(animationObject);
             return true;

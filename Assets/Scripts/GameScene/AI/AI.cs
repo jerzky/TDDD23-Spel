@@ -31,8 +31,8 @@ public class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float walkingSpeed = 5f;
-    public float speedMultiplier = 7f;
+    public float walkingSpeed = 10f;
+    public float speedMultiplier = 1f;
 
 
     // Health
@@ -96,6 +96,8 @@ public class AI : MonoBehaviour
 
     public bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
     {
+        // TODO: SOMETHING NEEDS TO STOP AI FROM RESTARTING INVESTIGATION, BUT SOMEHOW CHANGE PATH SMOOTHLY, 
+        // RIGHT NOW IT STOPS EVERY TIME IT HEARS A BULLET AND RECALCULATES PATH
         switch(alertType)
         {
             case AlertType.Guard_CCTV:
@@ -103,8 +105,9 @@ public class AI : MonoBehaviour
                 StartInvestigate(position, alertType);
                 break;
             case AlertType.Sound:
-                // we need to check the current location, if we are in a common space, only confirmed hostile would trigger reaction
-                // if we care in a staff only space, investigate it?
+                StartInvestigate(position, alertType);
+                // we need to check the current location, if we are in a common space, only confirmed hostile and maybe construction would trigger reaction
+                // if we care in a staff only space, investigate it no matter what.
                 break;
         }
 
@@ -222,6 +225,7 @@ public class AI : MonoBehaviour
 
     public void Injure(int damage, Vector3 dir)
     {
+        CreateBloodSplatter();
         health -= damage;
         if (health <= 0)
         {
@@ -273,5 +277,14 @@ public class AI : MonoBehaviour
                 currentAction = ActionE.Pursue;
                 break;
         }
+    }
+
+    void CreateBloodSplatter()
+    {
+        GameObject blood = new GameObject("Blood");
+        blood.transform.parent = transform;
+        blood.transform.position = transform.position + Vector3.back;
+        blood.AddComponent<SpriteRenderer>();
+        blood.AddComponent<Blood>();
     }
 }

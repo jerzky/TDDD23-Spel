@@ -78,7 +78,7 @@ public class FollowPath : Action
         {
             if (ai.inVision.Count > 0)
             {
-                ai.speedMultiplier = 0.5f;
+                ai.speedMultiplier = 1f;
 
                 foreach (var v in ai.inVision)
                 {
@@ -98,7 +98,7 @@ public class FollowPath : Action
                         myDir = ai.path[0].Position - ai.path[0].Parent.Position;
 
                     RaycastHit2D hit = Physics2D.Raycast(ai.transform.position, v.transform.position - ai.transform.position);
-                    if (hit.collider.gameObject.name.Substring(0, 2) != "AI")
+                    if (!hit.collider.CompareTag("humanoid"))
                         continue;
 
                     if ((vDir != myDir || Vector2.Distance(ai.transform.position, v.transform.position) < 1f) && (closest == null || Vector2.Distance(v.transform.position, ai.transform.position) < Vector2.Distance(closest.transform.position, ai.transform.position)))

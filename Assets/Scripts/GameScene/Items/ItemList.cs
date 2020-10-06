@@ -24,6 +24,8 @@ namespace Assets.Items
         public uint BuyPrice { get; set; }
         public uint PurchaseAmount { get; set; } = 1;
 
+        public float SoundRadius { get; set; } = 25f;
+
     }
 
 
@@ -40,7 +42,8 @@ namespace Assets.Items
             InventoryStackSize = 10,
             SellPrice = 10,
             BuyPrice = 100,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 10f
         };
 
         public static readonly ItemInfo ITEM_SLEDGEHAMMER = new ItemInfo
@@ -56,7 +59,8 @@ namespace Assets.Items
             InventoryStackSize = 1,
             SellPrice = 50,
             BuyPrice = 200,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 30f
         };
 
         public static readonly ItemInfo ITEM_PISTOL = new ItemInfo
@@ -72,7 +76,8 @@ namespace Assets.Items
             InventoryStackSize = 1,
             SellPrice = 500,
             BuyPrice = 1000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 60f
         };
 
         public static readonly ItemInfo ITEM_PISTOL_AMMO = new ItemInfo
@@ -102,7 +107,8 @@ namespace Assets.Items
             PrefabPath = "Assets/Prefabs/Explosive",
             SellPrice = 1000,
             BuyPrice = 5000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 200f
         };
 
         public static readonly ItemInfo ITEM_EXPLOSIVE_TIMED = new ItemInfo
@@ -118,7 +124,8 @@ namespace Assets.Items
             PrefabPath = "Assets/Prefabs/Explosive",
             SellPrice = 1000,
             BuyPrice = 5000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 200f
         };
 
         public static readonly ItemInfo ITEM_SILENCED_PISTOL = new ItemInfo
@@ -134,7 +141,8 @@ namespace Assets.Items
             InventoryStackSize = 1,
             SellPrice = 500,
             BuyPrice = 2000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 10f
         };
 
         public static readonly ItemInfo ITEM_AK47 = new ItemInfo
@@ -150,7 +158,8 @@ namespace Assets.Items
             InventoryStackSize = 1,
             SellPrice = 1000,
             BuyPrice = 6000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 80f
         };
 
         public static readonly ItemInfo ITEM_LOCKPICK3 = new ItemInfo

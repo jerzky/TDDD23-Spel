@@ -18,10 +18,11 @@ public class Sound
 
 public class SoundController : MonoBehaviour
 {
+    public static SoundController Instance;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Instance = this;
     }
 
     // Update is called once per frame
@@ -30,12 +31,14 @@ public class SoundController : MonoBehaviour
         
     }
 
-    void GenerateSound(Sound sound)
+    public void GenerateSound(Sound sound)
     {
         var colliders = Physics2D.OverlapCircleAll(sound.origin, sound.radius);
+        ((GameObject)Instantiate(Resources.Load("Prefabs/soundcircle"), sound.origin, Quaternion.identity, null)).GetComponent<soundcircletest>().Radius = sound.radius;
+
         foreach(var v in colliders)
         {
-            if(v.CompareTag("AI"))
+            if(v.CompareTag("humanoid"))
             {
                 v.GetComponent<AI>().Alert(sound);
             }

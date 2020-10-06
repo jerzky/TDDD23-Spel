@@ -18,6 +18,7 @@ public class LockPick : UsableItem
     }
     public override uint Use(ItemInfo item, Vector3 pos)
     {
+        SoundController.Instance.GenerateSound(new Sound(pos, ItemList.ITEM_LOCKPICK.SoundRadius, Sound.SoundType.Construction));
         AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/LockPicking"), new Vector3(pos.x, pos.y, -5));
         return 0;
     }
