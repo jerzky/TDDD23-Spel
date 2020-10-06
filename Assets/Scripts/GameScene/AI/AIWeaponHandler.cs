@@ -34,7 +34,7 @@ public class AIWeaponHandler
 
         var finalDirection = playerPos - startPosition;
 
-        Bullet.Generate(20f, 30f, 20, Bullet.ShooterType.AI, finalDirection, startPosition,
+        Bullet.Generate(20f, 30f, 50, Bullet.ShooterType.AI, finalDirection, startPosition,
             Quaternion.FromToRotation(startPosition, finalDirection));
         _audioSource.Play();
 
