@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var temp = Camera.main.ScreenToWorldPoint(Input.mousePosition) - FindObjectOfType<WeaponController>().transform.position;
+        var temp = WeaponController.Instance.WeaponEnd.transform.position - PlayerController.Instance.transform.position;
         BulletDirection = new Vector2(temp.x, temp.y);
         StartingPosition = transform.position;
     }
