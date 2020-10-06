@@ -220,6 +220,8 @@ public class FollowPath : Action
 
     public void NodeToPathList(Node startNode)
     {
+        if (ai == null)
+            return;
         Node node = startNode;
         if (node == null)
             return;

@@ -30,6 +30,7 @@ public class LoadingCircle : MonoBehaviour
         rectComponent.rotation = rectComponent.parent.rotation;
         lastUpdate = 0;
         sr.enabled = false;
+        ItemController.Instance.CancelCurrentItem();
     }
 
     private void Update()

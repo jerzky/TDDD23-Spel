@@ -43,7 +43,7 @@ namespace Assets.Items
             SellPrice = 10,
             BuyPrice = 100,
             PurchaseAmount = 1,
-            SoundRadius = 10f
+            SoundRadius = 5f
         };
 
         public static readonly ItemInfo ITEM_SLEDGEHAMMER = new ItemInfo
@@ -168,11 +168,13 @@ namespace Assets.Items
             Name = "Drill",
             IconPath = "Textures/drilltesticon",
             IconIndex = 0,
-            AverageUseTime = 10f,
+            AverageUseTime = 15f,
+            ItemType = ItemType.Usable,
             InventoryStackSize = 1,
             SellPrice = 2000,
             BuyPrice = 5000,
-            PurchaseAmount = 1
+            PurchaseAmount = 1,
+            SoundRadius = 10f
         };
 
         public static readonly ItemInfo ITEM_LOCKPICK4 = new ItemInfo

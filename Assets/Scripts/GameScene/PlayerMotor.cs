@@ -95,6 +95,7 @@ public class PlayerMotor : MonoBehaviour
             if (item.ItemType == ItemType.Usable)
             {
                 //PlayerMotor.Instance.UseItem(currentSelectedItem);
+                PlayerController.Instance.CancelCurrentInteractable();
                 ItemController.Instance.Use(item, transform.position);
             }
             else if (item.ItemType != ItemType.Usable)

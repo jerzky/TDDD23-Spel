@@ -13,12 +13,16 @@ public class ItemController : MonoBehaviour
     {
         Instance = this;
         GameObject temp = new GameObject("UsableItems");
+        temp.transform.parent = PlayerController.Instance.transform;
+        temp.transform.position = PlayerController.Instance.transform.position;
         var exp = temp.AddComponent<Explosive>();
         var lockpick = temp.AddComponent<LockPick>();
         var sledge = temp.AddComponent<SledgeHammer>();
         var pistol = temp.AddComponent<Pistol>();
         var silencedPistol = temp.AddComponent<SilencedPistol>();
         var AK47 = temp.AddComponent<AK47>();
+        var drill = temp.AddComponent<Drill_Item>();
+        temp.AddComponent<AudioSource>();
         Items.Add(ItemList.ITEM_EXPLOSIVE_REMOTE.UID, exp);
         Items.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID, exp);
         Items.Add(ItemList.ITEM_LOCKPICK.UID, lockpick);
@@ -26,6 +30,7 @@ public class ItemController : MonoBehaviour
         Items.Add(ItemList.ITEM_PISTOL.UID, pistol);
         Items.Add(ItemList.ITEM_SILENCED_PISTOL.UID, silencedPistol);
         Items.Add(ItemList.ITEM_AK47.UID, AK47);
+        Items.Add(ItemList.ITEM_DRILL.UID, drill);
     }
     public void Use(ItemInfo item, Vector3 pos)
     {

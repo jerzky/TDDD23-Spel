@@ -55,4 +55,9 @@ public abstract class Openable : Interactable
 
     public abstract void UnLock();
 
+    public bool IsLocked()
+    {
+        return isLocked;
+    }
+
 }

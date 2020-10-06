@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+
+
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
@@ -16,7 +18,7 @@ public class PlayerController : MonoBehaviour
     float sneakMultiplier = 0.5f;
     Vector2 movementDirection;
     float currentSpeed = 5f;
-    Vector2 lookDir = Vector2.zero;
+    public Vector2 lookDir = Vector2.zero;
 
     Sprite[] playerSprites = new Sprite[4];
     SpriteRenderer sr;
@@ -176,7 +178,6 @@ public class PlayerController : MonoBehaviour
         {
             if(!EventSystem.current.IsPointerOverGameObject())
             {
-                Debug.Log("notoverui");
                 // NOT over UI element
                 Inventory.Instance.DeSelectItem();
                 bool storeIsOpen = StoreController.Instance.IsOpen();

@@ -251,6 +251,7 @@ public class AI : MonoBehaviour
             temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rot));
             temp.transform.position = transform.position + hatDir;
             temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/guardhat");
+            GeneralUI.Instance.Kills++;
             Destroy(gameObject);
         }
     }

@@ -6,11 +6,12 @@ using UnityEngine;
 public class LockPick : UsableItem
 {
     private bool active = false;
-    private float timer = 5f;
-    Vector3 pos;
+    private float timer = 0f;
+    AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         
     }
 
@@ -19,27 +20,30 @@ public class LockPick : UsableItem
     {
         if (active)
         {
-            timer -= Time.deltaTime;
-            if(timer <= 1f)
+            timer += Time.deltaTime;
+            if(timer >= 1f)
             {
-
+                timer = 0f;
+                SoundController.Instance.GenerateSound(new Sound(transform.position, ItemList.ITEM_LOCKPICK.SoundRadius, Sound.SoundType.Construction));
             }
-        }
-        
-            
+        }  
     }
     public override uint Use(ItemInfo item, Vector3 pos)
     {
-        SoundController.Instance.GenerateSound(new Sound(pos, ItemList.ITEM_LOCKPICK.SoundRadius, Sound.SoundType.Construction));
-        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/LockPicking"), new Vector3(pos.x, pos.y, -5));
+        Debug.Log("USE ITEM LOCKPICK");
+        SoundController.Instance.GenerateSound(new Sound(transform.position, ItemList.ITEM_LOCKPICK.SoundRadius, Sound.SoundType.Construction));
+        audioSource.enabled = true;
+        audioSource.volume = 0.5f;
+        audioSource.PlayOneShot(Resources.Load<AudioClip>("Sounds/LockPicking"));
         active = true;
-        timer = 5f;
+        timer = 0f;
         return 0;
     }
 
     public override void Cancel()
     {
+        Debug.Log("CANCEL ITEM LOCKPICK");
+        audioSource.enabled = false;
         active = false;
-        timer = 5f;
     }
 }
