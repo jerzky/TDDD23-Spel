@@ -3,12 +3,13 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BreakableController : MonoBehaviour
 {
     public static BreakableController Instance;
     SortedDictionary<string, int> damagedObjects = new SortedDictionary<string, int>();
-    SortedSet<string> brokenObjects = new SortedSet<string>();
+    SortedDictionary<string, GameObject> brokenObjects = new SortedDictionary<string, GameObject>();
     public void Start()
     {
         Instance = this;
@@ -16,7 +17,7 @@ public class BreakableController : MonoBehaviour
 
     public bool HitObject(GameObject go, uint itemID)
     {
-        if(go.CompareTag("breakable") && !brokenObjects.Contains(go.transform.position.ToString()))
+        if(go.CompareTag("breakable") && !brokenObjects.ContainsKey(go.transform.position.ToString()))
         {   
             int damage = ItemList.AllItems[itemID].BreakableDamage;
             if(damage == 0f)
@@ -76,7 +77,16 @@ public class BreakableController : MonoBehaviour
     {
         go.GetComponent<SpriteRenderer>().enabled = false;
         go.GetComponent<BoxCollider2D>().enabled = false;
-        brokenObjects.Add(go.transform.position.ToString());
+        brokenObjects.Add(go.transform.position.ToString(), go);
         damagedObjects.Remove(go.transform.position.ToString());
+        PathingController.Instance.UpdateGrid((Vector2)go.transform.position, NodeType.Clear);
+    }
+
+    void Rebuild(Vector3 position)
+    {
+        GameObject rebuiltObject = brokenObjects[position.ToString()];
+        rebuiltObject.GetComponent<SpriteRenderer>().enabled = true;
+        rebuiltObject.GetComponent<BoxCollider2D>().enabled = true;
+        PathingController.Instance.UpdateGrid((Vector2)rebuiltObject.transform.position, NodeType.Blocked);
     }
 }

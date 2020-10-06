@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: bccecdf15ce846c4b88e45fe25462c6b, type: 3}
-    totalSpriteSurfaceArea: 13368646
+    totalSpriteSurfaceArea: 13372742
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -848,6 +848,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 08adbd548b6b3ce4aac4bf5ad9cd6030, type: 3}
   - {fileID: 21300000, guid: 7ae1dde4bc1a0694ab9001cd98d92a2e, type: 3}
   - {fileID: 21300000, guid: e49ffa45d92dc0942bd158f7c2848df2, type: 3}
+  - {fileID: 21300000, guid: e4d648755904a1441a44aa20638a79c9, type: 3}
   - {fileID: 21300000, guid: 47bd5b7540dacee4688a4771cec1bf90, type: 3}
   - {fileID: 21300000, guid: 74634695c8aeeba489d83e2086fb9658, type: 3}
   - {fileID: 21300000, guid: dd57a1d51a6bc5c4d9be619d07de24fb, type: 3}
@@ -2020,6 +2021,7 @@ SpriteAtlas:
   - bullet
   - groundspritesheet
   - frame_10
+  - invisible
   - tcrossup
   - frame_03
   - frame_02

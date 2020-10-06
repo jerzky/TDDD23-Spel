@@ -64,6 +64,10 @@ public class GeneralUI : MonoBehaviour
         Credits = 1000;
         kills = 0;
         totalCreditsEarned = 0;
+
+        // MESSAGE IS CREATED IN SCENE ALREADY
+        infoTextQueue.Enqueue(new InfoText("", null));
+        infoTextQueue.Peek().isShowing = true;
     }
 
     void Update()

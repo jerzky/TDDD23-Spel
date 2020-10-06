@@ -94,6 +94,11 @@ public class PathingController : MonoBehaviour
         }
     }
 
+    internal void UpdateGrid(Vector2 position, NodeType nodeType)
+    {
+        grid[(int)position.x, (int)position.y] = nodeType;
+    }
+
     public void CreateNodeGrid()
     {
         grid = new NodeType[(int)MapController.MapSize.x, (int)MapController.MapSize.y];
