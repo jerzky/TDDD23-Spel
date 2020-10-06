@@ -78,4 +78,9 @@ public class CashRegister : Interactable
         robType = -1;
         LoadingCircle.Instance.StopLoading();
     }
+
+    public override string Name()
+    {
+        return "Cash Register";
+    }
 }

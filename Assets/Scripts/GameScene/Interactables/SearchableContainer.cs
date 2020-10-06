@@ -59,5 +59,8 @@ public class SearchableContainer : Openable
         Debug.Log("Attempting LockPicking");
     }
 
-    
+    public override string Name()
+    {
+        return "Searchable Container";
+    }
 }

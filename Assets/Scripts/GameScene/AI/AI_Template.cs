@@ -9,12 +9,13 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngineInternal;
 
+public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker }
 public enum ActionE { None, Idle, FollowPath, LookAround, Pursue };
 public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit };
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntesity { Nonexistant, NonHostile, ConfirmedHostile }
 
-public class AI : MonoBehaviour
+public abstract class AI : MonoBehaviour
 {
     // Vision Variables
     [SerializeField]
@@ -26,7 +27,7 @@ public class AI : MonoBehaviour
 
 
     public List<Collider2D> inVision = new List<Collider2D>();
-    SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
+    protected SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
 
     public SortedDictionary<ActionE, Action> actions = new SortedDictionary<ActionE, Action>();
     public FollowPath followPath;
@@ -44,34 +45,28 @@ public class AI : MonoBehaviour
 
 
     // Health
-    int health = 100;
-    bool isIncapacitated = false;
-    GameObject cuffs;
+    protected int health = 100;
+    protected bool isIncapacitated = false;
+    protected GameObject cuffs;
 
 
     // StateMachineVariables
-    State idleState = State.FollowRoute;
-    State currentState = State.None;
-    ActionE currentAction = ActionE.None;
-    AlertType currentAlertIntesity = AlertType.None;
-    AlertType currentAlertType = AlertType.None;
+    protected State idleState = State.FollowRoute;
+    protected State currentState = State.None;
+    protected ActionE currentAction = ActionE.None;
+    protected AlertType currentAlertIntesity = AlertType.None;
+    protected AlertType currentAlertType = AlertType.None;
     
 
     // Follow Route variables
     public List<Node> path = new List<Node>();
-    NodePath currentRoute;
+    protected NodePath currentRoute;
 
+    AI_Type ai_type = AI_Type.Guard;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        followPath = new FollowPath(this);
-        actions.Add(ActionE.FollowPath, followPath);
-        actions.Add(ActionE.LookAround, new LookAround(this));
-        actions.Add(ActionE.Pursue, new Pursue(this, FindObjectOfType<PlayerController>().transform, followPath));
-        currentState = State.FollowRoute;
-        currentAction = ActionE.FollowPath;
-        cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
-        cuffs.SetActive(false);
+
     }
 
     private void Update()
@@ -93,63 +88,22 @@ public class AI : MonoBehaviour
 
     }
 
+    public AI_Type Type()
+    {
+        return ai_type;
+    }
+
     public bool Alert(Sound sound)
     {
         AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
-
         Alert(sound.origin, AlertType.Sound, alertIntesity);
         return true;
     }
 
+    public abstract bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity);
 
-    public bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
-    {
-        // TODO: SOMETHING NEEDS TO STOP AI FROM RESTARTING INVESTIGATION, BUT SOMEHOW CHANGE PATH SMOOTHLY, 
-        // RIGHT NOW IT STOPS EVERY TIME IT HEARS A BULLET AND RECALCULATES PATH
-        switch(alertType)
-        {
-            case AlertType.Guard_CCTV:
-            case AlertType.Guard_Radio:
-                StartInvestigate(position, alertType);
-                break;
-            case AlertType.Sound:
-                StartInvestigate(position, alertType);
-                // we need to check the current location, if we are in a common space, only confirmed hostile and maybe construction would trigger reaction
-                // if we care in a staff only space, investigate it no matter what.
-                break;
-        }
 
-        return false;
-    }
-
-    public void GetNextActionE()
-    {
-        switch (currentState)
-        {
-            case State.Investigate:
-                Investigate();
-                break;
-            case State.FollowRoute:
-                SetPathToPosition(currentRoute.NextNode.Position);
-                currentAction = ActionE.FollowPath;
-                break;
-            case State.Pursuit:
-                Pursuit();
-                break;
-        }
-    }
-
-    void Pursuit()
-    {
-        switch(currentAction)
-        {
-            case ActionE.Pursue:
-                // Completely Lost Player
-                // TODO: Search Action Here maybe?
-                break;
-        }
-    }
-
+    public abstract void GetNextActionE();
 
     public void SetPathToPosition(Vector2 pos)
     {
@@ -165,36 +119,16 @@ public class AI : MonoBehaviour
         SetPathToPosition(currentRoute.NextNode.Position);
     }
 
-    void CancelCurrentState()
+    protected void CancelCurrentState()
     {
         CancelCurrentActionE();
         currentState = idleState;
         GetNextActionE();
     }
 
-    void CancelCurrentActionE()
+    protected void CancelCurrentActionE()
     {
         currentAction = ActionE.None;
-    }
-
-    void Investigate()
-    {
-        switch(currentAction)
-        {
-            case ActionE.FollowPath:
-                currentAction = ActionE.LookAround;
-                break;
-            case ActionE.LookAround:
-                CancelCurrentState();
-                break;
-        }
-    }
-
-    void StartInvestigate(Vector2 position, AlertType alertType)
-    {
-        currentState = State.Investigate;
-        SetPathToPosition(position);
-        currentAction = ActionE.FollowPath;
     }
 
     public void OnVisionEnter(Collider2D col)
@@ -237,24 +171,13 @@ public class AI : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            GameObject temp = new GameObject("DeadHead");
-            temp.transform.position = transform.position + Vector3.forward * 10f;
-            temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/deadhead");
-            temp = new GameObject("DeadBody");
-            temp.transform.position = transform.position + Vector3.forward * 11f;
-            temp.AddComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
-            temp = new GameObject("GuardHat");
-            float r = UnityEngine.Random.Range(0.4f, 0.8f);
-            Vector3 hatDir = new Vector3(r * dir.normalized.x, dir.normalized.y * r, 9f);
-            float rot = -90f;
-            rot *= hatDir.x;
-            temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rot));
-            temp.transform.position = transform.position + hatDir;
-            temp.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/guardhat");
+            DieAnimation(dir);
             GeneralUI.Instance.Kills++;
             Destroy(gameObject);
         }
     }
+
+    protected abstract void DieAnimation(Vector3 dir);
 
     public void Incapacitate()
     {
@@ -263,12 +186,14 @@ public class AI : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position + dir * 0.3f, dir, 1f);
         if (hit.collider == null ||!hit.collider.CompareTag("Player"))
         {
-            // shoot that motherfucker
+            IncapacitateFailedReaction();
             return;
         }
         isIncapacitated = true;
         cuffs.SetActive(true);
     }
+
+    protected abstract void IncapacitateFailedReaction();
 
     public void ReleaseCuffs()
     {
@@ -277,16 +202,7 @@ public class AI : MonoBehaviour
     }
 
 
-    void PlayerSeen() // guard implementation
-    {
-        switch (currentState)
-        {
-            case State.Investigate:
-                currentState = State.Pursuit;
-                currentAction = ActionE.Pursue;
-                break;
-        }
-    }
+    protected abstract void PlayerSeen();
 
     void CreateBloodSplatter()
     {

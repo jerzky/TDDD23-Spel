@@ -162,4 +162,9 @@ public class CCTV : Interactable
                 break;
         }
     }
+
+    public override string Name()
+    {
+        return "CCTV";
+    }
 }

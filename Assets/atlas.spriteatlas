@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: bccecdf15ce846c4b88e45fe25462c6b, type: 3}
-    totalSpriteSurfaceArea: 13366616
+    totalSpriteSurfaceArea: 13368646
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -1000,6 +1000,7 @@ SpriteAtlas:
   - {fileID: 2106409558847724506, guid: 7e4d8fca0cc783b49af75e7a0015e06d, type: 3}
   - {fileID: 21300000, guid: c9ca36eaa31cfb5418fc8e1a7416def8, type: 3}
   - {fileID: 21300000, guid: 4a2ae90bc9b7fe84282523d3503d386e, type: 3}
+  - {fileID: 21300000, guid: 2c81463b4d917b6449534f8a178a30c2, type: 3}
   - {fileID: 21300000, guid: 32ea345b066ce154ba2525cb12cab87e, type: 3}
   - {fileID: 21300000, guid: 27349bcb08ef8634389f0bc810347233, type: 3}
   - {fileID: 21300000, guid: 1af2f02cbeffbb04086d6dbde5c6e200, type: 3}
@@ -2171,6 +2172,7 @@ SpriteAtlas:
   - blood_5
   - frame_5_delay-0.1s
   - scrollbar
+  - textboxexpandable
   - arrowdown
   - frame_15
   - frame_01

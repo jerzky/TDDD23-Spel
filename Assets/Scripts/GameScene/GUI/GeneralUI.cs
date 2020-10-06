@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,11 +15,31 @@ public class GeneralUI : MonoBehaviour
     Text totalCreditsEarnedText;
     [SerializeField]
     Text killsText;
+    [SerializeField]
+    GameObject infoTextGameObject;
+    [SerializeField]
+    Text infoText;
+    [SerializeField]
+    Image infoPic;
 
     int health;
     int credits;
     int kills;
     int totalCreditsEarned;
+
+    private class InfoText
+    {
+        public string text;
+        public bool isShowing = false;
+        public Sprite sprite;
+        public InfoText(string text, Sprite sprite)
+        {
+            this.text = text;
+            this.sprite = sprite;
+        }
+    }
+    Queue<InfoText> infoTextQueue = new Queue<InfoText>();
+    float infoTextTimer = 0f;
 
     public int Credits { get => credits; set { if (value > 0) TotalCreditsEarned += value; credits = value; creditText.text = "Current $" + credits;  } }
     public int Health { get => health; set { health = value; healthSlider.value = health; } }
@@ -47,6 +68,26 @@ public class GeneralUI : MonoBehaviour
 
     void Update()
     {
+        if (infoTextQueue.Count > 0)
+        {
+            var temp = infoTextQueue.Peek();
+            if (!temp.isShowing)
+            {
+                infoTextGameObject.SetActive(true);
+                infoText.text = temp.text;
+                infoPic.sprite = temp.sprite;
+            }
+        }
+    }
 
+    public void TriggerInfoText(string text, Sprite pic)
+    {
+        infoTextQueue.Enqueue(new InfoText(text, pic));
+    }
+
+    public void CloseInfoBox()
+    {
+        infoTextGameObject.SetActive(false);
+        infoTextQueue.Dequeue();
     }
 }

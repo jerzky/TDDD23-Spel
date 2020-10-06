@@ -51,4 +51,9 @@ public class Store : Interactable
         StoreController.Instance.Toggle(true);
         isOpen = !isOpen;
     }
+
+    public override string Name()
+    {
+        return "Store";
+    }
 }

@@ -55,4 +55,9 @@ public class Drill_Interactable : Interactable
         Destroy(gameObject);
         return false;
     }
+
+    public override string Name()
+    {
+        return "Drill";
+    }
 }

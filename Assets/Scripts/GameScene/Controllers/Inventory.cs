@@ -198,5 +198,6 @@ public class Inventory
     {
         currentItem = index;
         ItemBar.UpdateCurrentItem(index);
+        GameController.Instance.TriggerItemText(GetCurrentItem().UID);
     }
 }

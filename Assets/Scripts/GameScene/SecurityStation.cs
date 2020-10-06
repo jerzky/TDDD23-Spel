@@ -29,4 +29,9 @@ public class SecurityStation : Interactable
     {
         
     }
+
+    public override string Name()
+    {
+        return "Security Station";
+    }
 }

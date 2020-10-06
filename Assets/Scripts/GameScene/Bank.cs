@@ -20,13 +20,14 @@ public class Bank : Building
     {
         Instance = this;
         LoadPathingNodes();
+        return;
         var allGuards = GetComponentsInChildren<AI>();
 
         foreach (var guard in allGuards)
         {
             _guards.Add(guard);
         }
-
+        
         _nodePaths[0].Guard = _guards[0];
         _nodePaths[1].Guard = _guards[1];
 

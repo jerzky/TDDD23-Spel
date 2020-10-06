@@ -112,4 +112,9 @@ public class Door : Openable
         LoadingCircle.Instance.StartLoading();
         timerActive = true;
     }
+
+    public override string Name()
+    {
+        return "Door";
+    }
 }
