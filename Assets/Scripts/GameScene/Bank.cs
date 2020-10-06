@@ -20,7 +20,6 @@ public class Bank : Building
     {
         Instance = this;
         LoadPathingNodes();
-        return;
         var allGuards = GetComponentsInChildren<AI>();
 
         foreach (var guard in allGuards)

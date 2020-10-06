@@ -37,8 +37,11 @@ public class Guard : AI
 
     public override bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
     {
-        // TODO: SOMETHING NEEDS TO STOP AI FROM RESTARTING INVESTIGATION, BUT SOMEHOW CHANGE PATH SMOOTHLY, 
-        // RIGHT NOW IT STOPS EVERY TIME IT HEARS A BULLET AND RECALCULATES PATH
+        if (isIncapacitated)
+            return false;
+        if (currentState == State.Pursuit)
+            return true;
+
         switch (alertType)
         {
             case AlertType.Guard_CCTV:
@@ -52,7 +55,7 @@ public class Guard : AI
                 break;
         }
 
-        return false;
+        return true;
     }
 
     public override void GetNextActionE()

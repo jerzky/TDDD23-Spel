@@ -70,7 +70,7 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(uint weaponUID)
     {
-        if (AnimationActive || ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon) 
+        if (AnimationActive || (ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon && ItemList.AllItems[weaponUID].ItemType != ItemType.MeleeWeapon)) 
             return;
 
         currentWeapon = weaponUID;
@@ -82,7 +82,7 @@ public class WeaponController : MonoBehaviour
         ItemInfo info = Inventory.Instance.GetCurrentItem();
         if (info == null)
             return;
-        if (info.ItemType == ItemType.Weapon)
+        if (info.ItemType == ItemType.Weapon || info.ItemType == ItemType.MeleeWeapon)
         {
             weaponGO.GetComponent<SpriteRenderer>().enabled = true;
             weaponGO.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(info.IconPath);

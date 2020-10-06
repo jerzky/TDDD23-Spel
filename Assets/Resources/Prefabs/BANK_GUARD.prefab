@@ -203,10 +203,10 @@ GameObject:
   m_Component:
   - component: {fileID: 393767119263237752}
   - component: {fileID: 393767119263237732}
-  - component: {fileID: 393767119263237755}
   - component: {fileID: 393767119263237754}
   - component: {fileID: 393767119263237753}
   - component: {fileID: 9135300835656726867}
+  - component: {fileID: 6262308846238676766}
   m_Layer: 11
   m_Name: BANK_GUARD
   m_TagString: humanoid
@@ -280,23 +280,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &393767119263237755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393767119263237759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c5bbba03e74bbd4488c8dc50c66e160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotateVisionAround: {fileID: 393767117859180879}
-  leftOffsetPoint: {fileID: 393767118984782969}
-  rightOffsetPoint: {fileID: 393767119701039176}
-  inVision: []
-  speedMultiplier: 1
 --- !u!50 &393767119263237754
 Rigidbody2D:
   serializedVersion: 4
@@ -430,6 +413,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6262308846238676766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393767119263237759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d9a930b942ac04aa2e53382a1d3b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateVisionAround: {fileID: 393767117859180879}
+  leftOffsetPoint: {fileID: 393767118984782969}
+  rightOffsetPoint: {fileID: 393767119701039176}
+  inVision: []
+  speedMultiplier: 1
 --- !u!1 &393767119701039183
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,6 @@ public class MAC10 : Gun
         reloadSpeed = 3.2f; // lowest reload time which allows sound to finish = 4.5f
 
         magSize = 30;
-        currentMagSize = 30;
         damage = ItemList.ITEM_AK47.HumanDamage;
         bulletPrefab = Resources.Load<GameObject>("Prefabs/bullet");
         if (bulletPrefab == null)

@@ -8,6 +8,7 @@ public class AIWeaponHandler
     private readonly SimpleTimer _haltTimer = new SimpleTimer(2f);
     private readonly SimpleTimer _shootTimer = new SimpleTimer(0.5f);
     private readonly AI _ai;
+    private readonly int _damage = 50;
 
     public AIWeaponHandler(AudioSource audioSource)
     {
@@ -34,7 +35,7 @@ public class AIWeaponHandler
 
         var finalDirection = playerPos - startPosition;
 
-        Bullet.Generate(20f, 30f, 20, Bullet.ShooterType.AI, finalDirection, startPosition,
+        Bullet.Generate(20f, 30f, _damage, Bullet.ShooterType.AI, finalDirection, startPosition,
             Quaternion.FromToRotation(startPosition, finalDirection));
         _audioSource.Play();
 

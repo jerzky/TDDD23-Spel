@@ -13,7 +13,7 @@ public abstract class Gun : UsableItem
     protected AudioClip shootAudio;
     protected float rateOfFire;
     protected int magSize;
-    protected int currentMagSize;
+    protected int currentMagSize = 0;
     protected float cantShootTimer;
     protected GameObject bulletPrefab;
     protected float reloadSpeed;
@@ -59,6 +59,7 @@ public abstract class Gun : UsableItem
             WeaponController.Instance.AudioSource.Play();
             currentMagSize = (temp >= magSize) ? magSize : (int)temp;
             cantShootTimer = reloadSpeed;
+            Inventory.Instance.UpdateCurrentWeaponMag();
         }
         return 0;
     }
@@ -80,5 +81,11 @@ public abstract class Gun : UsableItem
     public override void Cancel()
     {
         
+    }
+
+    public int Ammo()
+    {
+        Debug.Log(currentMagSize);
+        return currentMagSize;
     }
 }

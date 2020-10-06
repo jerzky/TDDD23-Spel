@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Items
 {
-    public enum ItemType { None, Weapon, Usable };
+    public enum ItemType { None, Weapon, MeleeWeapon, Usable };
     public class ItemInfo
     {
         public uint UID { get; set; }
@@ -55,7 +55,7 @@ namespace Assets.Items
             AverageUseTime = 0f,
             HumanDamage = 25,
             BreakableDamage = 10,
-            ItemType = ItemType.Weapon,
+            ItemType = ItemType.MeleeWeapon,
             InventoryStackSize = 1,
             SellPrice = 50,
             BuyPrice = 200,

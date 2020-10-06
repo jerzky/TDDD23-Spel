@@ -92,7 +92,6 @@ public abstract class AI : MonoBehaviour
     public bool Alert(Sound sound)
     {
         AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
-
         return Alert(sound.origin, AlertType.Sound, alertIntesity);
     }
 

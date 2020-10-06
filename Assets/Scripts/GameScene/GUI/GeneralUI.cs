@@ -21,6 +21,8 @@ public class GeneralUI : MonoBehaviour
     Text infoText;
     [SerializeField]
     Image infoPic;
+    [SerializeField]
+    bool infoTextOn = true;
 
     int health;
     int credits;
@@ -66,8 +68,12 @@ public class GeneralUI : MonoBehaviour
         totalCreditsEarned = 0;
 
         // MESSAGE IS CREATED IN SCENE ALREADY
-        infoTextQueue.Enqueue(new InfoText("", null));
-        infoTextQueue.Peek().isShowing = true;
+        if(infoTextOn)
+        {
+            infoTextQueue.Enqueue(new InfoText("", null));
+            infoTextQueue.Peek().isShowing = true;
+        }
+        
     }
 
     void Update()
@@ -86,12 +92,14 @@ public class GeneralUI : MonoBehaviour
 
     public void TriggerInfoText(string text, Sprite pic)
     {
-        infoTextQueue.Enqueue(new InfoText(text, pic));
+        if(infoTextOn)
+            infoTextQueue.Enqueue(new InfoText(text, pic));
     }
 
     public void CloseInfoBox()
     {
         infoTextGameObject.SetActive(false);
-        infoTextQueue.Dequeue();
+        if(!infoTextOn)
+            infoTextQueue.Dequeue();
     }
 }

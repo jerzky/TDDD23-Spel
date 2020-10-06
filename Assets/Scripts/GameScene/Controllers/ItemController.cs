@@ -1,6 +1,7 @@
 ﻿using Assets.Items;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class ItemController : MonoBehaviour
@@ -34,6 +35,13 @@ public class ItemController : MonoBehaviour
         Items.Add(ItemList.ITEM_AK47.UID, AK47);
         Items.Add(ItemList.ITEM_DRILL.UID, drill);
         Items.Add(ItemList.ITEM_MAC10.UID, mac10);
+    }
+
+    public Gun GetWeapon(uint UID)
+    {
+        if (ItemList.AllItems[UID].ItemType != ItemType.Weapon)
+            return null;
+        return Items[UID] is Gun ? Items[UID] as Gun : null;
     }
     public void Use(ItemInfo item, Vector3 pos)
     {

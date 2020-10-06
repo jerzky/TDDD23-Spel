@@ -68,8 +68,9 @@ public class GameController : MonoBehaviour
                 {
                     if(ai.Type() == AI_Type.Guard)
                     {
-                        GeneralUI.Instance.TriggerInfoText(guardText, ai.GetComponent<SpriteRenderer>().sprite);
-                        InteractableToInfo.Remove(inter.Name());
+                        if(guardText != "")
+                            GeneralUI.Instance.TriggerInfoText(guardText, ai.GetComponent<SpriteRenderer>().sprite);
+                        guardText = "";
                     }
                     else if (ai.Type() == AI_Type.Civilian)
                     {

@@ -46,7 +46,8 @@ public class Inventory
             if(temp.Count + count <= temp.ItemInfo.InventoryStackSize)
             {
                 temp.Count += count;
-                ItemBar.UpdateCount(itemPos, temp.Count);
+                if(!UpdateCurrentWeaponMag())
+                    ItemBar.UpdateCount(itemPos, temp.Count);
                 return true;
             }
             else
@@ -71,6 +72,17 @@ public class Inventory
                     InventoryItemMap.Add(id, new Vector2(x, y));
                     InventoryItemInfo[x, y] = new InventoryItem(item, count);
                     ItemBar.AddItem(new Vector2(x, y), InventoryItemInfo[x, y]);
+                    if (item.ItemType == ItemType.Weapon)
+                    {
+                        Debug.Log("ITEM TYPE IS WEAPON IN ADD");
+                        Gun g = ItemController.Instance.GetWeapon(id);
+                        if (g != null)
+                            ItemBar.UpdateCount(new Vector2(x, y), (uint)g.Ammo());
+                        else
+                            Debug.Log("GUN == NULL");
+                    }
+                    else
+                        Debug.Log("ITEM TYPE IS NOT WEAPON IN ADD");
                     return true;
                 }
             }
@@ -93,7 +105,8 @@ public class Inventory
             else
             {
                 InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count -= count;
-                ItemBar.UpdateCount(itemPos, InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count);
+                if(!UpdateCurrentWeaponMag())
+                    ItemBar.UpdateCount(itemPos, InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count);
             }
             return true;
         }
@@ -199,5 +212,19 @@ public class Inventory
         currentItem = index;
         ItemBar.UpdateCurrentItem(index);
         GameController.Instance.TriggerItemText(GetCurrentItem().UID);
+    }
+
+    public bool UpdateCurrentWeaponMag()
+    {
+        if(GetCurrentItem().ItemType == ItemType.Weapon)
+        {
+            Gun g = ItemController.Instance.GetWeapon(GetCurrentItem().UID);
+            if (g != null)
+            {
+                ItemBar.UpdateCount(new Vector2(currentItem, 0), (uint)g.Ammo());
+                return true;
+            }
+        }
+        return false;
     }
 }
