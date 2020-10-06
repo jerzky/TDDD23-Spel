@@ -2172,7 +2172,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &480203685
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4055,6 +4055,7 @@ MonoBehaviour:
   WeaponEnd: {fileID: 524266239}
   bulletHolder: {fileID: 799403862}
   AudioSource: {fileID: 812849254}
+  cantShootTimer: 0
 --- !u!1 &817231395
 GameObject:
   m_ObjectHideFlags: 0
@@ -7056,7 +7057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8706,7 +8707,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8918,7 +8919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8975,7 +8976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9723,7 +9724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -10214,7 +10215,7 @@ MonoBehaviour:
   infoTextGameObject: {fileID: 480203684}
   infoText: {fileID: 214888934}
   infoPic: {fileID: 1528478106}
-  infoTextOn: 0
+  infoTextOn: 1
 --- !u!114 &1920875593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10566,7 +10567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 393767119263237752, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

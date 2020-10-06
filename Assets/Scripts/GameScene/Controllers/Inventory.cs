@@ -46,7 +46,9 @@ public class Inventory
             if(temp.Count + count <= temp.ItemInfo.InventoryStackSize)
             {
                 temp.Count += count;
-                if(!UpdateCurrentWeaponMag())
+                if(temp.ItemInfo.ItemType == ItemType.Weapon)
+                    ItemBar.UpdateCount(itemPos, 0);
+                else
                     ItemBar.UpdateCount(itemPos, temp.Count);
                 return true;
             }
@@ -72,17 +74,6 @@ public class Inventory
                     InventoryItemMap.Add(id, new Vector2(x, y));
                     InventoryItemInfo[x, y] = new InventoryItem(item, count);
                     ItemBar.AddItem(new Vector2(x, y), InventoryItemInfo[x, y]);
-                    if (item.ItemType == ItemType.Weapon)
-                    {
-                        Debug.Log("ITEM TYPE IS WEAPON IN ADD");
-                        Gun g = ItemController.Instance.GetWeapon(id);
-                        if (g != null)
-                            ItemBar.UpdateCount(new Vector2(x, y), (uint)g.Ammo());
-                        else
-                            Debug.Log("GUN == NULL");
-                    }
-                    else
-                        Debug.Log("ITEM TYPE IS NOT WEAPON IN ADD");
                     return true;
                 }
             }
@@ -105,7 +96,7 @@ public class Inventory
             else
             {
                 InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count -= count;
-                if(!UpdateCurrentWeaponMag())
+                if(!UpdateCurrentWeaponMag() || InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].ItemInfo.UID == ItemList.ITEM_PISTOL_AMMO.UID)
                     ItemBar.UpdateCount(itemPos, InventoryItemInfo[(int)itemPos.x, (int)itemPos.y].Count);
             }
             return true;

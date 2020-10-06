@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using Assets.Items;
 using System.Net.Sockets;
+using UnityEditor.PackageManager;
 
 public class WeaponController : MonoBehaviour
 {
@@ -35,6 +36,11 @@ public class WeaponController : MonoBehaviour
     Vector3 playerOffset = new Vector3(-0.08f, 0.1f, 0f);
     bool WeaponEquiped = true;
     float previousAngle = 0f;
+
+    public float cantShootTimer = 0f;
+
+    private bool changeWeaponSpriteWhenPossible = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +53,15 @@ public class WeaponController : MonoBehaviour
     {
         if (WeaponEquiped)
             HandleWeaponRotation();
+
+        
+        if (cantShootTimer >= 0)
+            cantShootTimer -= Time.deltaTime;
+        if (changeWeaponSpriteWhenPossible && cantShootTimer <= 0)
+        {
+            changeWeaponSpriteWhenPossible = false;
+            ChangeWeaponSprite();
+        }
     }
 
     public void HandleWeaponRotation()
@@ -71,7 +86,7 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(uint weaponUID)
     {
-        if (AnimationActive || (ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon && ItemList.AllItems[weaponUID].ItemType != ItemType.MeleeWeapon)) 
+        if (AnimationActive || cantShootTimer > 0f || (ItemList.AllItems[weaponUID].ItemType != ItemType.Weapon && ItemList.AllItems[weaponUID].ItemType != ItemType.MeleeWeapon)) 
             return;
 
         currentWeapon = weaponUID;
@@ -80,6 +95,13 @@ public class WeaponController : MonoBehaviour
 
     public void ChangeWeaponSprite()
     {
+
+        if(cantShootTimer > 0f)
+        {
+            changeWeaponSpriteWhenPossible = true;
+            return;
+        }
+
         ItemInfo info = Inventory.Instance.GetCurrentItem();
         if (info == null)
             return;

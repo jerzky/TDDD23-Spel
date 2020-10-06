@@ -8,7 +8,7 @@ public class Pursue : Action
     private readonly AIWeaponHandler _weaponHandler;
     private Vector2 _currentFollowPos;
 
-    public Vector2 LastPlayerPos { get; private set; } = Vector2.zero;
+    public Vector2 LastPlayerPos { get; set; } = Vector2.zero;
 
     public Pursue(AI ai, Transform player, FollowPath followPath) : base(ai)
     {

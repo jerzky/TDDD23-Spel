@@ -13,7 +13,6 @@ public class SilencedPistol : Gun
         reloadAudio = Resources.Load<AudioClip>("Sounds/reload");
         shootAudio = Resources.Load<AudioClip>("Sounds/silencedGunfire");
         rateOfFire = 0.35f;
-        cantShootTimer = rateOfFire;
         reloadSpeed = 1f;
 
         magSize = 16;
@@ -26,7 +25,5 @@ public class SilencedPistol : Gun
 
     void Update()
     {
-        if (cantShootTimer >= 0)
-            cantShootTimer -= Time.deltaTime;
     }
 }

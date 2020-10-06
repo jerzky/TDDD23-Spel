@@ -91,7 +91,17 @@ public abstract class AI : MonoBehaviour
 
     public bool Alert(Sound sound)
     {
-        AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
+        AlertIntesity alertIntesity;
+        switch(sound.soundType)
+        {
+            case Sound.SoundType.Weapon:
+                alertIntesity = AlertIntesity.ConfirmedHostile;
+                break;
+            default:
+                alertIntesity = AlertIntesity.NonHostile;
+                break;
+
+        }
         return Alert(sound.origin, AlertType.Sound, alertIntesity);
     }
 
@@ -130,7 +140,8 @@ public abstract class AI : MonoBehaviour
     {
         if(CompareTag(col.tag))
         {
-            justEnteredVision.Add(col.gameObject.name, 0f);
+            if(!inVision.Contains(col) && !justEnteredVision.ContainsKey(col.gameObject.name))
+                justEnteredVision.Add(col.gameObject.name, 0f);
         }
         if (col.CompareTag("Player"))
         {

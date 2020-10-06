@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Guard : AI
 {
+    public Pursue pursue;
     // Start is called before the first frame update
     void Start()
     {
         followPath = new FollowPath(this);
         actions.Add(ActionE.FollowPath, followPath);
         actions.Add(ActionE.LookAround, new LookAround(this));
-        actions.Add(ActionE.Pursue, new Pursue(this, FindObjectOfType<PlayerController>().transform, followPath));
+        pursue = new Pursue(this, FindObjectOfType<PlayerController>().transform, followPath);
+        actions.Add(ActionE.Pursue, pursue);
         currentState = State.FollowRoute;
         currentAction = ActionE.FollowPath;
         cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
@@ -42,16 +44,18 @@ public class Guard : AI
         if (currentState == State.Pursuit)
             return true;
 
-        switch (alertType)
+        switch (alertIntesity)
         {
-            case AlertType.Guard_CCTV:
-            case AlertType.Guard_Radio:
+            case AlertIntesity.NonHostile:
                 StartInvestigate(position, alertType);
                 break;
-            case AlertType.Sound:
+            case AlertIntesity.Nonexistant:
                 StartInvestigate(position, alertType);
-                // we need to check the current location, if we are in a common space, only confirmed hostile and maybe construction would trigger reaction
-                // if we care in a staff only space, investigate it no matter what.
+                break;
+            case AlertIntesity.ConfirmedHostile:
+                pursue.LastPlayerPos = position;
+                currentState = State.Pursuit;
+                currentAction = ActionE.Pursue;
                 break;
         }
 

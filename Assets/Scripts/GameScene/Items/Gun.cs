@@ -14,26 +14,25 @@ public abstract class Gun : UsableItem
     protected float rateOfFire;
     protected int magSize;
     protected int currentMagSize = 0;
-    protected float cantShootTimer;
     protected GameObject bulletPrefab;
     protected float reloadSpeed;
     protected int damage;
 
     public override uint Use(ItemInfo item, Vector3 pos)
     {
-        if (cantShootTimer > 0)
+        if (WeaponController.Instance.cantShootTimer > 0)
             return 0;
         uint temp = OutOfAmmo();
         if (temp == 0)
         {
             Shoot(item.SoundRadius);
-            cantShootTimer = rateOfFire;
+            WeaponController.Instance.cantShootTimer = rateOfFire;
             WeaponController.Instance.AudioSource.clip = shootAudio;
             WeaponController.Instance.AudioSource.Play();
         }
         else if (temp == 1)
         {
-            Reload();
+           // Reload();
         }
         return 0;
     }
@@ -47,6 +46,9 @@ public abstract class Gun : UsableItem
     }
     public uint Reload()
     {
+        if (WeaponController.Instance.cantShootTimer > 0f)
+            return 0;
+
         uint temp = Inventory.Instance.GetItemCount(ammoUID);
         if (temp <= 0)
         {
@@ -57,25 +59,31 @@ public abstract class Gun : UsableItem
         {
             WeaponController.Instance.AudioSource.clip = reloadAudio;
             WeaponController.Instance.AudioSource.Play();
-            currentMagSize = (temp >= magSize) ? magSize : (int)temp;
-            cantShootTimer = reloadSpeed;
+            if(currentMagSize < 0)
+                currentMagSize = 0;
+            int neededBullets = magSize - currentMagSize;
+            currentMagSize += (temp >= neededBullets) ? neededBullets : (int)temp;
+            Inventory.Instance.RemoveItem(ammoUID, (uint)neededBullets);
+            WeaponController.Instance.cantShootTimer = reloadSpeed;
             Inventory.Instance.UpdateCurrentWeaponMag();
         }
         return 0;
     }
     public uint OutOfAmmo()
     {
-        if (Inventory.Instance.GetItemCount(ammoUID) > 0)
+        if (currentMagSize-- <= 0)
         {
-            if (currentMagSize-- <= 0)
-                return 1;
-            Inventory.Instance.RemoveItem(ammoUID, 1);
-            return 0;
+            if (Inventory.Instance.GetItemCount(ammoUID) <= 0)
+            {
+                WeaponController.Instance.AudioSource.clip = noAmmoAudio;
+                WeaponController.Instance.AudioSource.Play();
+                return 2;
+            }
+            
+            return 1;
         }
-        
-        WeaponController.Instance.AudioSource.clip = noAmmoAudio;
-        WeaponController.Instance.AudioSource.Play();
-        return 2;
+        Inventory.Instance.UpdateCurrentWeaponMag();
+        return 0;
     }
 
     public override void Cancel()

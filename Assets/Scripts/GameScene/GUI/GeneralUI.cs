@@ -72,6 +72,7 @@ public class GeneralUI : MonoBehaviour
         {
             infoTextQueue.Enqueue(new InfoText("", null));
             infoTextQueue.Peek().isShowing = true;
+            infoTextGameObject.SetActive(true);
         }
         
     }
@@ -99,7 +100,7 @@ public class GeneralUI : MonoBehaviour
     public void CloseInfoBox()
     {
         infoTextGameObject.SetActive(false);
-        if(!infoTextOn)
+        if(infoTextOn)
             infoTextQueue.Dequeue();
     }
 }

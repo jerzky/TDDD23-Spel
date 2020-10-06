@@ -13,7 +13,6 @@ public class MAC10 : Gun
         reloadAudio = Resources.Load<AudioClip>("Sounds/ak_reload");
         shootAudio = Resources.Load<AudioClip>("Sounds/mac10_fire");
         rateOfFire = (60f/1200f);
-        cantShootTimer = rateOfFire;
         reloadSpeed = 3.2f; // lowest reload time which allows sound to finish = 4.5f
 
         magSize = 30;
@@ -25,7 +24,6 @@ public class MAC10 : Gun
 
     void Update()
     {
-        if (cantShootTimer >= 0)
-            cantShootTimer -= Time.deltaTime;
+        
     }
 }

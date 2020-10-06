@@ -87,7 +87,7 @@ public class PlayerMotor : MonoBehaviour
     public void TakeDown(Vector2 lookDir)
     {
         RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + lookDir * 0.5f, lookDir, 0.5f);
-        if(hit.collider.CompareTag("humanoid"))
+        if(hit.collider != null && hit.collider.CompareTag("humanoid"))
         {
             hit.collider.GetComponent<AI>().Incapacitate();
         }
