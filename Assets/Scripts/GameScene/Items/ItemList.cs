@@ -88,7 +88,7 @@ namespace Assets.Items
             IconIndex = 0,
             AverageUseTime = 0f,
             ItemType = ItemType.None,
-            InventoryStackSize = 64,
+            InventoryStackSize = 640,
             SellPrice = 100,
             BuyPrice = 1000,
             PurchaseAmount = 16
@@ -203,6 +203,24 @@ namespace Assets.Items
             PurchaseAmount = 1
         };
 
+        public static readonly ItemInfo ITEM_MAC10 = new ItemInfo
+        {
+            UID = 12,
+            Name = "MAC-10",
+            IconPath = "NoSpriteAtlasTextures/mac_10",
+            IconIndex = 0,
+            AverageUseTime = 0f,
+            HumanDamage = 75,
+            BreakableDamage = 0,
+            ItemType = ItemType.Weapon,
+            InventoryStackSize = 1,
+            SellPrice = 1000,
+            BuyPrice = 6000,
+            PurchaseAmount = 1,
+            SoundRadius = 80f
+        };
+
+
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
             {
@@ -237,7 +255,11 @@ namespace Assets.Items
             },
             {
                 ITEM_LOCKPICK5.UID, ITEM_LOCKPICK5
+            },
+            {
+                ITEM_MAC10.UID, ITEM_MAC10
             }
+
         };
     }
 

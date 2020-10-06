@@ -33,12 +33,8 @@ public abstract class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float moveSpeed { 
-        get
-        {
-            return currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
-        }
-    }
+    public float moveSpeed => currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
+
     public const float pursueSpeed = 5f;
     public const float patrolSpeed = 3f;
     public float speedMultiplier = 1f;
@@ -96,8 +92,8 @@ public abstract class AI : MonoBehaviour
     public bool Alert(Sound sound)
     {
         AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
-        Alert(sound.origin, AlertType.Sound, alertIntesity);
-        return true;
+
+        return Alert(sound.origin, AlertType.Sound, alertIntesity);
     }
 
     public abstract bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity);

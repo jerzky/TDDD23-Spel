@@ -26,12 +26,18 @@ public class PlayerMotor : MonoBehaviour
         if (!Inventory.AddItem(ItemList.ITEM_SLEDGEHAMMER.UID, 1))
             Debug.Log("Failed to add start item");
 
-        if (!Inventory.AddItem(ItemList.ITEM_PISTOL_AMMO.UID, 64))
+        if (!Inventory.AddItem(ItemList.ITEM_PISTOL_AMMO.UID, ItemList.ITEM_PISTOL_AMMO.InventoryStackSize))
             Debug.Log("Failed to add start item");
 
         if (!Inventory.AddItem(ItemList.ITEM_EXPLOSIVE_TIMED.UID, 64))
             Debug.Log("Failed to add start item");
 
+
+        if (!Inventory.AddItem(ItemList.ITEM_AK47.UID, 1))
+            Debug.Log("Failed to add start item");
+
+        if (!Inventory.AddItem(ItemList.ITEM_MAC10.UID, 1))
+            Debug.Log("Failed to add start item");
         Inventory.RemoveItem(ItemList.ITEM_LOCKPICK.UID, 1);
 
         WeaponController.Instance.ChangeWeaponSprite();
