@@ -32,12 +32,8 @@ public class AI : MonoBehaviour
     public FollowPath followPath;
 
     // Move Variables
-    public float moveSpeed { 
-        get
-        {
-            return currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
-        }
-    }
+    public float moveSpeed => currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
+
     public const float pursueSpeed = 5f;
     public const float patrolSpeed = 3f;
     public float speedMultiplier = 1f;
@@ -97,16 +93,23 @@ public class AI : MonoBehaviour
     {
         AlertIntesity alertIntesity = AlertIntesity.Nonexistant;
 
-        Alert(sound.origin, AlertType.Sound, alertIntesity);
-        return true;
+        return Alert(sound.origin, AlertType.Sound, alertIntesity);
     }
 
 
     public bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity)
     {
+        if (isIncapacitated)
+            return false;
+
+        //Return if already chasing
+        if (currentState == State.Pursuit)
+            return true;
+
+      
         // TODO: SOMETHING NEEDS TO STOP AI FROM RESTARTING INVESTIGATION, BUT SOMEHOW CHANGE PATH SMOOTHLY, 
         // RIGHT NOW IT STOPS EVERY TIME IT HEARS A BULLET AND RECALCULATES PATH
-        switch(alertType)
+        switch (alertType)
         {
             case AlertType.Guard_CCTV:
             case AlertType.Guard_Radio:
@@ -119,7 +122,7 @@ public class AI : MonoBehaviour
                 break;
         }
 
-        return false;
+        return true;
     }
 
     public void GetNextActionE()
@@ -144,6 +147,7 @@ public class AI : MonoBehaviour
         switch(currentAction)
         {
             case ActionE.Pursue:
+
                 // Completely Lost Player
                 // TODO: Search Action Here maybe?
                 break;
@@ -192,6 +196,7 @@ public class AI : MonoBehaviour
 
     void StartInvestigate(Vector2 position, AlertType alertType)
     {
+       
         currentState = State.Investigate;
         SetPathToPosition(position);
         currentAction = ActionE.FollowPath;

@@ -40,8 +40,9 @@ public abstract class Gun : UsableItem
     public uint Shoot(float soundRadius)
     {
         SoundController.Instance.GenerateSound(new Sound(WeaponController.Instance.WeaponEnd.transform.position, soundRadius, Sound.SoundType.Weapon));
-        GameObject bullet = Instantiate(bulletPrefab, WeaponController.Instance.WeaponEnd.transform.position, WeaponController.Instance.WeaponEnd.transform.rotation, WeaponController.Instance.bulletHolder.transform);
-        bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance, damage);
+        var bullet = Instantiate(bulletPrefab, WeaponController.Instance.WeaponEnd.transform.position, WeaponController.Instance.WeaponEnd.transform.rotation, WeaponController.Instance.bulletHolder.transform);
+        var direction = WeaponController.Instance.WeaponEnd.transform.position - PlayerController.Instance.transform.position;
+        bullet.GetComponent<Bullet>().SetBulletInfo(muzzleVelocity, bulletMaxTravelDistance, damage, direction, Bullet.ShooterType.Player);
         return 1;
     }
     public uint Reload()
