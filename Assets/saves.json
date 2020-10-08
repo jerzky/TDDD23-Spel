@@ -1,40 +1,5 @@
 {
-  "1": {
-    "Items": [
-      {
-        "Item1": 3,
-        "Item2": 1
-      },
-      {
-        "Item1": 1,
-        "Item2": 2
-      },
-      {
-        "Item1": 2,
-        "Item2": 1
-      },
-      {
-        "Item1": 4,
-        "Item2": 640
-      },
-      {
-        "Item1": 6,
-        "Item2": 64
-      },
-      {
-        "Item1": 8,
-        "Item2": 1
-      },
-      {
-        "Item1": 12,
-        "Item2": 1
-      }
-    ],
-    "Name": "10/8/2020 5:11:31 PM",
-    "Credits": 1000,
-    "Kills": 0
-  },
-  "7": {
+  "0": {
     "Items": [
       {
         "Item1": 1,
@@ -61,7 +26,9 @@
         "Item2": 1
       }
     ],
-    "Name": "10/8/2020 4:35:31 PM",
+    "ItemToInfo": {},
+    "NearbyToInfo": {},
+    "Name": "10/8/2020 7:33:37 PM",
     "Credits": 1500,
     "Kills": 0
   }

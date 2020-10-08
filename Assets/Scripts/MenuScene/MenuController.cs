@@ -2,52 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Experimental.TerrainAPI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public abstract class MenuScreen
-{
-    protected Vector2 limit;
-    public MenuScreen()
-    {
 
-    }
 
-    protected bool WithinLimit(Vector2 pos)
-    {
-        return Mathf.Clamp(pos.x, 0f, limit.x) == pos.x && Mathf.Clamp(pos.y, 0f, limit.y) == pos.y;
-    }
-
-    public abstract void ActivateMenuObject(Vector2 pos);
-    public abstract void DeactivateMenuObject(Vector2 pos);
-}
-
-public class MainMenu : MenuScreen
-{
-    Image[] menuButtons;
-    public MainMenu(GameController buttonHolder)
-    {
-        limit.x = 0f;
-        limit.y = 3f;
-
-        menuButtons = buttonHolder.GetComponentsInChildren<Image>();
-        for (int i = 0; i < menuButtons.Length; i++)
-        {
-            menuButtons[i].color = Color.blue;
-        }
-        menuButtons[0].color = Color.magenta;
-    }
-    public override void ActivateMenuObject(Vector2 pos)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void DeactivateMenuObject(Vector2 pos)
-    {
-        throw new System.NotImplementedException();
-    }
-}
 
 public class MenuController : MonoBehaviour
 {
@@ -55,17 +16,21 @@ public class MenuController : MonoBehaviour
     [SerializeField]
     Image background;
     [SerializeField]
-    GameObject buttonHolder;
-    
+    GameObject mainMenuButtonHolder;
+    [SerializeField]
+    GameObject controlEditHolder;
+    [SerializeField]
+    GameObject loadSaveHolder;
+    [SerializeField]
+    GameObject controlEditorTextPrefab;
+    [SerializeField]
+    GameObject loadGamesTextPrefab;
+
     public BackgroundController bc;
-
-    Image[] menuButtons;
-    bool startGameAnimationActive = false;
-
-    int currentMenuButton = 0;
-
-    bool menuIsOpen = true;
-
+    public bool startGameAnimationActive = false;
+    Dictionary<string, MenuScreen> menuScreens = new Dictionary<string, MenuScreen>();
+    string currentMenu = "MainMenu";
+    string sceneToBeLoaded = "GameScene";
     
 
     // Start is called before the first frame update
@@ -73,14 +38,10 @@ public class MenuController : MonoBehaviour
     {
         Instance = this;
         bc = new BackgroundController(background, Resources.LoadAll<Sprite>("NoSpriteAtlasTextures/bg"));
-        menuButtons = buttonHolder.GetComponentsInChildren<Image>();
-
-        for (int i = 0; i < menuButtons.Length; i++)
-        {
-            menuButtons[i].color = Color.blue;
-        }
-        menuButtons[0].color = Color.magenta;
-        
+        menuScreens.Add("MainMenu", new MainMenu(mainMenuButtonHolder, "MainMenu"));
+        menuScreens.Add("ControlEditor", new ControlMenu(controlEditHolder, "ControlEditor", controlEditorTextPrefab));
+        menuScreens.Add("LoadGamesMenu", new LoadGamesMenu(loadSaveHolder, "LoadGamesMenu", loadGamesTextPrefab));
+        menuScreens["MainMenu"].Activate();
     }
 
     // Update is called once per frame
@@ -88,67 +49,44 @@ public class MenuController : MonoBehaviour
     {
         if (startGameAnimationActive)
             if(bc.Animate())
-                SceneManager.LoadScene("GameScene");
+                SceneManager.LoadScene(sceneToBeLoaded);
 
-        if (!menuIsOpen)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.S))
-            UpdateCurrentMenuButton(currentMenuButton + 1);
-        else if (Input.GetKeyDown(KeyCode.W))
-            UpdateCurrentMenuButton(currentMenuButton - 1);
-
-        if (Input.GetKeyDown(KeyCode.Return))
-            ClickButton(currentMenuButton);
-    }
-
-    void UpdateCurrentMenuButton(int newButton)
-    {
-        if (newButton < 0 || newButton >= menuButtons.Length) return;
-        menuButtons[currentMenuButton].color = Color.blue;
-        currentMenuButton = newButton;
-        menuButtons[currentMenuButton].color = Color.magenta;
-    }
-
-    void ClickButton(int buttonIndex)
-    {
-        switch(buttonIndex)
+        if (menuScreens[currentMenu].SkipFrame)
         {
-            case 0:
-                buttonHolder.SetActive(false);
-                startGameAnimationActive = true;
-                break;
-            case 1:
-                DeActivate();
-                ControlEditor.Instance.Activate();
-                break;
-            case 2:
-                DeActivate();
-                SavedGamesHandler.Instance.Activate();
-                break;
-            case 3:
-                #if UNITY_EDITOR
-                if (EditorApplication.isPlaying)
-                {
-                    UnityEditor.EditorApplication.isPlaying = false;
-                }
-                #endif
-                break;
-            
+            menuScreens[currentMenu].SkipFrame = false;
+            return;
         }
+
+        if (Input.GetKeyDown(KeyCode.W))
+            menuScreens[currentMenu].Move(Vector2.up);
+        else if (Input.GetKeyDown(KeyCode.S))
+            menuScreens[currentMenu].Move(Vector2.down);
+        else if(Input.GetKeyDown(KeyCode.A))
+            menuScreens[currentMenu].Move(Vector2.right);
+        else if (Input.GetKeyDown(KeyCode.D))
+            menuScreens[currentMenu].Move(Vector2.left);
+
+        foreach (var v in menuScreens[currentMenu].MonitoredKeys)
+            if (Input.GetKeyDown(v))
+                menuScreens[currentMenu].KeyPressed(v);
     }
 
-    public void Activate()
+    public void ChangeMenuScreen(string name)
     {
-        menuIsOpen = true;
-        buttonHolder.SetActive(true);
+
+        menuScreens[currentMenu].DeActivate();
+        currentMenu = name;
+        menuScreens[currentMenu].Activate();
     }
 
-    public void DeActivate()
+    public void StartGameAnimation(string sceneName)
     {
-        menuIsOpen = false;
-        buttonHolder.SetActive(false);
+        startGameAnimationActive = true;
+        sceneToBeLoaded = sceneName;
     }
 
-
+    void OnGUI()
+    {
+        menuScreens[currentMenu].OnGUI();
+    }
 }
