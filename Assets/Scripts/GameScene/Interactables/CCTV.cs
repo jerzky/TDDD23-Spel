@@ -18,15 +18,13 @@ public class CCTV : Interactable
     private const float RotationSpeed = 10f;
     private Vector3 _originalRotation;
     private Vector3 _currentAngle = Vector3.zero;
-    public enum LocationType { BANK, STORE };
-    LocationType _locationType;
-
-    private float _timer = 0f;
+    public enum LocationType { Common, EmployeeOnly, Hostile };
     [SerializeField]
-    float _playerNoticedDelay = 1f;
+    LocationType _locationType = LocationType.Common;
+
 
     bool _timerActive = false;
-
+    private SimpleTimer _timer = new SimpleTimer(0.5f);
 
     [SerializeField]
     bool _isInEmployeeAreaOnly = false;
@@ -46,7 +44,6 @@ public class CCTV : Interactable
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[2];
         SetCameraLookDir(new Vector3(0f, 0f, -90f));
         _originalRotation = transform.rotation.eulerAngles;
-        _locationType = LocationType.BANK;
     }
 
     private bool IsMonitored
@@ -66,16 +63,10 @@ public class CCTV : Interactable
 
 
         RotateCamera();
+
         if (_timerActive)
-            _timer += Time.deltaTime;
-        else if (_timer > 0)
-            _timer -= Time.deltaTime;
-        else
-        {
-            // player hostile and noticed
-            HostilePlayerNoticed();
-            _timer = 0f;
-        }
+            if (_timer.TickAndReset())
+                HostilePlayerNoticed(AlertIntensity.ConfirmedHostile);
 
         if (IsMonitored != _building.IsSomeoneMonitoringCCTV)
             IsMonitored = _building.IsSomeoneMonitoringCCTV;
@@ -122,16 +113,20 @@ public class CCTV : Interactable
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
         // Check if player is hostile
         // this bool should be kept in some kind of controller
-        var playerHasBeenSeenAsHostileBefore = false;
-        if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon)
+
+        if (PlayerController.Instance.IsHostile || _locationType == LocationType.Hostile)
         {
-            if(_building.IsSomeoneMonitoringCCTV)
-                _building.OnAlert(AlertType.Guard_CCTV, col.transform.position);
+            // if the player is hostile in camera vision or if the location type is hostile (maybe inside vault?)
+            // report player instantly
+            if (_building.IsSomeoneMonitoringCCTV)
+                HostilePlayerNoticed(AlertIntensity.ConfirmedHostile);
         }
-        else if (playerHasBeenSeenAsHostileBefore)
+        else if (/*_building.PlayerReportedAsHostile ||*/ _locationType == LocationType.EmployeeOnly)
         {
-            // start timer
-            _timerActive = true;
+            // if player was previously reported at the same building or if the cctv is in a employee only location
+            // start the timer so the player can be noticed after noticeDelay seconds
+            if (_building.IsSomeoneMonitoringCCTV)
+                _timerActive = true;
         }
     }
 
@@ -148,19 +143,13 @@ public class CCTV : Interactable
         if (!col.CompareTag("Player")) 
             return;
         _timerActive = false;
+        _timer.Reset();
         IsMonitored = _building.IsSomeoneMonitoringCCTV;
     }
 
-    void HostilePlayerNoticed()
+    void HostilePlayerNoticed(AlertIntensity alertIntensity)
     {
-        switch (_locationType)
-        {
-            case LocationType.BANK:
-                // Alarm guards
-                // Call Police
-                // Set off alarm
-                break;
-        }
+        _building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_CCTV, alertIntensity);
     }
 
     public override string Name()

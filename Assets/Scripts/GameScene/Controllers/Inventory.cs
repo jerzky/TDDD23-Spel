@@ -1,4 +1,5 @@
 ﻿﻿using Assets.Items;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -35,6 +36,17 @@ public class Inventory
         ItemBar = bar;
     }
 
+    public List<Tuple<uint, uint>> InventoryToList()
+    {
+        List<Tuple<uint, uint>> result = new List<Tuple<uint, uint>>();
+        foreach (var v in InventoryItemInfo)
+        {
+            if(v != null)
+                result.Add(new Tuple<uint, uint>(v.ItemInfo.UID, v.Count));
+        }
+        return result;
+    }
+
 
 
     public bool AddItem(uint id, uint count)
@@ -65,9 +77,9 @@ public class Inventory
             return false;
         }
 
-        for (int y = 0; y < inventorySizeX; y++)
+        for (int y = 0; y < inventorySizeY; y++)
         {
-            for (int x = 0; x < inventorySizeY; x++)
+            for (int x = 0; x < inventorySizeX; x++)
             {
                 if (InventoryItemInfo[x, y] == null)
                 {
@@ -202,12 +214,11 @@ public class Inventory
     {
         currentItem = index;
         ItemBar.UpdateCurrentItem(index);
-        GameController.Instance.TriggerItemText(GetCurrentItem().UID);
     }
 
     public bool UpdateCurrentWeaponMag()
     {
-        if(GetCurrentItem().ItemType == ItemType.Weapon)
+        if(GetCurrentItem() != null && GetCurrentItem().ItemType == ItemType.Weapon)
         {
             Gun g = ItemController.Instance.GetWeapon(GetCurrentItem().UID);
             if (g != null)

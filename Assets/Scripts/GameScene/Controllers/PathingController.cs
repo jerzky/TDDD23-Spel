@@ -254,9 +254,26 @@ public class PathingController : MonoBehaviour
             
     }
 
+    Vector2 GetClearNodeNeighbour(Vector2 pos)
+    {
+        Vector2 notBlocked = new Vector2(-1, -1);
+        foreach(var v in neighbours)
+        {
+            Vector2 current = pos + v;
+            if (grid[(int)Mathf.Round(current.x), (int)Mathf.Round(current.y)] == NodeType.Clear)
+                return current;
+            if (grid[(int)Mathf.Round(current.x), (int)Mathf.Round(current.y)] != NodeType.Blocked)
+                notBlocked = current;
+        }
+
+        return notBlocked;
+    }
+
     public Node FindPathExcluding(Vector2 s, Vector2 g, List<Vector2> excluding)
     {
         if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
+            g = GetClearNodeNeighbour(g);
+        if (g == new Vector2(-1, -1)) // no neighbour
             return null;
 
         NodeType[,] gridCopy = (NodeType[,])grid.Clone();
@@ -270,10 +287,11 @@ public class PathingController : MonoBehaviour
     public bool FindPath(Vector2 s, Vector2 g, AI ai)
     {
         if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
+            g = GetClearNodeNeighbour(g);
+        if (g == new Vector2(-1, -1)) // no neighbour
             return false;
 
-
-        foreach(var v in waitingQueue)
+        foreach (var v in waitingQueue)
         {
             if (v.AI.name == ai.name)
                 return true;

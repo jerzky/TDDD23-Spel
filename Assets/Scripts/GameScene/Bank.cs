@@ -97,28 +97,27 @@ public class Bank : Building
 
 
 
-    public override void OnAlert(AlertType alertType, Vector2 pos)
+    public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
     {
-        Debug.Log("BANK CCTV OnAlert");
         switch(alertType)
         {
             case AlertType.Guard_CCTV:
-                SendGuardToInvestigate(pos);
+                SendGuardToInvestigate(pos, alertIntensity);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(alertType), alertType, null);
         }
 
 
-        base.OnAlert(alertType, pos);
+        base.OnAlert(pos, alertType, alertIntensity);
     }
 
-    private void SendGuardToInvestigate(Vector2 pos)
+    private void SendGuardToInvestigate(Vector2 pos, AlertIntensity alertIntensity)
     {
         foreach (var guard in _guards.Where(guard => guard != null))
         {
             //Alerts guards d
-            guard.Alert(pos, AlertType.Guard_CCTV, AlertIntesity.NonHostile);
+            guard.Alert(pos, alertIntensity);
         }
     }
 

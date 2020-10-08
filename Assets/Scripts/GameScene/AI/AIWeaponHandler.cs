@@ -4,8 +4,7 @@ public class AIWeaponHandler
 {
     private readonly AudioSource _audioSource;
     private const float MaxRange = 20f;
-    private const float DistanceFromAi = 1.5f;
-    private readonly SimpleTimer _haltTimer = new SimpleTimer(2f);
+    private const float DistanceFromAi = 0.5f;
     private readonly SimpleTimer _shootTimer = new SimpleTimer(0.5f);
     private readonly AI _ai;
     private readonly int _damage = 50;
@@ -15,33 +14,31 @@ public class AIWeaponHandler
         _audioSource = audioSource;
     }
     /// <summary>This method will return true if does not stand still or if it shoots </summary>
-    public bool Shoot(Vector2 aiPosition, Vector2 playerPos, bool needsToHalt = true)
-    {
-        if (!_haltTimer.Tick() && needsToHalt)
-        {
-            _shootTimer.Reset();
-            return true;
-        }
-
-        
+    public bool Shoot(Vector2 aiPosition, Vector2 playerPos)
+    { 
 
         if (!_shootTimer.Tick()) 
             return false;
        
-        if (!needsToHalt) _shootTimer.Reset();
+        _shootTimer.Reset();
         var direction = playerPos - aiPosition;
 
         var startPosition = aiPosition + direction.normalized * DistanceFromAi;
 
         var finalDirection = playerPos - startPosition;
 
-        Bullet.Generate(20f, 30f, _damage, Bullet.ShooterType.AI, finalDirection, startPosition,
-            Quaternion.FromToRotation(startPosition, finalDirection));
-        _audioSource.Play();
+        float xDis = playerPos.x - startPosition.x;
+        float yDis = playerPos.y - startPosition.y;
+        float angle = -Mathf.Atan2(xDis, yDis) * 180 / Mathf.PI;
 
-        _haltTimer.Reset();
-      
-        
-        return false;
+        Bullet.Generate(20f, 30f, _damage, Bullet.ShooterType.AI, finalDirection, startPosition,
+            Quaternion.Euler(0f, 0f, angle));
+        _audioSource.Play(); 
+        return true;
+    }
+
+    public void ResetShootTimer()
+    {
+        _shootTimer.Reset();
     }
 }

@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO.MemoryMappedFiles;
-using System.Net.Sockets;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Transactions;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngineInternal;
+using UnityEngine.XR.WSA.Input;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue };
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode };
 public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit };
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
-public enum AlertIntesity { Nonexistant, NonHostile, ConfirmedHostile }
+public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
 
 public abstract class AI : MonoBehaviour
 {
@@ -35,52 +29,56 @@ public abstract class AI : MonoBehaviour
     // Move Variables
     public float moveSpeed => currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
 
-    public const float pursueSpeed = 5f;
-    public const float patrolSpeed = 3f;
+    public const float pursueSpeed = 3f;
+    public const float patrolSpeed = 2f;
     public float speedMultiplier = 1f;
 
 
     // Health
     protected int health = 100;
+    SimpleTimer incapacitateTimer = new SimpleTimer(20);
     protected bool isIncapacitated = false;
+    protected bool isZipTied = false;
     protected GameObject cuffs;
 
 
     // StateMachineVariables
     protected State idleState = State.FollowRoute;
+    protected ActionE idleAction = ActionE.FollowPath;
     protected State currentState = State.None;
     protected ActionE currentAction = ActionE.None;
-    protected AlertType currentAlertIntesity = AlertType.None;
-    protected AlertType currentAlertType = AlertType.None;
+    protected AlertIntensity currentAlertIntensity = AlertIntensity.Nonexistant;
     
 
     // Follow Route variables
     public List<Node> path = new List<Node>();
-    protected NodePath currentRoute;
-
+    public NodePath currentRoute { get; private set; }
     AI_Type ai_type = AI_Type.Guard;
-    // Start is called before the first frame update
-    private void Start()
-    {
 
+    protected virtual void Start()
+    {
+        cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
+        cuffs.SetActive(false);
+        followPath = new FollowPath(this);
+        actions.Add(ActionE.FollowPath, followPath);
+        actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
     }
 
-    private void Update()
-    {
-       
-    }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
+        if (!isZipTied && incapacitateTimer.TickFixed())
+            isIncapacitated = false;
         // Reset variables that need to be reset every frame for functionality.
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (isIncapacitated)
             return;
 
-        if (actions[currentAction].PerformAction())
-            GetNextActionE();
+        uint actionReturnType = actions[currentAction].PerformAction();
+        if (actionReturnType != 0)
+        {
+            GetNextAction(actionReturnType);
+        }
 
     }
 
@@ -91,29 +89,39 @@ public abstract class AI : MonoBehaviour
 
     public bool Alert(Sound sound)
     {
-        AlertIntesity alertIntesity;
-        switch(sound.soundType)
+        switch (sound.soundType)
         {
             case Sound.SoundType.Weapon:
-                alertIntesity = AlertIntesity.ConfirmedHostile;
+                currentAlertIntensity = AlertIntensity.ConfirmedHostile;
+                break;
+            case Sound.SoundType.Construction:
+                currentAlertIntensity = AlertIntensity.NonHostile;
                 break;
             default:
-                alertIntesity = AlertIntesity.NonHostile;
+                currentAlertIntensity = AlertIntensity.Nonexistant;
                 break;
-
         }
-        return Alert(sound.origin, AlertType.Sound, alertIntesity);
+        return Alert(sound.origin, currentAlertIntensity);
     }
 
-    public abstract bool Alert(Vector2 position, AlertType alertType, AlertIntesity alertIntesity);
+    public virtual bool Alert(Vector2 position, AlertIntensity alertIntesity) { Debug.LogError("IMPLEMENT ALERT IN ALL CLASSES DERIVED FROM AI"); return true;  }
 
-
-    public abstract void GetNextActionE();
+    public virtual void GetNextAction(uint lastActionReturnValue)
+    {
+        currentAction = actions[currentAction].GetNextAction(currentState, lastActionReturnValue, currentAlertIntensity);
+        if (currentAction == ActionE.None)
+            CancelCurrentState();
+    }
 
     public void SetPathToPosition(Vector2 pos)
     {
         path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+    }
+
+    public void GoToNextRouteNode()
+    {
+        SetPathToPosition(currentRoute.NextNode.Position);
     }
 
     public void SetRoute(NodePath route)
@@ -126,14 +134,9 @@ public abstract class AI : MonoBehaviour
 
     protected void CancelCurrentState()
     {
-        CancelCurrentActionE();
         currentState = idleState;
-        GetNextActionE();
-    }
-
-    protected void CancelCurrentActionE()
-    {
-        currentAction = ActionE.None;
+        currentAction = idleAction;
+        currentAlertIntensity = AlertIntensity.Nonexistant;
     }
 
     public void OnVisionEnter(Collider2D col)
@@ -180,6 +183,12 @@ public abstract class AI : MonoBehaviour
             DieAnimation(dir);
             GeneralUI.Instance.Kills++;
             Destroy(gameObject);
+            return;
+        }
+
+        if(currentState != State.Pursuit)
+        {
+            Alert(PlayerController.Instance.transform.position, AlertIntensity.ConfirmedHostile);
         }
     }
 
@@ -196,6 +205,17 @@ public abstract class AI : MonoBehaviour
             return;
         }
         isIncapacitated = true;
+        incapacitateTimer.ResetTo(incapacitateTimer.Max * UnityEngine.Random.Range(0.5f, 1.5f));
+    }
+
+    public void GetZipTied()
+    {
+        if (!isIncapacitated)
+        {
+            IncapacitateFailedReaction();
+            return;
+        }
+        isZipTied = true;
         cuffs.SetActive(true);
     }
 

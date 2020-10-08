@@ -1,7 +1,6 @@
 ﻿using Assets.Items;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class ItemController : MonoBehaviour
@@ -25,6 +24,7 @@ public class ItemController : MonoBehaviour
         var drill = temp.AddComponent<Drill_Item>();
         temp.AddComponent<AudioSource>();
         var mac10 = temp.AddComponent<MAC10>();
+        var zipties = temp.AddComponent<Zipties>();
 
         Items.Add(ItemList.ITEM_EXPLOSIVE_REMOTE.UID, exp);
         Items.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID, exp);
@@ -35,6 +35,7 @@ public class ItemController : MonoBehaviour
         Items.Add(ItemList.ITEM_AK47.UID, AK47);
         Items.Add(ItemList.ITEM_DRILL.UID, drill);
         Items.Add(ItemList.ITEM_MAC10.UID, mac10);
+        Items.Add(ItemList.ITEM_ZIPTIES.UID, zipties);
     }
 
     public Gun GetWeapon(uint UID)

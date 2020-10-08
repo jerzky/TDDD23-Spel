@@ -11,5 +11,25 @@ public abstract class Action
         this.ai = ai;
     }
 
-    public abstract bool PerformAction();
+    public abstract uint PerformAction();
+    public abstract ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity);
 }
+
+public class FindPathToRouteNode : Action
+{
+    public FindPathToRouteNode(AI ai) : base(ai)
+    {
+
+    }
+    public override uint PerformAction()
+    {
+        ai.SetPathToPosition(ai.currentRoute.NextNode.Position);
+        return 1;
+    }
+
+    public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
+    {
+        return ActionE.FollowPath;
+    }
+}
+

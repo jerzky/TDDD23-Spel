@@ -16,7 +16,13 @@ public class LookAround : Action
 
     }
 
-    public override bool PerformAction()
+    public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
+    {
+        // if we ever see anyone while walking around, the playerSeen function in ai would be called. Therefore we can always return none.
+        return ActionE.None;
+    }
+
+    public override uint PerformAction()
     {
         if(firstRun)
         {
@@ -27,11 +33,11 @@ public class LookAround : Action
         if (currentLookAroundTimer <= 0f)
         {
             firstRun = true;
-            return true;
+            return 1;
         }
 
         ai.rotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
 
-        return false;
+        return 0;
     }
 }

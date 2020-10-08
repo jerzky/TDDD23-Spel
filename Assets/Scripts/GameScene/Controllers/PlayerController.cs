@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEditor.U2D.Path.GUIFramework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,13 +30,16 @@ public class PlayerController : MonoBehaviour
     ControlAction[] itemBarActions = { ControlAction.Itembar_1, ControlAction.Itembar_2, ControlAction.Itembar_3, ControlAction.Itembar_4, ControlAction.Itembar_5, ControlAction.Itembar_6, ControlAction.Itembar_7, ControlAction.Itembar_8 };
 
     ItemController itemController;
-
     [SerializeField]
     GameObject heartbeat;
 
-
-    float healthResetTimer = 0f;
-    float healthResetMaxTime = 5f;
+    SimpleTimer healthResetTimer = new SimpleTimer(5f);
+    public bool IsHostile { 
+        get
+        {
+            return Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon;
+        }
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -50,7 +52,6 @@ public class PlayerController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = playerSprites[0];
         EventSystem = FindObjectOfType<EventSystem>();
-
         SortedDictionary<ControlAction, ControlInfo> atk = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
         actionToKeys = new uint[atk.Count, 2];
         foreach (var v in atk)
@@ -70,11 +71,9 @@ public class PlayerController : MonoBehaviour
     {
         HandleKeyInputs();
 
-        healthResetTimer += Time.deltaTime;
-        if(healthResetTimer > healthResetMaxTime)
+        if(healthResetTimer.TickAndReset())
         {
             heartbeat.SetActive(false);
-            healthResetTimer = 0f;
             GeneralUI.Instance.Health = 100;
         }
     }
@@ -200,15 +199,8 @@ public class PlayerController : MonoBehaviour
             PlayerMotor.Instance.TakeDown(lookDir);
         }
 
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            GameObject blood = new GameObject("Blood");
-            blood.transform.parent = transform.parent;
-            blood.transform.position = transform.position + Vector3.back;
-            blood.AddComponent<SpriteRenderer>();
-            blood.AddComponent<Blood>();
-        }
-
+        if (Input.GetKeyDown(KeyCode.F1))
+            GameController.Instance.SaveGame();
     }
 
     public void CancelCurrentInteractable()
@@ -223,7 +215,7 @@ public class PlayerController : MonoBehaviour
 
     public void Injure(int damage)
     {
-        healthResetTimer = 0f;
+        healthResetTimer.Reset();
         GeneralUI.Instance.Health -= damage;
         if (GeneralUI.Instance.Health <= 0)
         {

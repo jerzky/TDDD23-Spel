@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FollowPath : Action
 {
+    public enum ReturnType { NotFinished, Finished, StartedWithoutPath }
     public bool isWaitingForPath = false;
     bool movingThroughDoor = false;
     bool walkingPassedDoor = false;
@@ -25,17 +26,17 @@ public class FollowPath : Action
 
     }
 
-    public override bool PerformAction()
+    public override uint PerformAction()
     {
         if (ai.path.Count <= 0)
-            return false;
+            return (uint) ReturnType.StartedWithoutPath;
 
         if (IsStuck())
             if (RecalculatePath())
-                return false;
+                return (uint) ReturnType.NotFinished;
 
         if (ShouldWaitForDoor())
-            return false;
+            return (uint)ReturnType.NotFinished;
 
         Vector2 dir = (ai.path[0].Position - (Vector2)ai.transform.position).normalized;
         SetOffset(FindClosestAIInVision());
@@ -45,9 +46,9 @@ public class FollowPath : Action
             FinishedNode();
 
         if (ai.path.Count <= 0)
-            return true;
+            return (uint)ReturnType.Finished;
 
-        return false;
+        return (uint)ReturnType.NotFinished;
     }
 
     bool RecalculatePath()
@@ -82,14 +83,6 @@ public class FollowPath : Action
 
                 foreach (var v in ai.inVision)
                 {
-                   /* if(v.CompareTag("Player"))
-                    {
-                        if (closest == null || (Vector2.Distance(ai.transform.position, v.transform.position) < 1.5f) && Vector2.Distance(v.transform.position, ai.transform.position) < Vector2.Distance(closest.transform.position, ai.transform.position))
-                        {
-                            closest = v;
-                        }
-                        continue;
-                    }*/
                     Vector2 vDir = Vector2.zero;
                     if (v.GetComponent<AI>().path.Count > 0 && v.GetComponent<AI>().path[0].Parent != null)
                         vDir = v.GetComponent<AI>().path[0].Position - v.GetComponent<AI>().path[0].Parent.Position;
@@ -256,5 +249,23 @@ public class FollowPath : Action
             node = node.Child;
             prevdir = dir;
         }
+    }
+
+    public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
+    {
+        if (lastActionReturnValue == (uint)ReturnType.StartedWithoutPath && currentState == State.FollowRoute)
+            return ActionE.FindPathToRouteNode;
+
+        switch(currentState)
+        {
+            case State.Pursuit:
+                if ((ai as Guard).pursue.LineOfSight())
+                    return ActionE.Pursue;
+                else
+                    return ActionE.LookAround;
+            case State.Investigate:
+                return ActionE.LookAround;
+        }
+        return ActionE.None;
     }
 }

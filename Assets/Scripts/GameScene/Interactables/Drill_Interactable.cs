@@ -6,12 +6,13 @@ using UnityEngine;
 public class Drill_Interactable : Interactable
 {
     AudioSource audioSource;
-    private float timer = 1f;
     Interactable inter;
     bool active = false;
+    uint continousSoundID = 0;
     // Start is called before the first frame update
     void Start()
     {
+        continousSoundID = SoundController.Instance.GenerateContinousSound(new Sound(transform.position, ItemList.ITEM_DRILL.SoundRadius, Sound.SoundType.Construction));
         audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.Play();
         active = true;
@@ -25,17 +26,8 @@ public class Drill_Interactable : Interactable
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("active " + active);
         if (!active)
             return;
-        timer += Time.deltaTime;
-        Debug.Log("TIMER INCREASE?");
-        if (timer >= 1f)
-        {
-            Debug.Log("SOUNDWAVES?");
-            timer = 0f;
-            SoundController.Instance.GenerateSound(new Sound(transform.position, ItemList.ITEM_DRILL.SoundRadius, Sound.SoundType.Construction));
-        }
         if(!((Openable)inter).IsLocked())
         {
             audioSource.enabled = false;
@@ -50,7 +42,7 @@ public class Drill_Interactable : Interactable
 
     public override bool Interact(uint itemIndex)
     {
-        Debug.Log("DRILL INTER");
+        SoundController.Instance.CancelContinousSound(continousSoundID);
         Inventory.Instance.AddItem(ItemList.ITEM_DRILL.UID, 1);
         Destroy(gameObject);
         return false;

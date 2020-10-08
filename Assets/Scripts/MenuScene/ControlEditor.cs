@@ -5,7 +5,6 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using System.IO;
-using UnityEditor.U2D.Path.GUIFramework;
 using Newtonsoft.Json.Converters;
 
 
@@ -52,7 +51,6 @@ public class ControlEditor : MonoBehaviour
 
     Vector3 textOffset = new Vector3(0f, -55f, 0f);
     Vector3 controlOffset = new Vector3(370f, 0f, 0f);
-    Vector3 controlOffset2 = new Vector3(270f, 0f, 0f);
 
     Vector2 currentPointer = new Vector2(1,0);
 
@@ -71,11 +69,9 @@ public class ControlEditor : MonoBehaviour
     void Start()
     {
         Instance = this;
-        //controlMap = new SortedDictionary<ControlAction, ControlInfo>();
-        //controlMap.Add(ControlAction.Up, new ControlInfo { Action = ControlAction.Up, KeyCode1 = 1, KeyCode2 = 2 });
         controlMap = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
         CreateControlTexts();
-        Json.SaveToJson<SortedDictionary<ControlAction, ControlInfo>>(controlMap, "controldata.json");
+        Json.SaveToJson(controlMap, "controldata.json");
   
     }
     
@@ -228,7 +224,7 @@ public class ControlEditor : MonoBehaviour
     void UpdatePointer(Vector2 newPointer)
     {
         if (newPointer.x < 1 || newPointer.x > 2) return;
-        if (newPointer.y < 0 || newPointer.y > 15) return;
+        if (newPointer.y < 0 || newPointer.y > keyTexts.GetUpperBound(1)) return;
         keyTexts[(int)currentPointer.x, (int)currentPointer.y].color = Color.black;
         currentPointer = newPointer;
         keyTexts[(int)currentPointer.x, (int)currentPointer.y].color = Color.magenta;
@@ -243,7 +239,7 @@ public class ControlEditor : MonoBehaviour
 
     public void DeActivate()
     {
-        Json.SaveToJson<SortedDictionary<ControlAction, ControlInfo>>(controlMap, "controldata.json");
+        Json.SaveToJson(controlMap, "controldata.json");
         controlEditorOpen = false;
         holder.SetActive(false);
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Dynamic;
+using UnityEngine;
 
 public class Building : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class Building : MonoBehaviour
         
     }
 
-    public virtual void OnAlert(AlertType alertType, Vector2 pos)
+    public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
     {
 
     }

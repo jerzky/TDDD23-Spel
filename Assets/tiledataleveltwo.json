@@ -47,8 +47,10 @@
     "Components": [
       "BoxCollider"
     ],
-    "BoxColliderScaleX": 0.0,
-    "BoxColliderScaleY": 0.0
+    "BoxColliderScaleX": 0.75,
+    "BoxColliderScaleY": 1.0,
+    "BoxColliderOffsetX": 0.125,
+    "BoxColliderOffsetY": 0.0
   },
   "RGBA(0.000, 0.196, 0.588, 1.000)": {
     "UID": 108,

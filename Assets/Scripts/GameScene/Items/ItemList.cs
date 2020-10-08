@@ -43,7 +43,7 @@ namespace Assets.Items
             SellPrice = 10,
             BuyPrice = 100,
             PurchaseAmount = 1,
-            SoundRadius = 5f
+            SoundRadius = 2f
         };
 
         public static readonly ItemInfo ITEM_SLEDGEHAMMER = new ItemInfo
@@ -60,7 +60,7 @@ namespace Assets.Items
             SellPrice = 50,
             BuyPrice = 200,
             PurchaseAmount = 1,
-            SoundRadius = 30f
+            SoundRadius = 5f
         };
 
         public static readonly ItemInfo ITEM_PISTOL = new ItemInfo
@@ -77,7 +77,7 @@ namespace Assets.Items
             SellPrice = 500,
             BuyPrice = 1000,
             PurchaseAmount = 1,
-            SoundRadius = 60f
+            SoundRadius = 30f
         };
 
         public static readonly ItemInfo ITEM_PISTOL_AMMO = new ItemInfo
@@ -108,7 +108,7 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 5000,
             PurchaseAmount = 1,
-            SoundRadius = 200f
+            SoundRadius = 100f
         };
 
         public static readonly ItemInfo ITEM_EXPLOSIVE_TIMED = new ItemInfo
@@ -125,7 +125,7 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 5000,
             PurchaseAmount = 1,
-            SoundRadius = 200f
+            SoundRadius = 100f
         };
 
         public static readonly ItemInfo ITEM_SILENCED_PISTOL = new ItemInfo
@@ -159,7 +159,7 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 6000,
             PurchaseAmount = 1,
-            SoundRadius = 80f
+            SoundRadius = 40f
         };
 
         public static readonly ItemInfo ITEM_DRILL = new ItemInfo
@@ -177,32 +177,6 @@ namespace Assets.Items
             SoundRadius = 10f
         };
 
-        public static readonly ItemInfo ITEM_LOCKPICK4 = new ItemInfo
-        {
-            UID = 10,
-            Name = "Lockpick4",
-            IconPath = "Textures/drilltesticon",
-            IconIndex = 0,
-            AverageUseTime = 5f,
-            InventoryStackSize = 10,
-            SellPrice = 10,
-            BuyPrice = 100,
-            PurchaseAmount = 1
-        };
-
-        public static readonly ItemInfo ITEM_LOCKPICK5 = new ItemInfo
-        {
-            UID = 11,
-            Name = "Lockpick5",
-            IconPath = "Textures/drilltesticon",
-            IconIndex = 0,
-            AverageUseTime = 5f,
-            InventoryStackSize = 10,
-            SellPrice = 10,
-            BuyPrice = 100,
-            PurchaseAmount = 1
-        };
-
         public static readonly ItemInfo ITEM_MAC10 = new ItemInfo
         {
             UID = 12,
@@ -217,7 +191,24 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 6000,
             PurchaseAmount = 1,
-            SoundRadius = 80f
+            SoundRadius = 30f
+        };
+
+        public static readonly ItemInfo ITEM_ZIPTIES = new ItemInfo
+        {
+            UID = 13,
+            Name = "ZIPTIES",
+            IconPath = "Textures/x64spritesheet",
+            IconIndex = 66,
+            AverageUseTime = 3f,
+            HumanDamage = 0,
+            BreakableDamage = 0,
+            ItemType = ItemType.Usable,
+            InventoryStackSize = 64,
+            SellPrice = 0,
+            BuyPrice = 100,
+            PurchaseAmount = 5,
+            SoundRadius = 2f
         };
 
 
@@ -251,13 +242,10 @@ namespace Assets.Items
                 ITEM_DRILL.UID, ITEM_DRILL
             },
             {
-                ITEM_LOCKPICK4.UID, ITEM_LOCKPICK4
-            },
-            {
-                ITEM_LOCKPICK5.UID, ITEM_LOCKPICK5
-            },
-            {
                 ITEM_MAC10.UID, ITEM_MAC10
+            },
+            {
+                ITEM_ZIPTIES.UID, ITEM_ZIPTIES
             }
 
         };

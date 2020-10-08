@@ -110,6 +110,7 @@ public class StoreController : MonoBehaviour
             Inventory.Instance.AddItem(boughtItem.UID, count);
             GeneralUI.Instance.Credits -= price;
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ChaChing2"), PlayerController.Instance.transform.position);
+            GameController.Instance.TriggerItemText(boughtItem.UID);
         }
     }
 

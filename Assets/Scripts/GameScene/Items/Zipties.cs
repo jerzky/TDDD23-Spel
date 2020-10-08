@@ -1,18 +1,27 @@
-﻿using System.Collections;
+﻿using Assets.Items;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class Zipties : MonoBehaviour
+public class Zipties : UsableItem
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Cancel()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override uint Use(ItemInfo item, Vector3 pos)
     {
-        
+        Debug.Log("USE ZIP");
+        RaycastHit2D hit = Physics2D.Raycast(pos, PlayerController.Instance.lookDir, 2, LayerMask.GetMask("AI"), -Mathf.Infinity, Mathf.Infinity);
+        if (hit.collider == null)
+            return 0;
+        Debug.Log("USE ZIP HIT");
+        hit.collider.GetComponent<AI>().GetZipTied();
+        Inventory.Instance.RemoveItem(item.UID, 1);
+        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ziptie3s"), pos);
+        SoundController.Instance.GenerateContinousSound(new Sound(pos, ItemList.ITEM_ZIPTIES.SoundRadius, Sound.SoundType.Construction), ItemList.ITEM_ZIPTIES.AverageUseTime);
+        return 0;
     }
 }

@@ -8,7 +8,21 @@ public class soundcircletest : MonoBehaviour
     private float speed = 35f;
     private float radius = 25f;
     private bool hasStarted = false;
-    public float Radius { get { return radius; } set { if (value > radius) speed = value + 10f; radius = value; hasStarted = true; } }
+    public float Radius 
+    { 
+        get 
+        {
+            return radius; 
+        } 
+        set 
+        { 
+            speed = value + 10f; 
+            radius = value; 
+            hasStarted = true;
+            if (radius < 2.5f)
+                GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("NoSpriteAtlasTextures/soundcircleblack10");
+        } 
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -22,7 +36,7 @@ public class soundcircletest : MonoBehaviour
         if (!hasStarted)
             return;
         transform.localScale += new Vector3(1f, 1f, 0f) * speed * Time.deltaTime;
-        if (transform.localScale.x > radius)
+        if (transform.localScale.x > radius*2)
             Destroy(gameObject);
     }
 }

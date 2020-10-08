@@ -49,14 +49,14 @@
     "KeyCode1": 105,
     "KeyCode2": 9
   },
-  "Itembar_1": {
-    "Action": "Itembar_1",
-    "KeyCode1": 49,
-    "KeyCode2": 0
-  },
   "Reload": {
     "Action": "Reload",
     "KeyCode1": 114,
+    "KeyCode2": 0
+  },
+  "Itembar_1": {
+    "Action": "Itembar_1",
+    "KeyCode1": 49,
     "KeyCode2": 0
   },
   "Itembar_2": {
