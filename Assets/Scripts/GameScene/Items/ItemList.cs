@@ -26,6 +26,7 @@ namespace Assets.Items
         public uint PurchaseAmount { get; set; } = 1;
 
         public float SoundRadius { get; set; } = 25f;
+        public string Tooltip { get; set; }
 
     }
 
@@ -44,7 +45,8 @@ namespace Assets.Items
             SellPrice = 10,
             BuyPrice = 100,
             PurchaseAmount = 1,
-            SoundRadius = 2f
+            SoundRadius = 2f,
+            Tooltip = "The lockpick can be used on locked interactables, such as doors or cabinets, by pressing the use item key({0})."
         };
 
         public static readonly ItemInfo ITEM_SLEDGEHAMMER = new ItemInfo
@@ -61,7 +63,8 @@ namespace Assets.Items
             SellPrice = 50,
             BuyPrice = 200,
             PurchaseAmount = 1,
-            SoundRadius = 5f
+            SoundRadius = 5f,
+            Tooltip = "This can be used to break walls, so you can enter a building from a different direction. Unless you want to simply hit the guards with it. It is used as a weapon by pressing the Shoot key({0})."
         };
 
         public static readonly ItemInfo ITEM_PISTOL = new ItemInfo
@@ -78,7 +81,8 @@ namespace Assets.Items
             SellPrice = 500,
             BuyPrice = 1000,
             PurchaseAmount = 1,
-            SoundRadius = 30f
+            SoundRadius = 30f,
+            Tooltip = "Weapons can be used to control civilians or fight guards and police, simply point the gun at a civilian that has noticed you to make the civilian freeze."
         };
 
         public static readonly ItemInfo ITEM_PISTOL_AMMO = new ItemInfo
@@ -126,7 +130,8 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 5000,
             PurchaseAmount = 1,
-            SoundRadius = 100f
+            SoundRadius = 100f,
+            Tooltip = "The C4 is a highpowered explosive which can break down pretty much anything on the map. Use it by pressing the use item key({0})."
         };
 
         public static readonly ItemInfo ITEM_SILENCED_PISTOL = new ItemInfo
@@ -143,7 +148,8 @@ namespace Assets.Items
             SellPrice = 500,
             BuyPrice = 2000,
             PurchaseAmount = 1,
-            SoundRadius = 10f
+            SoundRadius = 10f,
+            Tooltip = ITEM_PISTOL.Tooltip
         };
 
         public static readonly ItemInfo ITEM_AK47 = new ItemInfo
@@ -160,7 +166,8 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 6000,
             PurchaseAmount = 1,
-            SoundRadius = 40f
+            SoundRadius = 40f,
+            Tooltip = ITEM_PISTOL.Tooltip
         };
 
         public static readonly ItemInfo ITEM_DRILL = new ItemInfo
@@ -175,7 +182,8 @@ namespace Assets.Items
             SellPrice = 2000,
             BuyPrice = 5000,
             PurchaseAmount = 1,
-            SoundRadius = 10f
+            SoundRadius = 10f,
+            Tooltip = "The drill is used to open locked interactables, similar to the lockpick, however, its main use is to open the vault doors in the bank. Use it by pressing the use item key({0})."
         };
 
         public static readonly ItemInfo ITEM_MAC10 = new ItemInfo
@@ -192,7 +200,8 @@ namespace Assets.Items
             SellPrice = 1000,
             BuyPrice = 6000,
             PurchaseAmount = 1,
-            SoundRadius = 30f
+            SoundRadius = 30f,
+            Tooltip = ITEM_PISTOL.Tooltip
         };
 
         public static readonly ItemInfo ITEM_ZIPTIES = new ItemInfo
