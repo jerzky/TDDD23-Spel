@@ -32,12 +32,19 @@ public class Drill_Interactable : Interactable
         {
             audioSource.enabled = false;
             active = false;
+            SoundController.Instance.CancelContinousSound(continousSoundID);
         }
     }
 
     public override void Cancel()
     {
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("bullet"))
+            Destroy(gameObject);
     }
 
     public override bool Interact(uint itemIndex)

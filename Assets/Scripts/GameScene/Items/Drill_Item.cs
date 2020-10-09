@@ -19,14 +19,16 @@ public class Drill_Item : UsableItem
 
     public override uint Use(ItemInfo item, Vector3 pos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(pos, PlayerController.Instance.lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
+        RaycastHit2D hit = Physics2D.Raycast(pos, PlayerController.Instance.lookDir, 1f, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
         if(hit.collider != null)
         {
             Interactable inter = hit.collider.GetComponent<Interactable>();
             if(inter != null)
             {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Drill"), pos + (Vector3)PlayerController.Instance.lookDir.normalized * 0f, Quaternion.identity, null);
+                var position = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 1f) + (Vector3)PlayerController.Instance.lookDir * -0.3f;
+                GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Drill"), position, Quaternion.identity, null);
                 temp.GetComponent<Drill_Interactable>().StartDrilling(inter);
+                Inventory.Instance.RemoveItem(ItemList.ITEM_DRILL.UID, 1);
             }
         }
         
