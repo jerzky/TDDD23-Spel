@@ -190,7 +190,7 @@ namespace Assets.Items
         {
             UID = 12,
             Name = "MAC-10",
-            IconPath = "NoSpriteAtlasTextures/mac_10",
+            IconPath = "Textures/mac_10",
             IconIndex = 0,
             AverageUseTime = 0f,
             HumanDamage = 75,
@@ -225,7 +225,7 @@ namespace Assets.Items
         {
             UID = 14,
             Name = "CellPhoneJammer",
-            IconPath = "NoSpriteAtlasTextures/cellphonejammer",
+            IconPath = "Textures/cellphonejammer",
             IconIndex = 0, 
             AverageUseTime = 1f,
             HumanDamage = 0,
