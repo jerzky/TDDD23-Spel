@@ -10,7 +10,7 @@ public class Police : Lawman
       protected override void Start()
       {
           Health = 150; 
-          HaltTime = 1f; 
+          HaltTime = 2f; 
           ShootTime = 0.25f;
           base.Start();
           CurrentState = State.FollowRoute;

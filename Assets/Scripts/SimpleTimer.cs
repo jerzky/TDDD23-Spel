@@ -13,7 +13,8 @@ public class SimpleTimer
     public SimpleTimer(float max)
     {
         _max = max;
-        _current = max;
+        //_current = max;
+        _current = 0;
     }
 
     public bool TickFixedAndReset()

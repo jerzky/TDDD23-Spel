@@ -15,13 +15,15 @@ public class AIWeaponHandler
         _shootTimer = new SimpleTimer(shootTime);
     }
     /// <summary>This method will return true if does not stand still or if it shoots </summary>
-    public bool Shoot(Vector2 aiPosition, Vector2 playerPos)
+    public bool Shoot(Vector2 aiPosition, Vector2 playerPos, bool ignoreTimer = false)
     { 
 
-        if (!_shootTimer.Tick()) 
+        if (!_shootTimer.Tick() && !ignoreTimer) 
             return false;
        
-        _shootTimer.Reset();
+        if(!ignoreTimer)
+            _shootTimer.Reset();
+
         var direction = playerPos - aiPosition;
 
         var startPosition = aiPosition + direction.normalized * DistanceFromAi;

@@ -79,9 +79,11 @@ public abstract class Lawman : AI
     public override void OnVisionEnter(Collider2D col)
     {
         base.OnVisionEnter(col);
+        Debug.Log("OnVisionEnterd Lawman: " + col.tag);
         if (col.CompareTag("lawmandestroy"))
         {
-            _weaponHandler.Shoot(transform.position, col.transform.position);
+            Debug.Log("Found a lawmandestroy");
+            _weaponHandler.Shoot(transform.position, col.transform.position, true);
         }
     }
 }

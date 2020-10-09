@@ -28,7 +28,7 @@ public class CellPhoneJammer_Item : UsableItem
         RaycastHit2D hit = Physics2D.Raycast(pos, PlayerController.Instance.lookDir, 1, LayerMask.GetMask("walls"), -Mathf.Infinity, Mathf.Infinity);
         if (hit.collider != null)
         {
-            var position = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 1f) + (Vector3)PlayerController.Instance.lookDir * -0.3f;
+            var position = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 1f) + (Vector3)PlayerController.Instance.lookDir * -0.7f;
             Instantiate(Resources.Load<GameObject>("Prefabs/cellphonejammer"), position, Quaternion.identity, null);
             Inventory.Instance.RemoveItem(ItemList.ITEM_CELLPHONE_JAMMER.UID, 1);
         }

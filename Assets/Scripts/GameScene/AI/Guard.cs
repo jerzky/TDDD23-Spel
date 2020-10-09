@@ -9,7 +9,8 @@ public class Guard : Lawman
     protected override void Start()
     {
         Health = 100;
-        HaltTime = 0.75f;
+        HaltTime = 2f;
+        ShootTime = 0.5f;
         base.Start();
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
