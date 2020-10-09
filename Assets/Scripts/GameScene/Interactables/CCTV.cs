@@ -102,14 +102,6 @@ public class CCTV : Interactable
         if (!_isMonitored || !col.CompareTag("Player"))
             return;
 
-        
-        
-        var hit = Physics2D.Raycast(_rayCastOrigin.transform.position, col.transform.position - transform.position);
-
-
-        if (hit.collider == null || !hit.collider.CompareTag("Player"))
-            return;
-
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
         // Check if player is hostile
         // this bool should be kept in some kind of controller

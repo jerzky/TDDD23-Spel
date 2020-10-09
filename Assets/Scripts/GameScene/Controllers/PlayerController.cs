@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     public bool IsHostile { 
         get
         {
+            if (Inventory.Instance.GetCurrentItem() == null)
+                return false;
             return Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon;
         }
     }

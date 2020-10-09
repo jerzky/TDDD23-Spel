@@ -24,6 +24,11 @@ public class Vision : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+        var parentPos = GetComponentInParent<Transform>().position;
+        var targetPos = col.transform.position;
+        var hit = Physics2D.Raycast(parentPos + (targetPos - parentPos) * 0.35f, targetPos - parentPos);
+        if (hit.collider == null || hit.collider.GetInstanceID() != col.GetInstanceID())
+            return;
 
         switch (visionType)
         {
