@@ -13,7 +13,7 @@ namespace Assets.Items
     {
         public uint UID { get; set; }
         public string Name { get; set; }
-        public string IconPath { get; set; }
+        public string IconPath { private get; set; }
         public uint IconIndex { get; set; }
         public uint InventoryStackSize { get; set; } = 64;
         public float AverageUseTime { get; set; }
@@ -27,6 +27,14 @@ namespace Assets.Items
 
         public float SoundRadius { get; set; } = 25f;
         public string Tooltip { get; set; }
+
+        public Sprite Sprite 
+        { 
+            get 
+            {
+                return Resources.LoadAll<Sprite>(IconPath)[IconIndex];
+            } 
+        }
 
     }
 

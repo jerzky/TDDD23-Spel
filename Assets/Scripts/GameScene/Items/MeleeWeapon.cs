@@ -24,7 +24,7 @@ public abstract class MeleeWeapon : UsableItem
         animationObject.transform.position = WeaponController.Instance.weaponGO.transform.position;
         animationObject.transform.rotation = WeaponController.Instance.weaponGO.transform.rotation;
         animationObject.transform.parent = WeaponController.Instance.transform;
-        animationObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(item.IconPath);
+        animationObject.AddComponent<SpriteRenderer>().sprite = item.Sprite;
         WeaponController.Instance.weaponGO.GetComponent<SpriteRenderer>().enabled = false;
         WeaponController.Instance.AnimationActive = true;
         Swing();

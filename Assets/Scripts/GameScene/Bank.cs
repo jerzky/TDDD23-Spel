@@ -32,6 +32,12 @@ public class Bank : Building
 
         _guards[0].SetRoute(_nodePaths[0]);
         _guards[1].SetRoute(_nodePaths[1]);
+
+        var sizeX = 23 - 0;
+        var sizeY = 99 - 77;
+        var posX = 0 + sizeX / 2;
+        var posY = 77 + sizeY / 2;
+        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
     }
 
 
@@ -99,17 +105,24 @@ public class Bank : Building
 
     public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
     {
-        switch(alertType)
+        base.OnAlert(pos, alertType, alertIntensity);
+
+        switch (alertType)
         {
             case AlertType.Guard_CCTV:
+                SendGuardToInvestigate(pos, alertIntensity);
+                break;
+            case AlertType.Guard_Radio:
+                // if it is confirmed hostile send more guards
+                if(alertIntensity == AlertIntensity.ConfirmedHostile)
+                    SendGuardToInvestigate(pos, alertIntensity);
+                break;
+            case AlertType.Sound:
                 SendGuardToInvestigate(pos, alertIntensity);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(alertType), alertType, null);
         }
-
-
-        base.OnAlert(pos, alertType, alertIntensity);
     }
 
     private void SendGuardToInvestigate(Vector2 pos, AlertIntensity alertIntensity)

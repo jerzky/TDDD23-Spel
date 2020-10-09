@@ -124,10 +124,7 @@ public class CCTV : Interactable
 
     public void OnVisionStay(Collider2D col)
     {
-        if(col.CompareTag("Player"))
-        {
-            
-        }
+
     }
 
     public void OnVisionExit(Collider2D col)

@@ -265,6 +265,11 @@ public class FollowPath : Action
                     return ActionE.LookAround;
             case State.Investigate:
                 return ActionE.LookAround;
+            case State.Panic:
+                if (ai.CurrentBuilding.PlayerReportedAsHostile)
+                    return ActionE.Flee;
+                else
+                    return ActionE.None;
         }
         return ActionE.None;
     }

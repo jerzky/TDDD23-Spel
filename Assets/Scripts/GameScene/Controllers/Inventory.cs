@@ -86,6 +86,7 @@ public class Inventory
                     InventoryItemMap.Add(id, new Vector2(x, y));
                     InventoryItemInfo[x, y] = new InventoryItem(item, count);
                     ItemBar.AddItem(new Vector2(x, y), InventoryItemInfo[x, y]);
+                    GeneralUI.Instance.TriggerItemText(item.UID);
                     return true;
                 }
             }
