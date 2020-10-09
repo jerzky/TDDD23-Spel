@@ -9,6 +9,7 @@ TagManager:
   - UI
   - breakable
   - humanoid
+  - bullet
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - interactables
   - car
   - AI
-  - 
+  - walls
   - 
   - 
   - 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Items
 {
@@ -220,6 +221,23 @@ namespace Assets.Items
             SoundRadius = 2f
         };
 
+        public static readonly ItemInfo ITEM_CELLPHONE_JAMMER = new ItemInfo
+        {
+            UID = 14,
+            Name = "CellPhoneJammer",
+            IconPath = "NoSpriteAtlasTextures/cellphonejammer",
+            IconIndex = 0, 
+            AverageUseTime = 1f,
+            HumanDamage = 0,
+            BreakableDamage = 0,
+            ItemType = ItemType.Usable,
+            InventoryStackSize = 5,
+            SellPrice = 3000,
+            BuyPrice = 6000,
+            PurchaseAmount = 1,
+            SoundRadius = 0f
+        };
+
 
         public static readonly Dictionary<uint, ItemInfo> AllItems = new Dictionary<uint, ItemInfo>
         {
@@ -255,6 +273,9 @@ namespace Assets.Items
             },
             {
                 ITEM_ZIPTIES.UID, ITEM_ZIPTIES
+            },
+            {
+                ITEM_CELLPHONE_JAMMER.UID, ITEM_CELLPHONE_JAMMER
             }
 
         };

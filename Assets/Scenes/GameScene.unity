@@ -778,7 +778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cd67d2e01eadf4ebdb483d511117dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNoticedDelay: 1
+  _locationType: 0
   _isInEmployeeAreaOnly: 0
   _rayCastOrigin: {fileID: 26510808}
   _building: {fileID: 1149382528}
@@ -6395,7 +6395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cd67d2e01eadf4ebdb483d511117dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNoticedDelay: 1
+  _locationType: 0
   _isInEmployeeAreaOnly: 0
   _rayCastOrigin: {fileID: 133677207}
   _building: {fileID: 1149382528}

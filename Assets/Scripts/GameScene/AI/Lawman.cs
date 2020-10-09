@@ -46,13 +46,6 @@ public abstract class Lawman : AI
         }
     }
 
-    public override void GetNextAction(uint lastActionReturnValue)
-    {
-        CurrentAction = Actions[CurrentAction].GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
-        if (CurrentAction == ActionE.None)
-            CancelCurrentState();
-    }
-
     protected void StartInvestigate(Vector2 position)
     {
         CurrentState = State.Investigate;

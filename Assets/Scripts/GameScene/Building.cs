@@ -22,6 +22,6 @@ public class Building : MonoBehaviour
 
     public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
     {
-
+        
     }
 }

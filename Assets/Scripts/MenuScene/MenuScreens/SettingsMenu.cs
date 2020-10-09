@@ -10,16 +10,24 @@ public enum SettingType
     ToolTipOn
 }
 
-public class Setting
+public abstract class Setting
 {
     public SettingType SettingType { get; private set; }
-    public object Val { get; set; }
+    public object Val;
     public Type ValType;
 
-    public Setting(SettingType key, object value, Type valueType)
+    public Setting(SettingType setting, object value, Type valueType)
     {
-       
+        SettingType = setting;
+        Val = value;
+        ValType = valueType;
     }
+}
+
+public class Setting_Int : Setting
+{
+    public int GetValueAsInt { get { return (int)Val; } }
+    public Setting_Int(SettingType s, object o, Type t) : base(s, o, t) { }
 }
 
 
@@ -29,11 +37,14 @@ public class SettingsMenu : MenuScreen
     Text[,] settingTexts;
     SortedDictionary<SettingType, string> settingMap;
 
+    Setting setting;
+
     public SettingsMenu(GameObject holder, string name, GameObject textPrefab) : base(holder, name)
     {
         this.textPrefab = textPrefab;
         monitoredKeys = new List<KeyCode> { KeyCode.Return, KeyCode.Escape };
     }
+
     public override void KeyPressed(KeyCode key)
     {
         switch(key)

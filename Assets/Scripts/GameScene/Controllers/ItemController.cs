@@ -25,6 +25,7 @@ public class ItemController : MonoBehaviour
         temp.AddComponent<AudioSource>();
         var mac10 = temp.AddComponent<MAC10>();
         var zipties = temp.AddComponent<Zipties>();
+        var cellphonejammer = temp.AddComponent<CellPhoneJammer_Item>();
 
         Items.Add(ItemList.ITEM_EXPLOSIVE_REMOTE.UID, exp);
         Items.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID, exp);
@@ -36,6 +37,7 @@ public class ItemController : MonoBehaviour
         Items.Add(ItemList.ITEM_DRILL.UID, drill);
         Items.Add(ItemList.ITEM_MAC10.UID, mac10);
         Items.Add(ItemList.ITEM_ZIPTIES.UID, zipties);
+        Items.Add(ItemList.ITEM_CELLPHONE_JAMMER.UID, cellphonejammer);
     }
 
     public Gun GetWeapon(uint UID)
