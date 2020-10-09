@@ -10,16 +10,15 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
-    SortedDictionary<uint, string> ItemToInfo = new SortedDictionary<uint, string>();
-    SortedDictionary<string, string> NearbyToInfo = new SortedDictionary<string, string>();
+    private readonly SortedDictionary<uint, string> _itemToInfo = new SortedDictionary<uint, string>();
+    private readonly SortedDictionary<string, string> _nearbyToInfo = new SortedDictionary<string, string>();
 
-    float timer = 2f;
-    float maxTimer = 2f;
-    string guardText;
+    private readonly SimpleTimer _timer = new SimpleTimer(2f);
+    private string _guardText;
 
-    bool gameHasSave = false;
+    private bool _gameHasSave;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Instance = this;
 
@@ -27,7 +26,7 @@ public class GameController : MonoBehaviour
         LoadSaveInfo lsi = FindObjectOfType<LoadSaveInfo>();
         if (lsi != null)
         {
-            gameHasSave = true;
+            _gameHasSave = true;
             GeneralUI.Instance.Credits = lsi.LoadedGame.Credits;
             GeneralUI.Instance.Kills = lsi.LoadedGame.Kills;
             Destroy(cams.Where(c => c.transform.parent == null).ToList()[0].gameObject);
@@ -36,130 +35,125 @@ public class GameController : MonoBehaviour
                     Inventory.Instance.AddItem(v.Item1, v.Item2);
             if (lsi.LoadedGame.ItemToInfo != null)
                 foreach (var v in lsi.LoadedGame.ItemToInfo)
-                    ItemToInfo.Add(v.Key, v.Value);
+                    _itemToInfo.Add(v.Key, v.Value);
             if (lsi.LoadedGame.NearbyToInfo != null)
                 foreach (var v in lsi.LoadedGame.NearbyToInfo)
-                    NearbyToInfo.Add(v.Key, v.Value);
+                    _nearbyToInfo.Add(v.Key, v.Value);
         }
         else
         {
-            SortedDictionary<ControlAction, ControlInfo> atk = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
-            ItemToInfo.Add(ItemList.ITEM_LOCKPICK.UID, "The lockpick can be used on locked interactables, such as doors or cabinets, by pressing the use item key(" + atk[ControlAction.UseItem].KeyCode1.ToString() + ").");
-            ItemToInfo.Add(ItemList.ITEM_DRILL.UID, "The drill is used to open locked interactables, similar to the lockpick, however, its main use is to open the vault doors in the bank. Use it by pressing the use item key(" + atk[ControlAction.UseItem].KeyCode1.ToString() + ").");
-            ItemToInfo.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID, "The C4 is a highpowered explosive which can break down pretty much anything on the map. Use it by pressing the use item key(" + atk[ControlAction.UseItem].KeyCode1.ToString() + ").");
-            ItemToInfo.Add(ItemList.ITEM_SLEDGEHAMMER.UID, "This can be used to break walls, so you can enter a building from a different direction. Unless you want to simply hit the guards with it. It is used as a weapon by pressing the Shoot key(" + atk[ControlAction.Shoot].KeyCode1.ToString() + ").");
-            ItemToInfo.Add(ItemList.ITEM_PISTOL.UID, "Weapons can be used to control civilians or fight guards and police, simply point the gun at a civilian that has noticed you to make the civilian freeze.");
-            ItemToInfo.Add(ItemList.ITEM_AK47.UID, "Weapons can be used to control civilians or fight guards and police, simply point the gun at a civilian that has noticed you to make the civilian freeze.");
-            ItemToInfo.Add(ItemList.ITEM_SILENCED_PISTOL.UID, "Weapons can be used to control civilians or fight guards and police, simply point the gun at a civilian that has noticed you to make the civilian freeze.");
-            ItemToInfo.Add(ItemList.ITEM_MAC10.UID, "Weapons can be used to control civilians or fight guards and police, simply point the gun at a civilian that has noticed you to make the civilian freeze.");
+            var keys = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
+            _itemToInfo.Add(ItemList.ITEM_LOCKPICK.UID, string.Format(ItemList.ITEM_LOCKPICK.Tooltip, (KeyCode)keys[ControlAction.UseItem].KeyCode1));
+            _itemToInfo.Add(ItemList.ITEM_DRILL.UID, string.Format(ItemList.ITEM_DRILL.Tooltip, (KeyCode)keys[ControlAction.UseItem].KeyCode1));
+            _itemToInfo.Add(ItemList.ITEM_EXPLOSIVE_TIMED.UID,  string.Format(ItemList.ITEM_EXPLOSIVE_TIMED.Tooltip, (KeyCode)keys[ControlAction.UseItem].KeyCode1));
+            _itemToInfo.Add(ItemList.ITEM_SLEDGEHAMMER.UID, string.Format(ItemList.ITEM_SLEDGEHAMMER.Tooltip, (KeyCode)keys[ControlAction.Shoot].KeyCode1));
+            _itemToInfo.Add(ItemList.ITEM_PISTOL.UID, ItemList.ITEM_PISTOL.Tooltip);
+            _itemToInfo.Add(ItemList.ITEM_AK47.UID, ItemList.ITEM_AK47.Tooltip);
+            _itemToInfo.Add(ItemList.ITEM_SILENCED_PISTOL.UID, ItemList.ITEM_SILENCED_PISTOL.Tooltip);
+            _itemToInfo.Add(ItemList.ITEM_MAC10.UID, ItemList.ITEM_MAC10.Tooltip);
 
-            NearbyToInfo.Add("Door", "Doors are interactable, simply press your interactable key(" + atk[ControlAction.Interact].KeyCode1.ToString() + ") to open it.");
-            NearbyToInfo.Add("Searchable Container", "Searchable Containers are interactable, they come in different shapes and sizes, for instance a searchable container could be a desk or cabinet, simply press your interactable key(" + atk[ControlAction.Interact].KeyCode1.ToString() + ") to open it. If its locked, maybe you should consider buying a lockpick.");
-            NearbyToInfo.Add("Store", "The store can be used to buy the items you need to complete your heists or cause mayhem, whatever, you prefer, simply press your interactable key(" + atk[ControlAction.Interact].KeyCode1.ToString() + ") to open it.");
-            NearbyToInfo.Add("Drill", "The drill interactable is spawned when you use your drill item, you can leave it to work on its own, unlike the lockpick, if you want to cancel it and pick it up again, simply use your interact key(" + atk[ControlAction.Interact].KeyCode1.ToString() + ").");
-            NearbyToInfo.Add("Cash Register", "The Cash register is a interactable that can be found in a few different locations, such as the bar or gas station, but the most lucrative cashregister is found inside the lobby of the bank. Holding a weapon will trigger the armed robbery mode, if you're not holding a weapon you will try to rob it in stealth mode. Interact key: " + atk[ControlAction.Interact].KeyCode1.ToString());
-            NearbyToInfo.Add("CCTV", "The CCTV will alert guards if you walk into its vision, however, you will only be noticed if a guard is guarding the security station.");
-            NearbyToInfo.Add("Security Station", "The security station controls the cameras, if there is no guard stationed at it you can freely move through the cameras' vision.");
-            guardText = "This is a guard, if you dont have a weapon use your takedown key(" + atk[ControlAction.TakeDown].KeyCode1.ToString() + ") while sneaking up behind him to knock him out.";
+            _nearbyToInfo.Add("Door", string.Format(Tooltips.DOOR_TOOLTIP, (KeyCode)keys[ControlAction.Interact].KeyCode1));
+            _nearbyToInfo.Add("Searchable Container", string.Format(Tooltips.SEARCHABLE_CONTAINER_TOOLTIP, (KeyCode)keys[ControlAction.Interact].KeyCode1));
+            _nearbyToInfo.Add("Store", string.Format(Tooltips.STORE_TOOLTIP, (KeyCode)keys[ControlAction.Interact].KeyCode1));
+            _nearbyToInfo.Add("Drill", string.Format(Tooltips.DRILL_TOOLTIP, (KeyCode)keys[ControlAction.Interact].KeyCode1));
+            _nearbyToInfo.Add("Cash Register", string.Format(Tooltips.CASH_REGISTER_TOOLTIP, (KeyCode)keys[ControlAction.Interact].KeyCode1));
+            _nearbyToInfo.Add("CCTV", Tooltips.CCTV_TOOLTIP);
+            _nearbyToInfo.Add("Security Station", Tooltips.SECURITY_STATION_TOOLTIP);
+            _guardText = string.Format(Tooltips.GUARD_TEXT, (KeyCode)keys[ControlAction.TakeDown].KeyCode1);
         }
     }
 
+
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (NearbyToInfo.Count > 0)
+        if (_nearbyToInfo.Count > 0)
             TriggerInteractableText();
     }
 
     public void TriggerInteractableText()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0f)
-        {
-            timer = maxTimer;
-            var colliders = Physics2D.OverlapCircleAll(PlayerController.Instance.transform.position, 10f);
-            foreach (var v in colliders)
-            {
-                var inter = v.GetComponent<Interactable>();
-                if (inter != null && NearbyToInfo.ContainsKey(inter.Name()))
-                {
-                    Sprite sprite = inter.GetComponent<SpriteRenderer>().sprite;
-                    if (inter.Name() == "Cash Register")
-                        sprite = Resources.LoadAll<Sprite>("Textures/x64spritesheet")[38];
-                    GeneralUI.Instance.TriggerInfoText(NearbyToInfo[inter.Name()], sprite);
-                    NearbyToInfo.Remove(inter.Name());
-                }
-                var ai = v.GetComponent<AI>();
-                if(ai != null)
-                {
-                    if(ai.Type() == AI_Type.Guard)
-                    {
-                        if(guardText != "")
-                            GeneralUI.Instance.TriggerInfoText(guardText, ai.GetComponent<SpriteRenderer>().sprite);
-                        guardText = "";
-                    }
-                    else if (ai.Type() == AI_Type.Civilian)
-                    {
-                        //BLABLA
-                    }
 
-                }
+        if (!_timer.TickAndReset())
+            return;
+        var colliders = Physics2D.OverlapCircleAll(PlayerController.Instance.transform.position, 10f);
+        foreach (var v in colliders)
+        {
+            var inter = v.GetComponent<Interactable>();
+            if (inter != null && _nearbyToInfo.ContainsKey(inter.Name()))
+            {
+                Sprite sprite = inter.GetComponent<SpriteRenderer>().sprite;
+                if (inter.Name() == "Cash Register")
+                    sprite = Resources.LoadAll<Sprite>("Textures/x64spritesheet")[38];
+                GeneralUI.Instance.TriggerInfoText(_nearbyToInfo[inter.Name()], sprite);
+                _nearbyToInfo.Remove(inter.Name());
+            }
+            var ai = v.GetComponent<AI>();
+            if (ai == null) 
+                continue;
+            
+            if(ai.Type() == AI_Type.Guard)
+            {
+                if(_guardText != "")
+                    GeneralUI.Instance.TriggerInfoText(_guardText, ai.GetComponent<SpriteRenderer>().sprite);
+                _guardText = "";
+            }
+            else if (ai.Type() == AI_Type.Civilian)
+            {
+                //BLABLA
             }
         }
     }
 
     public void TriggerItemText(uint UID)
     {
-        if (ItemToInfo.Count <= 0)
+        if (_itemToInfo.Count <= 0)
             return;
 
-        if (ItemToInfo.ContainsKey(UID))
-        {
-            GeneralUI.Instance.TriggerInfoText(ItemToInfo[UID], Resources.Load<Sprite>(ItemList.AllItems[UID].IconPath));
-            ItemToInfo.Remove(UID);
+        if (!_itemToInfo.ContainsKey(UID)) 
+            return;
 
-            // If it is a weapon remove all weapons
-            foreach(var v in ItemToInfo.ToList().Where(c => ItemList.AllItems[c.Key].ItemType == ItemType.Weapon))
-                ItemToInfo.Remove(v.Key);
-        }
+        GeneralUI.Instance.TriggerInfoText(_itemToInfo[UID], Resources.Load<Sprite>(ItemList.AllItems[UID].IconPath));
+        _itemToInfo.Remove(UID);
+
+        // If it is a weapon remove all weapons
+        foreach(var v in _itemToInfo.ToList().Where(c => ItemList.AllItems[c.Key].ItemType == ItemType.Weapon))
+            _itemToInfo.Remove(v.Key);
     }
 
     public void SaveGame()
     {
-        string name;
-        if (!gameHasSave)
-            name = CreateNewSave();
-        else
-            name = SaveOverFirstSlot();
-
-        gameHasSave = true;
-        GeneralUI.Instance.TriggerInfoText("Game has been saved with name: " + name + "\n If you would like to change the name of the save, you can do this in the main menu");
+        var saveName = !_gameHasSave ? CreateNewSave() : SaveOverFirstSlot();
+        _gameHasSave = true;
+        GeneralUI.Instance.TriggerInfoText(
+            $"Game has been saved with name: {saveName}\n If you would like to change the name of the save, you can do this in the main menu");
     }
 
-    string CreateNewSave()
+    private string CreateNewSave()
     {
         
         var savedGames = Json.JsonToContainer<SortedDictionary<uint, SavedGame>>("saves.json");
         var clone = savedGames.ToList();
         savedGames.Clear();
-        savedGames.Add(0, new SavedGame(DateTime.Now.ToString(), GeneralUI.Instance.Credits, GeneralUI.Instance.Kills, Inventory.Instance.InventoryToList(), ItemToInfo, NearbyToInfo));
+        savedGames.Add(0, new SavedGame(DateTime.Now.ToString(), GeneralUI.Instance.Credits, GeneralUI.Instance.Kills, Inventory.Instance.InventoryToList(), _itemToInfo, _nearbyToInfo));
         foreach (var v in clone)
             savedGames.Add(v.Key + 1, v.Value);
         Json.SaveToJson(savedGames, "saves.json");
         return savedGames[0].Name;
     }
 
-    string SaveOverFirstSlot()
+    private string SaveOverFirstSlot()
     {
         var savedGames = Json.JsonToContainer<SortedDictionary<uint, SavedGame>>("saves.json");
-        savedGames[0] = new SavedGame(DateTime.Now.ToString(), GeneralUI.Instance.Credits, GeneralUI.Instance.Kills, Inventory.Instance.InventoryToList(), ItemToInfo, NearbyToInfo);
+        savedGames[0] = new SavedGame(DateTime.Now.ToString(), GeneralUI.Instance.Credits, GeneralUI.Instance.Kills, Inventory.Instance.InventoryToList(), _itemToInfo, _nearbyToInfo);
         Json.SaveToJson(savedGames, "saves.json");
         return savedGames[0].Name;
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
-        if (!gameHasSave)
+        if (!_gameHasSave)
             return;
         SaveOverFirstSlot();
     }
