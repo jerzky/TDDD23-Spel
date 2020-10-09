@@ -38,7 +38,7 @@ namespace Assets.Items
         {
             UID = 1,
             Name = "Lockpick",
-            IconPath = "Textures/drilltesticon",
+            IconPath = "Textures/lockpick",
             IconIndex = 0,
             AverageUseTime = 5f,
             InventoryStackSize = 10,
