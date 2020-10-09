@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,13 @@ public class Guard : Lawman
     // Start is called before the first frame update
     protected override void Start()
     {
+        Health = 100;
+        HaltTime = 2f;
+        ShootTime = 0.5f;
         base.Start();
-        currentState = State.FollowRoute;
-        currentAction = ActionE.FollowPath;
-        deadHat = Resources.Load<Sprite>("Textures/guardhat");
+        CurrentState = State.FollowRoute;
+        CurrentAction = ActionE.FollowPath;
+        DeadHat = Resources.Load<Sprite>("Textures/guardhat");
     }
 
     // Update is called once per frame
@@ -21,13 +25,13 @@ public class Guard : Lawman
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
-        if (isIncapacitated)
+        if (IsIncapacitated)
             return false;
-        if (currentState == State.Pursuit)
+        if (CurrentState == State.Pursuit)
             return true;
 
-        currentAlertIntensity = alertIntesity;
-        switch (currentAlertIntensity)
+        CurrentAlertIntensity = alertIntesity;
+        switch (CurrentAlertIntensity)
         {
             case AlertIntensity.NonHostile:
                 StartInvestigate(position);
@@ -36,10 +40,11 @@ public class Guard : Lawman
                 StartInvestigate(position);
                 break;
             case AlertIntensity.ConfirmedHostile:
-                pursue.LastPlayerPos = position;
-                currentState = State.Pursuit;
-                currentAction = ActionE.Pursue;
+                Pursue.LastPlayerPos = position;
+                CurrentState = State.Pursuit;
+                CurrentAction = ActionE.Pursue;
                 break;
+
         }
 
         return true;

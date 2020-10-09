@@ -28,7 +28,7 @@ public class FollowPath : Action
 
     public override uint PerformAction()
     {
-        if (ai.path.Count <= 0)
+        if (ai.Path.Count <= 0)
             return (uint) ReturnType.StartedWithoutPath;
 
         if (IsStuck())
@@ -38,14 +38,14 @@ public class FollowPath : Action
         if (ShouldWaitForDoor())
             return (uint)ReturnType.NotFinished;
 
-        Vector2 dir = (ai.path[0].Position - (Vector2)ai.transform.position).normalized;
+        Vector2 dir = (ai.Path[0].Position - (Vector2)ai.transform.position).normalized;
         SetOffset(FindClosestAIInVision());
 
         Move(dir);
-        if (Vector2.Distance(ai.transform.position, ai.path[0].Position) < 0.1f)
+        if (Vector2.Distance(ai.transform.position, ai.Path[0].Position) < 0.1f)
             FinishedNode();
 
-        if (ai.path.Count <= 0)
+        if (ai.Path.Count <= 0)
             return (uint)ReturnType.Finished;
 
         return (uint)ReturnType.NotFinished;
@@ -54,17 +54,17 @@ public class FollowPath : Action
     bool RecalculatePath()
     {
         hasNotMovedTimer = 0f;
-        Node current = ai.path[0];
+        Node current = ai.Path[0];
         while (current.Child != null)
         {
             current = current.Child;
         }
-        NodeToPathList(PathingController.Instance.FindPathExcluding(new Vector2(Mathf.Round(ai.transform.position.x), Mathf.Round(ai.transform.position.y)), current.Position, new List<Vector2> { ai.path[0].Position }));
+        NodeToPathList(PathingController.Instance.FindPathExcluding(new Vector2(Mathf.Round(ai.transform.position.x), Mathf.Round(ai.transform.position.y)), current.Position, new List<Vector2> { ai.Path[0].Position }));
         if (lastDoorNeighbourPos != new Vector2(-1, -1))
         {
             PathingController.Instance.DoorPassed(lastDoorNeighbourPos, ai);
         }
-        if (ai.path.Count == 0)
+        if (ai.Path.Count == 0)
         {
             isWaitingForPath = false;
             return true;
@@ -77,18 +77,18 @@ public class FollowPath : Action
         Collider2D closest = null;
         if (true)
         {
-            if (ai.inVision.Count > 0)
+            if (ai.InVision.Count > 0)
             {
-                ai.speedMultiplier = 1f;
+                ai.SpeedMultiplier = 1f;
 
-                foreach (var v in ai.inVision)
+                foreach (var v in ai.InVision)
                 {
                     Vector2 vDir = Vector2.zero;
-                    if (v.GetComponent<AI>().path.Count > 0 && v.GetComponent<AI>().path[0].Parent != null)
-                        vDir = v.GetComponent<AI>().path[0].Position - v.GetComponent<AI>().path[0].Parent.Position;
+                    if (v.GetComponent<AI>().Path.Count > 0 && v.GetComponent<AI>().Path[0].Parent != null)
+                        vDir = v.GetComponent<AI>().Path[0].Position - v.GetComponent<AI>().Path[0].Parent.Position;
                     Vector2 myDir = Vector2.one;
-                    if (ai.path.Count > 0 && ai.path[0].Parent != null)
-                        myDir = ai.path[0].Position - ai.path[0].Parent.Position;
+                    if (ai.Path.Count > 0 && ai.Path[0].Parent != null)
+                        myDir = ai.Path[0].Position - ai.Path[0].Parent.Position;
 
                     RaycastHit2D hit = Physics2D.Raycast(ai.transform.position, v.transform.position - ai.transform.position);
                     if (!hit.collider.CompareTag("humanoid"))
@@ -127,28 +127,28 @@ public class FollowPath : Action
 
     bool ShouldWaitForDoor()
     {
-        if (!walkingPassedDoor && PathingController.Instance.IsDoorNeighbour(ai.path[0].Position))
+        if (!walkingPassedDoor && PathingController.Instance.IsDoorNeighbour(ai.Path[0].Position))
         {
-            float distance = PathingController.Instance.RequestDoorAccess(ai.path[0].Position, ai);
+            float distance = PathingController.Instance.RequestDoorAccess(ai.Path[0].Position, ai);
             if (distance > 0)
             {
                 // We are heading for a door, and do not have door access yet.
-                lastDoorNeighbourPos = ai.path[0].Position;
-                if (Vector2.Distance(ai.transform.position, ai.path[0].Position) <= distance)
+                lastDoorNeighbourPos = ai.Path[0].Position;
+                if (Vector2.Distance(ai.transform.position, ai.Path[0].Position) <= distance)
                     return true;
             }
             else
             {
                 walkingPassedDoor = true;
-                lastDoorNeighbourPos = ai.path[0].Position;
+                lastDoorNeighbourPos = ai.Path[0].Position;
             }
         }
         else if (walkingPassedDoor)
         {
-            if (PathingController.Instance.GetNodeType(ai.path[0].Position) == NodeType.Door)
+            if (PathingController.Instance.GetNodeType(ai.Path[0].Position) == NodeType.Door)
             {
                 // Next node is door
-                Door door = PathingController.Instance.GetDoor(ai.path[0].Position);
+                Door door = PathingController.Instance.GetDoor(ai.Path[0].Position);
                 movingThroughDoor = true;
                 if (door.IsClosed())
                 {
@@ -171,21 +171,21 @@ public class FollowPath : Action
         dir += offset.normalized * offsetForceMultiplier;
 
         float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
-        ai.rotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
+        ai.RotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.moveSpeed * Time.fixedDeltaTime);
+        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.MoveSpeed * Time.fixedDeltaTime);
     }
 
     void FinishedNode()
     {
         movingThroughDoor = false;
-        if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(ai.path[0].Child.Position))
+        if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(ai.Path[0].Child.Position))
         {
             PathingController.Instance.DoorPassed(lastDoorNeighbourPos, ai);
             walkingPassedDoor = false;
             lastDoorNeighbourPos = new Vector2(-1, -1);
         }
-        ai.path.RemoveAt(0);
+        ai.Path.RemoveAt(0);
     }
 
     void SetOffset(Collider2D closest)
@@ -201,9 +201,9 @@ public class FollowPath : Action
         }
         else
         {
-            Transform closestOffsetPoint = closest.GetComponent<AI>().leftOffsetPoint;
-            if (Vector2.Distance(closest.GetComponent<AI>().rightOffsetPoint.position, ai.transform.position) < Vector2.Distance(closestOffsetPoint.position, ai.transform.position))
-                closestOffsetPoint = closest.GetComponent<AI>().rightOffsetPoint;
+            Transform closestOffsetPoint = closest.GetComponent<AI>().LeftOffsetPoint;
+            if (Vector2.Distance(closest.GetComponent<AI>().RightOffsetPoint.position, ai.transform.position) < Vector2.Distance(closestOffsetPoint.position, ai.transform.position))
+                closestOffsetPoint = closest.GetComponent<AI>().RightOffsetPoint;
 
             offset = closestOffsetPoint.position - closest.transform.position;
             offsetForceMultiplier += Time.fixedDeltaTime * forceMultiplierSpeed;
@@ -218,11 +218,11 @@ public class FollowPath : Action
         Node node = startNode;
         if (node == null)
             return;
-        ai.path.Clear();
+        ai.Path.Clear();
         
         if (node.Child == null)
         {
-            ai.path.Add(node);
+            ai.Path.Add(node);
             return;
         }
         
@@ -235,16 +235,16 @@ public class FollowPath : Action
             // Add Node to list if the direction changes
             if (dir != prevdir)
             {
-                ai.path.Add(node.Parent);
+                ai.Path.Add(node.Parent);
             }
             else if (PathingController.Instance.IsDoorNeighbour(node.Parent.Position))
             {
                 // We should check for doornodes and add the closest nodes to it aswell as the door node.
-                ai.path.Add(node.Parent);
+                ai.Path.Add(node.Parent);
             }
             else if(node.Child == null)
             {
-                ai.path.Add(node);
+                ai.Path.Add(node);
             }
             node = node.Child;
             prevdir = dir;
@@ -259,7 +259,7 @@ public class FollowPath : Action
         switch(currentState)
         {
             case State.Pursuit:
-                if ((ai as Guard).pursue.LineOfSight())
+                if ((ai as Guard).Pursue.LineOfSight())
                     return ActionE.Pursue;
                 else
                     return ActionE.LookAround;

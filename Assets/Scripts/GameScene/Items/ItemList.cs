@@ -193,7 +193,7 @@ namespace Assets.Items
             IconPath = "Textures/mac_10",
             IconIndex = 0,
             AverageUseTime = 0f,
-            HumanDamage = 75,
+            HumanDamage = 50,
             BreakableDamage = 0,
             ItemType = ItemType.Weapon,
             InventoryStackSize = 1,

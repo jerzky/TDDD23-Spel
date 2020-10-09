@@ -13,68 +13,70 @@ public abstract class AI : MonoBehaviour
 {
     // Vision Variables
     [SerializeField]
-    public GameObject rotateVisionAround;
+    public GameObject RotateVisionAround;
     [SerializeField]
-    public Transform leftOffsetPoint;
+    public Transform LeftOffsetPoint;
     [SerializeField]
-    public Transform rightOffsetPoint;
+    public Transform RightOffsetPoint;
 
 
-    public List<Collider2D> inVision = new List<Collider2D>();
-    protected SortedDictionary<string, float> justEnteredVision = new SortedDictionary<string, float>();
+    public List<Collider2D> InVision = new List<Collider2D>();
+    protected SortedDictionary<string, float> JustEnteredVision = new SortedDictionary<string, float>();
 
-    public SortedDictionary<ActionE, Action> actions = new SortedDictionary<ActionE, Action>();
-    public FollowPath followPath;
+    public SortedDictionary<ActionE, Action> Actions = new SortedDictionary<ActionE, Action>();
+    public FollowPath FollowPath;
 
     // Move Variables
-    public float moveSpeed => currentState == State.Pursuit ? pursueSpeed : patrolSpeed;
+    public float MoveSpeed => CurrentState == State.Pursuit ? PursueSpeed : PatrolSpeed;
 
-    public const float pursueSpeed = 3f;
-    public const float patrolSpeed = 2f;
-    public float speedMultiplier = 1f;
+    public const float PursueSpeed = 3f;
+    public const float PatrolSpeed = 2f;
+    public float SpeedMultiplier = 1f;
 
 
     // Health
-    protected int health = 100;
-    SimpleTimer incapacitateTimer = new SimpleTimer(20);
-    protected bool isIncapacitated = false;
-    protected bool isZipTied = false;
-    protected GameObject cuffs;
+    protected int Health = 100;
+
+
+    private readonly SimpleTimer _incapacitateTimer = new SimpleTimer(20);
+    protected bool IsIncapacitated = false;
+    protected bool IsZipTied = false;
+    protected GameObject Cuffs;
 
 
     // StateMachineVariables
-    protected State idleState = State.FollowRoute;
-    protected ActionE idleAction = ActionE.FollowPath;
-    protected State currentState = State.None;
-    protected ActionE currentAction = ActionE.None;
-    protected AlertIntensity currentAlertIntensity = AlertIntensity.Nonexistant;
+    protected State IdleState = State.FollowRoute;
+    protected ActionE IdleAction = ActionE.FollowPath;
+    protected State CurrentState = State.None;
+    protected ActionE CurrentAction = ActionE.None;
+    protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
     
 
     // Follow Route variables
-    public List<Node> path = new List<Node>();
-    public NodePath currentRoute { get; private set; }
-    AI_Type ai_type = AI_Type.Guard;
+    public List<Node> Path = new List<Node>();
+    public NodePath CurrentRoute { get; private set; }
+    private const AI_Type AiType = AI_Type.Guard;
 
     protected virtual void Start()
     {
-        cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
-        cuffs.SetActive(false);
-        followPath = new FollowPath(this);
-        actions.Add(ActionE.FollowPath, followPath);
-        actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
+        Cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
+        Cuffs.SetActive(false);
+        FollowPath = new FollowPath(this);
+        Actions.Add(ActionE.FollowPath, FollowPath);
+        Actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
     }
 
     void FixedUpdate()
     {
-        if (!isZipTied && incapacitateTimer.TickFixed())
-            isIncapacitated = false;
+        if (!IsZipTied && _incapacitateTimer.TickFixed())
+            IsIncapacitated = false;
         // Reset variables that need to be reset every frame for functionality.
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
-        if (isIncapacitated)
+        if (IsIncapacitated)
             return;
 
-        uint actionReturnType = actions[currentAction].PerformAction();
+        uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
             GetNextAction(actionReturnType);
@@ -84,7 +86,7 @@ public abstract class AI : MonoBehaviour
 
     public AI_Type Type()
     {
-        return ai_type;
+        return AiType;
     }
 
     public bool Alert(Sound sound)
@@ -92,59 +94,59 @@ public abstract class AI : MonoBehaviour
         switch (sound.soundType)
         {
             case Sound.SoundType.Weapon:
-                currentAlertIntensity = AlertIntensity.ConfirmedHostile;
+                CurrentAlertIntensity = AlertIntensity.ConfirmedHostile;
                 break;
             case Sound.SoundType.Construction:
-                currentAlertIntensity = AlertIntensity.NonHostile;
+                CurrentAlertIntensity = AlertIntensity.NonHostile;
                 break;
             default:
-                currentAlertIntensity = AlertIntensity.Nonexistant;
+                CurrentAlertIntensity = AlertIntensity.Nonexistant;
                 break;
         }
-        return Alert(sound.origin, currentAlertIntensity);
+        return Alert(sound.origin, CurrentAlertIntensity);
     }
 
     public virtual bool Alert(Vector2 position, AlertIntensity alertIntesity) { Debug.LogError("IMPLEMENT ALERT IN ALL CLASSES DERIVED FROM AI"); return true;  }
 
     public virtual void GetNextAction(uint lastActionReturnValue)
     {
-        currentAction = actions[currentAction].GetNextAction(currentState, lastActionReturnValue, currentAlertIntensity);
-        if (currentAction == ActionE.None)
+        CurrentAction = Actions[CurrentAction].GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
+        if (CurrentAction == ActionE.None)
             CancelCurrentState();
     }
 
     public void SetPathToPosition(Vector2 pos)
     {
-        path.Clear();
+        Path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }
 
     public void GoToNextRouteNode()
     {
-        SetPathToPosition(currentRoute.NextNode.Position);
+        SetPathToPosition(CurrentRoute.NextNode.Position);
     }
 
     public void SetRoute(NodePath route)
     {
-        currentRoute = route;
-        currentState = State.FollowRoute;
-        currentAction = ActionE.FollowPath;
-        SetPathToPosition(currentRoute.NextNode.Position);
+        CurrentRoute = route;
+        CurrentState = State.FollowRoute;
+        CurrentAction = ActionE.FollowPath;
+        SetPathToPosition(CurrentRoute.NextNode.Position);
     }
 
     protected void CancelCurrentState()
     {
-        currentState = idleState;
-        currentAction = idleAction;
-        currentAlertIntensity = AlertIntensity.Nonexistant;
+        CurrentState = IdleState;
+        CurrentAction = IdleAction;
+        CurrentAlertIntensity = AlertIntensity.Nonexistant;
     }
 
-    public void OnVisionEnter(Collider2D col)
+    public virtual void OnVisionEnter(Collider2D col)
     {
         if(CompareTag(col.tag))
         {
-            if(!inVision.Contains(col) && !justEnteredVision.ContainsKey(col.gameObject.name))
-                justEnteredVision.Add(col.gameObject.name, 0f);
+            if(!InVision.Contains(col) && !JustEnteredVision.ContainsKey(col.gameObject.name))
+                JustEnteredVision.Add(col.gameObject.name, 0f);
         }
         if (col.CompareTag("Player"))
         {
@@ -154,13 +156,13 @@ public abstract class AI : MonoBehaviour
 
     public void OnVisionStay(Collider2D col)
     {
-        if(justEnteredVision.ContainsKey(col.gameObject.name))
+        if(JustEnteredVision.ContainsKey(col.gameObject.name))
         {
-            justEnteredVision[col.gameObject.name] += Time.deltaTime;
-            if(justEnteredVision[col.gameObject.name] > 0.15f)
+            JustEnteredVision[col.gameObject.name] += Time.deltaTime;
+            if(JustEnteredVision[col.gameObject.name] > 0.15f)
             {
-                inVision.Add(col);
-                justEnteredVision.Remove(col.gameObject.name);
+                InVision.Add(col);
+                JustEnteredVision.Remove(col.gameObject.name);
             }
         }
     }
@@ -169,16 +171,16 @@ public abstract class AI : MonoBehaviour
     {
         if (CompareTag(col.tag))
         {
-            justEnteredVision.Remove(col.gameObject.name);
-            inVision.Remove(col);
+            JustEnteredVision.Remove(col.gameObject.name);
+            InVision.Remove(col);
         }
     }
 
     public void Injure(int damage, Vector3 dir)
     {
         CreateBloodSplatter();
-        health -= damage;
-        if (health <= 0)
+        Health -= damage;
+        if (Health <= 0)
         {
             DieAnimation(dir);
             GeneralUI.Instance.Kills++;
@@ -186,7 +188,7 @@ public abstract class AI : MonoBehaviour
             return;
         }
 
-        if(currentState != State.Pursuit)
+        if(CurrentState != State.Pursuit)
         {
             Alert(PlayerController.Instance.transform.position, AlertIntensity.ConfirmedHostile);
         }
@@ -204,27 +206,27 @@ public abstract class AI : MonoBehaviour
             IncapacitateFailedReaction();
             return;
         }
-        isIncapacitated = true;
-        incapacitateTimer.ResetTo(incapacitateTimer.Max * UnityEngine.Random.Range(0.5f, 1.5f));
+        IsIncapacitated = true;
+        _incapacitateTimer.ResetTo(_incapacitateTimer.Max * UnityEngine.Random.Range(0.5f, 1.5f));
     }
 
     public void GetZipTied()
     {
-        if (!isIncapacitated)
+        if (!IsIncapacitated)
         {
             IncapacitateFailedReaction();
             return;
         }
-        isZipTied = true;
-        cuffs.SetActive(true);
+        IsZipTied = true;
+        Cuffs.SetActive(true);
     }
 
     protected abstract void IncapacitateFailedReaction();
 
     public void ReleaseCuffs()
     {
-        isIncapacitated = false;
-        cuffs.SetActive(false);
+        IsIncapacitated = false;
+        Cuffs.SetActive(false);
     }
 
 

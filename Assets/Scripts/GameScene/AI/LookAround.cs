@@ -36,7 +36,7 @@ public class LookAround : Action
             return 1;
         }
 
-        ai.rotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
+        ai.RotateVisionAround.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * Time.fixedDeltaTime));
 
         return 0;
     }

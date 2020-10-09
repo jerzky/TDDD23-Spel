@@ -487,6 +487,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &57591631 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 393767119701039176, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+  m_PrefabInstance: {fileID: 499843132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &133677207
 GameObject:
   m_ObjectHideFlags: 0
@@ -2587,6 +2592,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: BANK_GUARD
       objectReference: {fileID: 0}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: RotateVisionAround
+      value: 
+      objectReference: {fileID: 1591969883}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: LeftOffsetPoint
+      value: 
+      objectReference: {fileID: 1637821796}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: RightOffsetPoint
+      value: 
+      objectReference: {fileID: 57591631}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
 --- !u!1 &518471661
@@ -6886,6 +6903,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: RotateVisionAround
+      value: 
+      objectReference: {fileID: 1591969883}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: RightOffsetPoint
+      value: 
+      objectReference: {fileID: 57591631}
+    - target: {fileID: 6262308846238676766, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+      propertyPath: LeftOffsetPoint
+      value: 
+      objectReference: {fileID: 1637821796}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
 --- !u!1 &1432088374
@@ -8173,6 +8202,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+--- !u!1 &1591969883 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 393767117859180879, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+  m_PrefabInstance: {fileID: 499843132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1596534035
 GameObject:
   m_ObjectHideFlags: 0
@@ -8252,6 +8286,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596534035}
   m_CullTransparentMesh: 0
+--- !u!4 &1637821796 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 393767118984782969, guid: a2e41abc9c39158499e72a24339bee4e, type: 3}
+  m_PrefabInstance: {fileID: 499843132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1645653484
 GameObject:
   m_ObjectHideFlags: 0

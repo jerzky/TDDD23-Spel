@@ -4,18 +4,21 @@
 public class Pursue : Action
 {
     public enum ReturnType : uint { NotFinished, InFireRange, ReadyToHaltAndShoot, LostLineOfSight }
-    private readonly FollowPath _followPath;
     private readonly Transform _player;
     private readonly Threshold _pursueThreshold = new Threshold(9f, 7f);
     private Vector2 _currentFollowPos;
-    private readonly SimpleTimer _haltTimer = new SimpleTimer(2f);
-    bool b = false;
+    private readonly SimpleTimer _haltTimer;
+    private readonly Lawman _lawman;
+
+
+
     public Vector2 LastPlayerPos { get; set; } = Vector2.zero;
 
-    public Pursue(AI ai, Transform player, FollowPath followPath) : base(ai)
+    public Pursue(Lawman ai, Transform player, float haltTime) : base(ai)
     {
+        _lawman = ai;
         _player = player;
-        _followPath = followPath;
+        _haltTimer = new SimpleTimer(haltTime);
     }
 
     public override uint PerformAction()
@@ -78,7 +81,7 @@ public class Pursue : Action
         {
             if (PlayerController.Instance.IsHostile || alertIntensity == AlertIntensity.ConfirmedHostile)
             {
-                (ai.actions[ActionE.HaltAndShoot] as HaltAndShoot).ResetShootTimer();
+                (ai.Actions[ActionE.HaltAndShoot] as HaltAndShoot).ResetShootTimer();
                 return ActionE.HaltAndShoot;
             }
             else if (alertIntensity == AlertIntensity.NonHostile)
