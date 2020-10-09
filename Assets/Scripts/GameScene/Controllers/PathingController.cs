@@ -86,7 +86,7 @@ public class PathingController : MonoBehaviour
                     PathFindingQueueItem pfqi = waitingQueue.Dequeue();
                     if (pfqi.AI != null)
                     {
-                        pfqi.AI.followPath.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()));
+                        pfqi.AI.FollowPath.NodeToPathList(FindPath(pfqi.StartPos, pfqi.EndPos, (NodeType[,])grid.Clone()));
                         delayBetweenPathFindings = maxDelayBetweenPathFindings;
                         break;
                     }

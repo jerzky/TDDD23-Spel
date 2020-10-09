@@ -23,7 +23,7 @@ public class FindPathToRouteNode : Action
     }
     public override uint PerformAction()
     {
-        ai.SetPathToPosition(ai.currentRoute.NextNode.Position);
+        ai.SetPathToPosition(ai.CurrentRoute.NextNode.Position);
         return 1;
     }
 

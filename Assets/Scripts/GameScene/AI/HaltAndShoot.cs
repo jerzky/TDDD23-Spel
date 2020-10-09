@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class HaltAndShoot : Action
 {
+    private readonly Lawman _ai;
+
     public enum ReturnType : uint { NotFinished, Finished };
     private readonly AIWeaponHandler _weaponHandler;
-    public HaltAndShoot(AI ai) : base(ai)
+    public HaltAndShoot(Lawman ai, AIWeaponHandler weaponHandler ) : base(ai)
     {
-        _weaponHandler = new AIWeaponHandler(ai.GetComponent<AudioSource>());
+        _ai = ai;
+        _weaponHandler = weaponHandler;
     }
     public override uint PerformAction()
     {

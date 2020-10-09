@@ -5,13 +5,14 @@ public class AIWeaponHandler
     private readonly AudioSource _audioSource;
     private const float MaxRange = 20f;
     private const float DistanceFromAi = 0.5f;
-    private readonly SimpleTimer _shootTimer = new SimpleTimer(0.5f);
+    private readonly SimpleTimer _shootTimer;
     private readonly AI _ai;
     private readonly int _damage = 50;
 
-    public AIWeaponHandler(AudioSource audioSource)
+    public AIWeaponHandler(AudioSource audioSource, float shootTime)
     {
         _audioSource = audioSource;
+        _shootTimer = new SimpleTimer(shootTime);
     }
     /// <summary>This method will return true if does not stand still or if it shoots </summary>
     public bool Shoot(Vector2 aiPosition, Vector2 playerPos)
@@ -36,6 +37,7 @@ public class AIWeaponHandler
         _audioSource.Play(); 
         return true;
     }
+
 
     public void ResetShootTimer()
     {

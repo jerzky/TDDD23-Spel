@@ -1,38 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public abstract class Lawman : AI
 {
-    public Pursue pursue;
-    protected Sprite deadHat;
-    protected Sprite deadHead;
+    public Pursue Pursue { get; set; }
+    protected Sprite DeadHat;
+    protected Sprite DeadHead;
+
+    private protected float HaltTime = 2f;
+    private protected float ShootTime = 2f;
+    private AIWeaponHandler _weaponHandler;
+   
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        actions.Add(ActionE.LookAround, new LookAround(this));
-        pursue = new Pursue(this, FindObjectOfType<PlayerController>().transform, followPath);
-        actions.Add(ActionE.HaltAndShoot, new HaltAndShoot(this));
-        actions.Add(ActionE.Pursue, pursue);
-        deadHead = Resources.Load<Sprite>("Textures/deadhead");
+        _weaponHandler = new AIWeaponHandler(GetComponent<AudioSource>(), ShootTime);
+        Actions.Add(ActionE.LookAround, new LookAround(this));
+        Pursue = new Pursue(this, FindObjectOfType<PlayerController>().transform, HaltTime);
+        Actions.Add(ActionE.HaltAndShoot, new HaltAndShoot(this, _weaponHandler));
+        Actions.Add(ActionE.Pursue, Pursue);
+        DeadHead = Resources.Load<Sprite>("Textures/deadhead");
     }
 
     protected override void PlayerSeen()
     {
 
-        switch (currentState)
+        switch (CurrentState)
         {
             case State.Investigate:
-                currentState = State.Pursuit;
-                currentAction = ActionE.Pursue;
+                CurrentState = State.Pursuit;
+                CurrentAction = ActionE.Pursue;
                 break;
             case State.Pursuit:
-                if (currentAction != ActionE.Pursue && currentAction != ActionE.HaltAndShoot)
+                if (CurrentAction != ActionE.Pursue && CurrentAction != ActionE.HaltAndShoot)
                 {
                     // If we are not already in pursuit or shooting (looking for player), restart pursue.
-                    pursue.LastPlayerPos = PlayerController.Instance.transform.position;
-                    currentAction = ActionE.Pursue;
+                    Pursue.LastPlayerPos = PlayerController.Instance.transform.position;
+                    CurrentAction = ActionE.Pursue;
                 }
                 break;
         }
@@ -40,22 +48,22 @@ public abstract class Lawman : AI
 
     public override void GetNextAction(uint lastActionReturnValue)
     {
-        currentAction = actions[currentAction].GetNextAction(currentState, lastActionReturnValue, currentAlertIntensity);
-        if (currentAction == ActionE.None)
+        CurrentAction = Actions[CurrentAction].GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
+        if (CurrentAction == ActionE.None)
             CancelCurrentState();
     }
 
     protected void StartInvestigate(Vector2 position)
     {
-        currentState = State.Investigate;
+        CurrentState = State.Investigate;
         SetPathToPosition(position);
-        currentAction = ActionE.FollowPath;
+        CurrentAction = ActionE.FollowPath;
     }
 
     protected override void DieAnimation(Vector3 dir)
     {
         GameObject temp = new GameObject("DeadHead");
-        temp.AddComponent<SpriteRenderer>().sprite = deadHead;
+        temp.AddComponent<SpriteRenderer>().sprite = DeadHead;
         temp.transform.position = transform.position + Vector3.forward * 10f;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
@@ -67,11 +75,20 @@ public abstract class Lawman : AI
         rot *= hatDir.x;
         temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rot));
         temp.transform.position = transform.position + hatDir;
-        temp.AddComponent<SpriteRenderer>().sprite = deadHat;
+        temp.AddComponent<SpriteRenderer>().sprite = DeadHat;
     }
 
     protected override void IncapacitateFailedReaction()
     {
         throw new System.NotImplementedException();
+    }
+
+    public override void OnVisionEnter(Collider2D col)
+    {
+        base.OnVisionEnter(col);
+        if (col.CompareTag("lawmandestroy"))
+        {
+            _weaponHandler.Shoot(transform.position, col.transform.position);
+        }
     }
 }
