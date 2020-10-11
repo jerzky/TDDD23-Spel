@@ -88,9 +88,8 @@ public class Bank : Building
         }
 
         var type = int.Parse(name.Substring(firstDashIndex, secondDash - firstDashIndex));
-
+        
         var enumType = (NodePath.RouteNodeType) type;
-
         var length = name.Substring(secondDash + 1, name.Length - secondDash - 1);
         var intLength = int.Parse(length);
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class MenuScreen
 {
-    protected string name;
+    public enum Screen { MainMenu, ControlEditor, LoadGame }
+    protected Screen screen;
     protected Vector2 limit;
     protected GameObject holder;
     protected Vector2 position;
@@ -12,10 +13,10 @@ public abstract class MenuScreen
     public List<KeyCode> MonitoredKeys { get => monitoredKeys; }
     public bool IsActive { get { return holder.activeSelf; } }
     public bool SkipFrame { get; set; }
-    public MenuScreen(GameObject holder, string name)
+    public MenuScreen(GameObject holder, Screen screen)
     {
         this.holder = holder;
-        this.name = name;
+        this.screen = screen;
     }
 
     protected bool WithinLimit(Vector2 pos)
@@ -49,13 +50,13 @@ public abstract class MenuScreen
         ActivateMenuObject(position);
     }
 
-    public virtual string Activate()
+    public virtual Screen Activate()
     {
         holder.SetActive(true);
         ResetPosition();
         position = Vector2.zero;
         SkipFrame = true;
-        return name;
+        return screen;
     }
 
     public virtual void DeActivate()

@@ -17,14 +17,49 @@ public abstract class Action
 
 public class FindPathToRouteNode : Action
 {
+    public enum ReturnType { NotFinished, NewPathCreated, Idle }
+    bool hasWaited = false;
     public FindPathToRouteNode(AI ai) : base(ai)
     {
 
     }
     public override uint PerformAction()
     {
+        if (!hasWaited && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle)
+        {
+            hasWaited = true;
+            return (uint)ReturnType.Idle;
+        }
+        hasWaited = false;
         ai.SetPathToPosition(ai.CurrentRoute.NextNode.Position);
-        return 1;
+        return (uint)ReturnType.NewPathCreated;
+    }
+
+    public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
+    {
+        if (lastActionReturnValue == (uint)ReturnType.Idle)
+            return ActionE.Idle;
+        return ActionE.FollowPath;
+    }
+}
+
+public class IdleAtRouteNode : Action
+{
+    public enum ReturnType { NotFinished, Finished }
+    SimpleTimer timer = new SimpleTimer(9756873f);
+    public IdleAtRouteNode(AI ai) : base(ai)
+    {
+        timer.Reset();
+    }
+    public override uint PerformAction()
+    {
+        if (timer.CurrentTime == 9756873f)
+            timer.ResetTo(ai.CurrentRoute.CurrentNode.IdleTime);
+
+        if (timer.TickFixedAndReset())
+            return (uint)ReturnType.Finished;
+
+        return (uint)ReturnType.NotFinished;
     }
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)

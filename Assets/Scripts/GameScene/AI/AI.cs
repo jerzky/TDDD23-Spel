@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.WSA.Input;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker }
 public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, Freeze, Flee };
@@ -19,6 +16,9 @@ public abstract class AI : MonoBehaviour
     public Transform LeftOffsetPoint;
     [SerializeField]
     public Transform RightOffsetPoint;
+
+    protected Sprite[] sprites = new Sprite[4];
+    Vector2 lastPos; // used to determine movement direction to assign sprite
 
 
     public List<Collider2D> InVision = new List<Collider2D>();
@@ -49,13 +49,17 @@ public abstract class AI : MonoBehaviour
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
     protected State CurrentState = State.None;
+    public State GetCurrentState { get; }
     protected ActionE CurrentAction = ActionE.None;
+    public ActionE GetCurrentAction { get; }
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
     
 
     // Follow Route variables
     public List<Node> Path = new List<Node>();
     public NodePath CurrentRoute { get; private set; }
+
+
     public AI_Type AiType = AI_Type.Guard;
     private Building lastBuilding { get; set; }
     public Building CurrentBuilding
@@ -66,8 +70,6 @@ public abstract class AI : MonoBehaviour
             if (building != null)
                 lastBuilding = building;
 
-            if (lastBuilding == null)
-                Debug.LogError("THIS SHOULDNT HAPPEN IN THIS TESTING PHASE");
             return lastBuilding;
         }
     }
@@ -78,23 +80,40 @@ public abstract class AI : MonoBehaviour
         FollowPath = new FollowPath(this);
         Actions.Add(ActionE.FollowPath, FollowPath);
         Actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
+        Actions.Add(ActionE.Idle, new IdleAtRouteNode(this));
     }
 
     void FixedUpdate()
     {
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
-        // Reset variables that need to be reset every frame for functionality.
+        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (IsIncapacitated)
             return;
+
+
+        HandleCharacterRotation();
         uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
             GetNextAction(actionReturnType);
         }
 
+    }
+
+    void HandleCharacterRotation()
+    {
+        Vector2 dir = (Vector2)transform.position - lastPos;
+        lastPos = (Vector2)transform.position;
+        if (dir != Vector2.zero)
+        {
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y)) GetComponent<SpriteRenderer>().sprite = dir.x > 0f ? sprites[3] : sprites[2];
+            else GetComponent<SpriteRenderer>().sprite = dir.y > 0f ? sprites[1] : sprites[0];
+            float angle = -Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
+            RotateVisionAround.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
     }
 
     public AI_Type Type()

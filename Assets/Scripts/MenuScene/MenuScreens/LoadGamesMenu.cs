@@ -34,7 +34,7 @@ public class LoadGamesMenu : MenuScreen
     List<Text> savedGameTexts;
     Vector3 textOffset = new Vector3(0f, -100f, 0f);
     bool choosingName = false;
-    public LoadGamesMenu (GameObject holder, string name, GameObject textPrefab) : base(holder, name)
+    public LoadGamesMenu (GameObject holder, Screen screen, GameObject textPrefab) : base(holder, screen)
     {
         this.textPrefab = textPrefab;
         savedGamesMap = Json.JsonToContainer<SortedDictionary<uint, SavedGame>>("saves.json");
@@ -149,7 +149,7 @@ public class LoadGamesMenu : MenuScreen
                 break;
 
             case KeyCode.Escape:
-                MenuController.Instance.ChangeMenuScreen("MainMenu");
+                MenuController.Instance.ChangeMenuScreen(Screen.MainMenu);
                 break;
             case KeyCode.Delete:
                 GameObject.Destroy(savedGameTexts[(int)position.y].gameObject);
@@ -161,7 +161,7 @@ public class LoadGamesMenu : MenuScreen
                 }
 
                 if (savedGameTexts.Count == 0)
-                    MenuController.Instance.ChangeMenuScreen("MainMenu");
+                    MenuController.Instance.ChangeMenuScreen(Screen.MainMenu);
 
                 Vector2 lastPos = position;
                 if ((int)position.y >= savedGameTexts.Count)

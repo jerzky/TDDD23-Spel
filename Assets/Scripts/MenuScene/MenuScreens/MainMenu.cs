@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MainMenu : MenuScreen
 {
     Image[] menuButtons;
-    public MainMenu(GameObject holder, string name) : base(holder, name)
+    public MainMenu(GameObject holder, Screen screen) : base(holder, screen)
     {
         menuButtons = holder.GetComponentsInChildren<Image>();
         for (int i = 0; i < menuButtons.Length; i++)
@@ -40,10 +40,10 @@ public class MainMenu : MenuScreen
                 MenuController.Instance.startGameAnimationActive = true;
                 break;
             case 1:
-                MenuController.Instance.ChangeMenuScreen("ControlEditor");
+                MenuController.Instance.ChangeMenuScreen(Screen.ControlEditor);
                 break;
             case 2:
-                MenuController.Instance.ChangeMenuScreen("LoadGamesMenu");
+                MenuController.Instance.ChangeMenuScreen(Screen.LoadGame);
                 break;
             case 3:
                 #if UNITY_EDITOR

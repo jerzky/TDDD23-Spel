@@ -65,7 +65,6 @@ public class GameController : MonoBehaviour
 
     private string CreateNewSave()
     {
-        
         var savedGames = Json.JsonToContainer<SortedDictionary<uint, SavedGame>>("saves.json");
         var clone = savedGames.ToList();
         savedGames.Clear();
