@@ -272,6 +272,8 @@ public class FollowPath : Action
                     return ActionE.Flee;
                 else
                     return ActionE.None;
+            case State.CoverEntrance:
+                return ActionE.LookAround;
         }
         return ActionE.None;
     }

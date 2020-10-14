@@ -34,33 +34,92 @@ public abstract class Building : MonoBehaviour
     [SerializeField]
     private SecurityStation _securityStation;
 
+    [SerializeField] 
+    public List<Vector2> Entrances;
+
+    [SerializeField]
+    public Vector2 PoliceSpawnPoint;
+
+    private readonly Dictionary<Vector2, List<Police>> _entranceCover = new Dictionary<Vector2, List<Police>>();
+
+
     protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
-    SimpleTimer playerHostileTimer = new SimpleTimer(30);
+    private readonly SimpleTimer _playerHostileTimer = new SimpleTimer(30);
+    protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(60);
+
+
     public bool PlayerReportedAsHostile { get; private set; } = false;
     public BuildingType BuildingType { get; protected set; }
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        
+        foreach (var entrance in Entrances)
+        {
+            _entranceCover.Add(entrance, new List<Police>());
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (PlayerReportedAsHostile && playerHostileTimer.TickAndReset())
+        if (PlayerReportedAsHostile && _playerHostileTimer.TickAndReset())
             ResetPlayerHostility();
+    }
+
+    public Vector2 FindBestEntrance()
+    {
+        var lowest = int.MaxValue;
+        var best = Vector2.zero;
+        foreach (var pair in _entranceCover)
+        {
+            if (pair.Value.Count >= lowest)
+                continue;
+
+            lowest = pair.Value.Count;
+            best = pair.Key;
+
+            if (lowest == 0)
+                break;
+        }
+        return best;
+
 
     }
+
 
     protected virtual void ReportPlayerAsHostile()
     {
         PlayerReportedAsHostile = true;
-        playerHostileTimer.Reset();
+        _playerHostileTimer.Reset();
     }
     protected virtual void ResetPlayerHostility()
     {
         PlayerReportedAsHostile = false;
     }
+
+    public bool IsEntranceCovered(Vector2 entrance)
+    {
+        if (!_entranceCover.ContainsKey(entrance))
+            return false;
+
+        return _entranceCover[entrance].Count > 0;
+    }
+
+    public void AddToEnterance(Police police, Vector2 entrance)
+    {
+        if (!_entranceCover.ContainsKey(entrance))
+            return;
+        _entranceCover[entrance].Add(police);
+    }
+
+    public void RemoveFromEnterance(Police police, Vector2 entrance)
+    {
+        if (!_entranceCover.ContainsKey(entrance))
+            return;
+
+        _entranceCover[entrance].Remove(police);
+    }
+
+
 
     public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
     {

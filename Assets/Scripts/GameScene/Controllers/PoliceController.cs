@@ -18,6 +18,12 @@ public class PoliceController : MonoBehaviour
         
     }
 
+
+    public void NotifyPolice(Building building)
+    {
+        SpawnPolice(building, State.CoverEntrance, ActionE.CoverEntrance);
+    }
+
     public void CallPolice(Vector2 callPosition)
     {
         var cellphoneJammers = FindObjectsOfType<CellPhoneJammer_Interactable>();
@@ -26,5 +32,11 @@ public class PoliceController : MonoBehaviour
             if (Vector2.Distance(v.transform.position, callPosition) < v.Distance)
                 return;
         }
+    }
+
+    private static void SpawnPolice(Building building, State state, ActionE action)
+    {
+        for(var i = 0; i < 5; i++)
+            Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
     }
 }

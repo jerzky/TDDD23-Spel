@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, Freeze, Flee };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, Panic };
+public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, CoverEntrance, StormBuilding, Freeze, Flee };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, CoverEntrance, StormBuilding, Panic };
+
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
 
@@ -85,8 +86,13 @@ public abstract class AI : MonoBehaviour
 
     void FixedUpdate()
     {
+
+
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
+
+        if (CurrentAction == ActionE.None || CurrentState == State.None)
+            return;
         // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
@@ -158,6 +164,7 @@ public abstract class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
+        Debug.Log($"Path to position");
         Path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }

@@ -7,7 +7,8 @@ using UnityEngine;
 public abstract class Action
 {
     protected AI ai;
-    public Action(AI ai)
+
+    protected Action(AI ai)
     {
         this.ai = ai;
     }

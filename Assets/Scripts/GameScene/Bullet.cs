@@ -70,7 +70,7 @@ public class Bullet : MonoBehaviour
         _damage = damage;
         Shooter = shooter;
         BulletDirection = bulletDirection;
-        Debug.Log(muzzleVelocity + " " + maxTravelDistance);
+      //  Debug.Log(muzzleVelocity + " " + maxTravelDistance);
         _bulletInfoSet = true;
     }
 

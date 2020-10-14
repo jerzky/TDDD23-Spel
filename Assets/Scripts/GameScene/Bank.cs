@@ -19,7 +19,7 @@ public class Bank : Building
     private GameObject _civilianNodeHolder;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         Instance = this;
         BuildingType = BuildingType.Bank;
@@ -43,14 +43,14 @@ public class Bank : Building
         var posY = 77 + sizeY / 2;
         _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         SetUpCivilianRoutes();
-        Debug.Log("CIVIVIVIVIVIVIVI BANANANAKJK PAATATHS " + _civilianNodePaths.Count);
+        base.Start();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        
+        PoliceSpawnTimer.Tick();
     }
 
     private void SetUpCivilianRoutes()
@@ -80,21 +80,25 @@ public class Bank : Building
             
             _nodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));
         }
-
+/*
         foreach (var path in _nodePaths)
         {
             Debug.Log($"Name: {path.Name}, Count: {path.Nodes.Count}");
-        }
+        }*/
     }
 
     public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
     {
         base.OnAlert(pos, alertType, alertIntensity);
-
+       
         switch (alertType)
         {
             case AlertType.Guard_CCTV:
-                SendGuardToInvestigate(pos, alertIntensity);
+                if(PoliceSpawnTimer.TickAndReset())
+                    PoliceController.Instance.NotifyPolice(this);
+               // SendGuardToInvestigate(pos, alertIntensity);
+                break;
+            case AlertType.None:
                 break;
             case AlertType.Guard_Radio:
                 // if it is confirmed hostile send more guards
