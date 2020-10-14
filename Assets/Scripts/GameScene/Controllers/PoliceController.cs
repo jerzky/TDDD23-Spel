@@ -36,7 +36,7 @@ public class PoliceController : MonoBehaviour
 
     private static void SpawnPolice(Building building, State state, ActionE action)
     {
-        for(var i = 0; i < 5; i++)
+        for(var i = 0; i < 1; i++)
             Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
     }
 }

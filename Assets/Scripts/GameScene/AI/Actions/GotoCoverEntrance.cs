@@ -35,7 +35,7 @@ public class GotoCoverEntrance : Action
     {
 
         ai.Path.Clear();
-        var pos = new Vector2(11 + count, 65);
+        var pos = new Vector2(11 + count, 68);
         count += 0.5f;
         ai.SetPathToPosition(pos);
         Debug.Log($"Set the police cover to: {pos}");

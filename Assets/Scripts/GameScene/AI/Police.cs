@@ -14,7 +14,7 @@ public class Police : Lawman
     {
         Health = 150;
         HaltTime = 2f;
-        ShootTime = 0.25f;
+        ShootTime = 1f;
         AiType = AI_Type.Police;
         Actions.Add(ActionE.GotoCoverEntrance, new GotoCoverEntrance(this));
         Actions.Add(ActionE.HoldCoverEntrance, new HoldCoverEntrance(this));
