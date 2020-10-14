@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -228,7 +229,12 @@ public class PlayerController : MonoBehaviour
         if (GeneralUI.Instance.Health <= 0)
         {
             // you lost motherfucker
-            Destroy(gameObject);
+            #if UNITY_EDITOR
+            if (EditorApplication.isPlaying)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
+            #endif
         }
         else if(GeneralUI.Instance.Health <= 50)
         {

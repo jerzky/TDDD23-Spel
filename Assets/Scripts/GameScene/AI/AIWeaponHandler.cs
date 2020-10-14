@@ -2,17 +2,18 @@
 
 public class AIWeaponHandler
 {
-    private const float AIWeaponVelocity = 20f;
-    private const float MaxRange = 20f;
+    private const float AIWeaponVelocity = 40f;
+    private const float MaxRange = 30f;
     private const float DistanceFromAi = 0.5f;
-    private readonly AI _ai;
     private readonly AudioSource _audioSource;
     private readonly int _damage = 50;
     private readonly SimpleTimer _shootTimer;
+    private readonly float _shootTime;
 
     public AIWeaponHandler(AudioSource audioSource, float shootTime)
     {
         _audioSource = audioSource;
+        _shootTime = shootTime;
         _shootTimer = new SimpleTimer(shootTime);
     }
 
@@ -22,7 +23,7 @@ public class AIWeaponHandler
             return false;
 
         if (!ignoreTimer)
-            _shootTimer.Reset();
+            _shootTimer.ResetTo(_shootTime * Random.Range(0.5f, 1.5f));
 
         var playerDir = PlayerController.Instance.MovementDirection;
         var playerSpeed = PlayerController.Instance.CurrentSpeed;
@@ -70,7 +71,7 @@ public class AIWeaponHandler
         var yDis = interceptLocation.y - bulletLocation.y;
         var angle = -Mathf.Atan2(xDis, yDis) * 180 / Mathf.PI;
 
-        Bullet.Generate(AIWeaponVelocity, 30f, _damage, Bullet.ShooterType.AI, aimDirection, bulletLocation,
+        Bullet.Generate(AIWeaponVelocity, MaxRange, _damage, Bullet.ShooterType.AI, aimDirection, bulletLocation,
             Quaternion.Euler(0f, 0f, angle));
         _audioSource.Play();
         return true;
@@ -98,7 +99,7 @@ public class AIWeaponHandler
         var yDis = playerPos.y - startPosition.y;
         var angle = -Mathf.Atan2(xDis, yDis) * 180 / Mathf.PI;
 
-        Bullet.Generate(AIWeaponVelocity, 30f, _damage, Bullet.ShooterType.AI, finalDirection, startPosition,
+        Bullet.Generate(AIWeaponVelocity, MaxRange, _damage, Bullet.ShooterType.AI, finalDirection, startPosition,
             Quaternion.Euler(0f, 0f, angle));
         _audioSource.Play();
         return true;

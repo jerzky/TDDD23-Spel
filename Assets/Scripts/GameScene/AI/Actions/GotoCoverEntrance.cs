@@ -14,6 +14,8 @@ public class GotoCoverEntrance : Action
 
     public override uint PerformAction()
     {
+        if (ai == null)
+            return 0;
         if (ai.Path.Count > 0)
             return (uint)ReturnType.FollowPath;
         

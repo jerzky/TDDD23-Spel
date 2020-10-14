@@ -15,6 +15,8 @@ public class Freeze : Action
     
     public override uint PerformAction()
     {
+        if (ai == null)
+            return 0;
         // Do nothing until we either see a lawman or have waited sufficiently
         if (lookForLawman.TickAndReset())
             if (CanSeeLawMan())
@@ -38,6 +40,8 @@ public class Freeze : Action
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
+        if (ai == null)
+            return ActionE.None;
         if (alertIntensity != AlertIntensity.ConfirmedHostile)
             return ActionE.None;
 

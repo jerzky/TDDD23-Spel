@@ -24,7 +24,9 @@ public class LookAround : Action
 
     public override uint PerformAction()
     {
-        if(firstRun)
+        if (ai == null)
+            return 0;
+        if (firstRun)
         {
             firstRun = false;
             currentLookAroundTimer = UnityEngine.Random.Range(minLookAroundTime, maxLookAroundTime);

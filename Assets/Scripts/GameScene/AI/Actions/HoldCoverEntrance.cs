@@ -18,6 +18,8 @@ public class HoldCoverEntrance : Action
 
     public override uint PerformAction()
     {
+        if (ai == null)
+            return 0;
         var layerMask = ~LayerMask.GetMask("AI", "Ignore Raycast");
         return Utils.LineOfSight(_police.transform.position, PlayerController.Instance.gameObject, layerMask)
             ? (uint)ReturnType.FoundPlayer

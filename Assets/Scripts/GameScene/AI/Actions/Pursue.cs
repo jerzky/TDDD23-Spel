@@ -23,6 +23,8 @@ public class Pursue : Action
 
     public override uint PerformAction()
     {
+        if (ai == null)
+            return 0;
         if (LineOfSight())
         {
             // Player is in line of sight, move towards player.
@@ -67,6 +69,8 @@ public class Pursue : Action
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
+        if (ai == null)
+            return ActionE.None;
         if (lastActionReturnValue == (uint)Pursue.ReturnType.InFireRange || lastActionReturnValue == (uint)Pursue.ReturnType.ReadyToHaltAndShoot)
         {
             if (PlayerController.Instance.IsHostile || alertIntensity == AlertIntensity.ConfirmedHostile)
