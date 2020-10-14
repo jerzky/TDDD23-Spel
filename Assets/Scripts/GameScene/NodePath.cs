@@ -53,7 +53,14 @@ public class NodePath
     }
 
     public RouteNode CurrentNode => Nodes[CurrentNodeIndex];
-    public RouteNode NextNode => Nodes[CurrentNodeIndex++];
+    public RouteNode NextNode
+    {
+        get
+        {
+            ++CurrentNodeIndex;
+            return Nodes[CurrentNodeIndex];
+        }
+    }
 
     public static NodePath LoadPathNodesFromHolder(GameObject holder)
     {
@@ -88,8 +95,8 @@ public class NodePath
         var intLength = int.Parse(length);
 
         Debug.Log(string.IsNullOrEmpty(parentName)
-            ? $"Added a {enumType} with length: {intLength}"
-            : $"Added a {enumType} with length: {intLength} to parent: {parentName}");
+            ? $"Added a {enumType} with length: {intLength} at position {pos}"
+            : $"Added a {enumType} with length: {intLength} at position {pos} to parent: {parentName}");
 
         return new NodePath.RouteNode(pos, enumType, intLength);
     }

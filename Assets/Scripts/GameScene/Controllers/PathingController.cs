@@ -199,6 +199,11 @@ public class PathingController : MonoBehaviour
         for (int i = 0; i < queue.Count; i++)
         {
             var v = queue[i];
+            if(v.AI == null)
+            {
+                queue.Remove(v);
+                continue;
+            }
             if (v.AI.GetCurrentAction != ActionE.FollowPath)
                 queue.Remove(v);
             v.Distance = Vector2.Distance(doorPosition, v.AI.transform.position);

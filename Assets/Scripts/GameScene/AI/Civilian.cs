@@ -32,7 +32,6 @@ public class Civilian : AI
         fun = Random.Range(0, 100);
         food = Random.Range(0, 100);
         cash = Random.Range(0, 100);
-        SetRoute(new NodePath("testroute", this, new NodePath.RouteNode(new Vector2(12, 90), NodePath.RouteNodeType.Walk), new NodePath.RouteNode(new Vector2(12, 82), NodePath.RouteNodeType.Walk)));
     }
 
     void Update()
@@ -60,7 +59,8 @@ public class Civilian : AI
         {
             Debug.Log("Choose New Building");
             float val = Mathf.Min(food, cash);
-
+            CurrentState = State.FollowRoute;
+            CurrentAction = ActionE.FollowPath;
             if (val == food)
             {
                 CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment);
@@ -71,27 +71,9 @@ public class Civilian : AI
             {
                 CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank);
                 Path.Clear();
-                Debug.Log("current" + CurrentRoute.CurrentNode.Position);
-                Debug.Log("next " + CurrentRoute.Nodes[CurrentRoute.CurrentNodeIndex+1].Position);
-
                 SetPathToPosition(CurrentRoute.CurrentNode.Position);
             }
-                
-
-            if (val == fun)
-                Debug.Log("Fun");
-            else if (val == food)
-                Debug.Log("food");
-            else if (val == cash)
-                Debug.Log("cash");
-
-            if(CurrentRoute == null) Debug.Log("NULL");
-
-            Debug.Log(CurrentRoute.CurrentNode.Position);
-            Debug.Log(CurrentAction);
-            Debug.Log(CurrentState);
         }
-        
     }
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
@@ -109,7 +91,7 @@ public class Civilian : AI
 
         if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast")))
             if (PlayerController.Instance.IsHostile)
-                CurrentAction = ActionE.Freeze; // if we can see player and he is carrying weapon freeze instead of flee
+                CurrentAction = ActionE.Freeze;
 
         return true;
     }

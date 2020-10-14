@@ -46,7 +46,6 @@ public class Bank : Building
         base.Start();
     }
 
-
     // Update is called once per frame
     void Update()
     {
@@ -55,16 +54,13 @@ public class Bank : Building
 
     private void SetUpCivilianRoutes()
     {
-        _civilianNodePaths.Add(NodePath.LoadPathNodesFromHolder(_civilianNodeHolder));
-        for (int i = 0; i < 5; i++)
+        var rooms = _civilianNodeHolder.GetComponentsInChildren<Transform>();
+        foreach (var r in rooms)
         {
-            NodePath nodePath = new NodePath((i + 1).ToString(), null);
-            Vector2 offset = new Vector2(0f, 1f);
-            foreach(var v in _civilianNodePaths[0].Nodes)
-            {
-                nodePath.Nodes.Add(new NodePath.RouteNode(v.Position + offset * i, v.Type, v.IdleTime));
-            }
-            _civilianNodePaths.Add(nodePath);
+            if (r.childCount == 0 || r.name == _civilianNodeHolder.name)
+                continue;
+
+            _civilianNodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));
         }
     }
 
@@ -80,11 +76,6 @@ public class Bank : Building
             
             _nodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));
         }
-/*
-        foreach (var path in _nodePaths)
-        {
-            Debug.Log($"Name: {path.Name}, Count: {path.Nodes.Count}");
-        }*/
     }
 
     public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
@@ -124,7 +115,6 @@ public class Bank : Building
 
     public override NodePath GetCivilianPath()
     {
-        Debug.Log(_civilianNodePaths.Count);
         if (_civilianNodePathIndex >= _civilianNodePaths.Count) _civilianNodePathIndex = _civilianNodePathIndex % _civilianNodePaths.Count;
         return _civilianNodePaths[_civilianNodePathIndex++];
     }

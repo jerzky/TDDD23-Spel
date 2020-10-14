@@ -30,7 +30,7 @@ public class FindPathToRouteNode : Action
         if (ai.CurrentRoute == null)
             return (uint)ReturnType.NoRoute;
 
-        if (!hasWaited && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle)
+        if (!hasWaited && Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.25f && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle)
         {
             hasWaited = true;
             return (uint)ReturnType.Idle;
@@ -62,6 +62,7 @@ public class IdleAtRouteNode : Action
     {
         if (timer.CurrentTime == 9756873f)
             timer.ResetTo(ai.CurrentRoute.CurrentNode.IdleTime);
+        
 
         if (timer.TickFixedAndReset())
             return (uint)ReturnType.Finished;

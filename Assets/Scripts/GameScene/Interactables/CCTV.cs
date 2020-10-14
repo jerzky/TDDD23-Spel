@@ -50,7 +50,6 @@ public class CCTV : Interactable
         get => _isMonitored;
         set
         {
-            
             _isMonitored = value;
             GetComponent<SpriteRenderer>().sprite = _isMonitored ? _cameraSprites[4] : _cameraSprites[2];
         }
@@ -102,12 +101,6 @@ public class CCTV : Interactable
             return;
 
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
-        // Check if player is hostile
-        // this bool should be kept in some kind of controller
-
-        //For testing
-        _building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_CCTV,
-            AlertIntensity.ConfirmedHostile);
 
         if (PlayerController.Instance.IsHostile || _locationType == LocationType.Hostile)
         {
