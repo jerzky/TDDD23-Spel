@@ -13,7 +13,7 @@ public class Civilian : AI
     float cashGainMultiplier = 4f;
     float funGainMultiplier = 4f;
 
-    SimpleTimer switchCurrentRouteTimer = new SimpleTimer(45f);
+    SimpleTimer switchCurrentRouteTimer = new SimpleTimer(30f);
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -37,7 +37,7 @@ public class Civilian : AI
     void Update()
     {
         food -= Time.deltaTime;
-        //fun -= Time.deltaTime;
+        fun -= Time.deltaTime;
         cash -= Time.deltaTime;
         Building building = CurrentBuilding;
         if (building == null)

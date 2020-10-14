@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,33 +8,37 @@ public class Apartment
 {
     public AI Resident = null;
     public NodePath ApartmentRotation;
-    public Vector2 position;
+    public Vector2 Position;
     public Apartment(NodePath nodePath, Vector2 position)
     {
-
+        ApartmentRotation = nodePath;
+        Position = position;
     }
 }
 
 public class ApartmentBuilding : Building
 {
-    private const int numberOfApartments = 10;
+    private int numberOfApartments = 10;
     [SerializeField]
     GameObject nodeHolder;
     List<Apartment> apartments = new List<Apartment>();
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         var sizeX = 124 - 45;
         var sizeY = 57 - 23;
         var posX = 45 + sizeX / 2;
         var posY = 23 + sizeY / 2;
-        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
 
+        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         NodePath nodePath = NodePath.LoadPathNodesFromHolder(nodeHolder);
         apartments.Add(new Apartment(nodePath, new Vector2(52, 48)));
+
         float xInc = 15;
         float xIncOver3 = 4;
         float yIncOver4 = -17;
+
         for(int i = 0; i < numberOfApartments; i++)
         {
             Vector2 offset = Vector2.zero;
@@ -45,12 +50,10 @@ public class ApartmentBuilding : Building
                 var v = nodePath.Nodes[j];
                 newPath.Nodes.Add(new NodePath.RouteNode(v.Position + offset, v.Type, v.IdleTime));
             }
-            apartments.Add(new Apartment(newPath, apartments[0].position + offset));
+            apartments.Add(new Apartment(newPath, apartments[0].Position + offset));
         }
 
         BuildingType = BuildingType.Appartment;
-        Debug.Log("CIVIVIVIVIVIVIVI APAPAPPAPAPAP PAATATHS " + apartments.Count);
-
     }
 
     // Update is called once per frame
@@ -65,7 +68,6 @@ public class ApartmentBuilding : Building
         {
             if (v.Resident == null) return v.ApartmentRotation;
         }
-
         return null;
     }
 }

@@ -88,6 +88,7 @@ public class SoundController : MonoBehaviour
 
     public void CancelContinousSound(uint ID)
     {
-        continousSounds.Remove(ID);
+        if(continousSounds.ContainsKey(ID))
+            continousSounds.Remove(ID);
     }
 }
