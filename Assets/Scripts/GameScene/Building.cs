@@ -61,7 +61,10 @@ public class Building : MonoBehaviour
     public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
     {
         if (alertIntesity == AlertIntensity.ConfirmedHostile)
+        {
             ReportPlayerAsHostile();
+            PoliceController.Instance.CallPolice(pos);
+        }
     }
 
     public bool IsWithin(Vector2 position)

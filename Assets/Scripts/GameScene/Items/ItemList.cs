@@ -184,7 +184,7 @@ namespace Assets.Items
             Name = "Drill",
             IconPath = "Textures/drilltesticon",
             IconIndex = 0,
-            AverageUseTime = 15f,
+            AverageUseTime = 1.5f,
             ItemType = ItemType.Usable,
             InventoryStackSize = 1,
             SellPrice = 2000,

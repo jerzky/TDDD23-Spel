@@ -42,7 +42,6 @@ public class CCTV : Interactable
     {
         _cameraSprites = Resources.LoadAll<Sprite>("Textures/camerasprites");
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[2];
-        SetCameraLookDir(new Vector3(0f, 0f, -90f));
         _originalRotation = transform.rotation.eulerAngles;
     }
 

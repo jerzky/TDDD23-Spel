@@ -6,6 +6,8 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
+
+
 public class Door : Openable
 {
     protected bool timerActive = false;
@@ -20,7 +22,7 @@ public class Door : Openable
     public bool isVertical = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         transform.position += new Vector3(0, 0, -1);
         originalPosition = transform.position;
@@ -28,7 +30,7 @@ public class Door : Openable
         {
             openingDir = Vector2.up;
         }
-        AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID, ItemList.ITEM_DRILL.UID });
+        AssignUnlockItems();
     }
 
     // Update is called once per frame
@@ -40,9 +42,9 @@ public class Door : Openable
             MoveDoor();
     }
 
-    public override void AssignUnlockItems(HashSet<uint> set)
+    public override void AssignUnlockItems()
     {
-        unlockItems = set;
+        unlockItems = new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID, ItemList.ITEM_DRILL.UID };
     }
 
     public void Timer()
@@ -53,7 +55,13 @@ public class Door : Openable
             isLocked = false;
         }
         else
+        {
             timeLeft -= Time.deltaTime;
+            Debug.Log(timeLeft);
+        }
+            
+
+        
     }
 
     public virtual void MoveDoor()
@@ -108,6 +116,7 @@ public class Door : Openable
 
     public override void UnLock()
     {
+        Debug.Log("UnLock");
         timeLeft = ItemList.AllItems[currentItem].AverageUseTime * timerMultiplier;
         LoadingCircle.Instance.StartLoading();
         timerActive = true;

@@ -29,6 +29,7 @@ public class Drill_Item : UsableItem
                 GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Drill"), position, Quaternion.identity, null);
                 temp.GetComponent<Drill_Interactable>().StartDrilling(inter);
                 Inventory.Instance.RemoveItem(ItemList.ITEM_DRILL.UID, 1);
+                inter.Interact(item.UID);
             }
         }
         

@@ -11,7 +11,7 @@ public class SearchableContainer : Openable
     // Start is called before the first frame update
     void Start()
     {
-
+        AssignUnlockItems();
     }
 
     // Update is called once per frame
@@ -22,9 +22,9 @@ public class SearchableContainer : Openable
             
     }
 
-    public override void AssignUnlockItems(HashSet<uint> set)
+    public override void AssignUnlockItems()
     {
-        unlockItems = set;
+        unlockItems = new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID, ItemList.ITEM_DRILL.UID };
     }
 
     public void Timer()

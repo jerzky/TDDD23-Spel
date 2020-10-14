@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
@@ -54,5 +55,42 @@ public class NodePath
     public RouteNode CurrentNode => Nodes[CurrentNodeIndex];
     public RouteNode NextNode => Nodes[CurrentNodeIndex++];
 
+    public static NodePath LoadPathNodesFromHolder(GameObject holder)
+    {
+        var nodePath = new NodePath(holder.name, null, new List<NodePath.RouteNode>());
+        var nodes = holder.GetComponentsInChildren<Transform>().ToList();
+        foreach (var node in nodes.OrderBy(c => c.name))
+        {
+            if (node == holder)
+                continue;
+            nodePath.Nodes.Add(ParseNodeName(node.name, node.transform.position, holder.name));
+        }
+        return nodePath;
+    }
 
+    private static NodePath.RouteNode ParseNodeName(string name, Vector2 pos, string parentName = "")
+    {
+        var firstDashIndex = name.IndexOf('-') + 1;
+        var secondDash = name.IndexOf('-', firstDashIndex);
+        if (secondDash == -1)
+        {
+            Debug.Log(string.IsNullOrEmpty(parentName)
+                ? "Added walk node"
+                : $"Added walk node to parent: {parentName}");
+
+            return new NodePath.RouteNode(pos, NodePath.RouteNodeType.Walk);
+        }
+
+        var type = int.Parse(name.Substring(firstDashIndex, secondDash - firstDashIndex));
+
+        var enumType = (NodePath.RouteNodeType)type;
+        var length = name.Substring(secondDash + 1, name.Length - secondDash - 1);
+        var intLength = int.Parse(length);
+
+        Debug.Log(string.IsNullOrEmpty(parentName)
+            ? $"Added a {enumType} with length: {intLength}"
+            : $"Added a {enumType} with length: {intLength} to parent: {parentName}");
+
+        return new NodePath.RouteNode(pos, enumType, intLength);
+    }
 }

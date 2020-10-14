@@ -28,7 +28,6 @@ public abstract class Lawman : AI
 
     protected override void PlayerSeen()
     {
-        Debug.Log("Player Seen By LAWMAN");
         // call onalert on our building incase other guards are looking in the wrong place or this is first time player is noticed.
         // only call onalert if player is hostile or has been reported hostile in this building
         var building = CurrentBuilding;
@@ -67,7 +66,7 @@ public abstract class Lawman : AI
         temp.transform.position = transform.position + Vector3.forward * 10f;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
-        temp.AddComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+        temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
         temp = new GameObject("DeadHat");
         float r = UnityEngine.Random.Range(0.4f, 0.8f);
         Vector3 hatDir = new Vector3(r * dir.normalized.x, dir.normalized.y * r, 9f);

@@ -9,19 +9,8 @@ public abstract class Openable : Interactable
     protected bool isLocked = true;
     protected HashSet<uint> unlockItems = new HashSet<uint>();
     protected uint currentItem = 0;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public abstract void AssignUnlockItems(HashSet<uint> set);
+    public abstract void AssignUnlockItems();
 
     public override bool Interact(uint itemUID)
     {
