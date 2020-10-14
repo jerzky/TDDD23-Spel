@@ -16,7 +16,8 @@ public class Police : Lawman
         HaltTime = 2f;
         ShootTime = 0.25f;
         AiType = AI_Type.Police;
-        Actions.Add(ActionE.CoverEntrance, new CoverEntrance(this));
+        Actions.Add(ActionE.GotoCoverEntrance, new GotoCoverEntrance(this));
+        Actions.Add(ActionE.HoldCoverEntrance, new HoldCoverEntrance(this));
         sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[4];
         sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[5];
         sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[6];
@@ -24,27 +25,35 @@ public class Police : Lawman
         base.Start();
         IdleState = State.None;
         IdleAction = ActionE.None;
-        CurrentState = State.CoverEntrance;
-        CurrentAction = ActionE.CoverEntrance;
+        CurrentState = State.GotoCoverEntrance;
+        CurrentAction = ActionE.GotoCoverEntrance;
         DeadHat = Resources.Load<Sprite>("Textures/guardhat");
     }
 
 
 
 
-
+    protected override void PlayerSeen()
+    {
+        Debug.Log($"Player seen. Current State {CurrentState}");
+        base.PlayerSeen();
+    }
 
 
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
-        return false;
+        if (CurrentState == State.Pursuit)
+            return true;
+
+        Pursue.LastPlayerPos = position;
+        CurrentState = State.Pursuit;
+        CurrentAction = ActionE.Pursue;
+
+        return true;
     }
 
 
-    public void SetCurrentState(State state) => CurrentState = state;
-
-    public void SetCurrentAction(ActionE action) => CurrentAction = action;
 
     public void SetCurrentBuilding(Building building) => CurrentBuilding = building;
 

@@ -21,7 +21,7 @@ public class PoliceController : MonoBehaviour
 
     public void NotifyPolice(Building building)
     {
-        SpawnPolice(building, State.CoverEntrance, ActionE.CoverEntrance);
+        SpawnPolice(building, State.GotoCoverEntrance, ActionE.GotoCoverEntrance);
     }
 
     public void CallPolice(Vector2 callPosition)
