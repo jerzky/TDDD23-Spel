@@ -29,6 +29,8 @@ public class FollowPath : Action
 
     public override uint PerformAction()
     {
+        if (ai == null)
+            return (uint)ReturnType.NotFinished;
         if (ai.Path.Count <= 0)
             return (uint) ReturnType.StartedWithoutPath;
 
@@ -253,6 +255,8 @@ public class FollowPath : Action
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
+        if (ai == null)
+            return ActionE.None;
         if (lastActionReturnValue == (uint)ReturnType.StartedWithoutPath && currentState == State.FollowRoute)
         {
             return ActionE.FindPathToRouteNode;
@@ -261,7 +265,7 @@ public class FollowPath : Action
         switch(currentState)
         {
             case State.Pursuit:
-                if ((ai as Guard).Pursue.LineOfSight())
+                if (((Lawman) ai).Pursue.LineOfSight())
                     return ActionE.Pursue;
                 else
                     return ActionE.LookAround;
@@ -272,8 +276,8 @@ public class FollowPath : Action
                     return ActionE.Flee;
                 else
                     return ActionE.None;
-            case State.CoverEntrance:
-                return ActionE.LookAround;
+            case State.GotoCoverEntrance:
+                return ActionE.HoldCoverEntrance;
         }
         return ActionE.None;
     }

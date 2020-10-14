@@ -22,7 +22,6 @@ public class StormBuilding : Action
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
-
         return ActionE.StormBuilding;
     }
 

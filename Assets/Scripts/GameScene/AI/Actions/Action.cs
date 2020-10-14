@@ -27,6 +27,8 @@ public class FindPathToRouteNode : Action
     }
     public override uint PerformAction()
     {
+        if (ai == null)
+            return (uint)ReturnType.NotFinished;
         if (ai.CurrentRoute == null)
             return (uint)ReturnType.NoRoute;
 
@@ -60,6 +62,9 @@ public class IdleAtRouteNode : Action
     }
     public override uint PerformAction()
     {
+        if (ai == null)
+            return (uint)ReturnType.NotFinished;
+
         if (timer.CurrentTime == 9756873f)
             timer.ResetTo(ai.CurrentRoute.CurrentNode.IdleTime);
         

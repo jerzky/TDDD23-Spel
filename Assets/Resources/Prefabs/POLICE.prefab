@@ -460,3 +460,4 @@ MonoBehaviour:
   RightOffsetPoint: {fileID: 4262160193782322695}
   InVision: []
   SpeedMultiplier: 1
+  AiType: 4

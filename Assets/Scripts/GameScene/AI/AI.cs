@@ -2,8 +2,8 @@
 using UnityEngine;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, CoverEntrance, StormBuilding, Freeze, Flee };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, CoverEntrance, StormBuilding, Panic };
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Freeze, Flee };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Panic };
 
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
@@ -54,7 +54,9 @@ public abstract class AI : MonoBehaviour
     protected ActionE CurrentAction = ActionE.None;
     public ActionE GetCurrentAction { get; }
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
-    
+    public void SetCurrentState(State state) => CurrentState = state;
+
+    public void SetCurrentAction(ActionE action) => CurrentAction = action;
 
     // Follow Route variables
     public List<Node> Path = new List<Node>();

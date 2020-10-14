@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class CoverEntrance : Action
+public class GotoCoverEntrance : Action
 {
     public enum ReturnType : uint { NotFinished, Finished, FollowPath };
 
     private readonly Police _police;
     private Vector2 _currentEntrance;
-    public CoverEntrance(Police ai) : base(ai)
+    public GotoCoverEntrance(Police ai) : base(ai)
     {
         _police = ai;
 
@@ -14,34 +14,31 @@ public class CoverEntrance : Action
 
     public override uint PerformAction()
     {
-
-
+        if (ai == null)
+            return 0;
         if (ai.Path.Count > 0)
             return (uint)ReturnType.FollowPath;
         
         SetBestEntrance();
         SetCoverPosition();
-
-      
-
-
-        Debug.Log($"No path found");
-
         return (uint)ReturnType.NotFinished;
     }
     private void SetBestEntrance()
     {
         var building = _police.CurrentBuilding;
         var bestEntrance = building.FindBestEntrance();
+      
         building.AddToEnterance(_police, bestEntrance);
         _currentEntrance = bestEntrance;
-
     }
+
+    private static float count = 0;
     private void SetCoverPosition()
     {
 
         ai.Path.Clear();
-        var pos = new Vector2(20, 75);
+        var pos = new Vector2(11 + count, 68);
+        count += 0.5f;
         ai.SetPathToPosition(pos);
         Debug.Log($"Set the police cover to: {pos}");
     }
@@ -50,11 +47,10 @@ public class CoverEntrance : Action
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
         //Here we need to check if we need to abort and start pursuing or storming the building
-        if (ai.Path.Count > 0)
+       // if (ai.Path.Count > 0)
             return ActionE.FollowPath;
 
-        return ActionE.FollowPath;
-        return ActionE.CoverEntrance;
+       // return ActionE.FollowPath;
     }
 
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,8 +16,10 @@ public class PlayerController : MonoBehaviour
 
     float speed = 5f;
     float sneakMultiplier = 0.5f;
-    Vector2 movementDirection;
-    float currentSpeed = 5f;
+    public Vector2 MovementDirection { get; private set; }
+
+    public float CurrentSpeed { get; private set; } = 5f;
+
     public Vector2 lookDir = Vector2.zero;
 
     Sprite[] playerSprites = new Sprite[4];
@@ -84,12 +87,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (movementDirection != Vector2.zero)
+        if (MovementDirection != Vector2.zero)
         {
             CancelCurrentInteractable();
-            PlayerMotor.Instance.PlayerMove(movementDirection.normalized, currentSpeed);
-            movementDirection = Vector2.zero;
-            currentSpeed = speed;
+            PlayerMotor.Instance.PlayerMove(MovementDirection.normalized, CurrentSpeed);
+            MovementDirection = Vector2.zero;
+            CurrentSpeed = speed;
             GetComponent<AudioSource>().enabled = true;
 
         }
@@ -108,35 +111,35 @@ public class PlayerController : MonoBehaviour
     {
         if (GetInput(Input.GetKey, ControlAction.Right))
         {
-            movementDirection += Vector2.right;
+            MovementDirection += Vector2.right;
             lookDir = Vector2.right;
             sr.sprite = playerSprites[3];
         }
 
         if (GetInput(Input.GetKey, ControlAction.Left))
         {
-            movementDirection += Vector2.left;
+            MovementDirection += Vector2.left;
             lookDir = Vector2.left;
             sr.sprite = playerSprites[2];
         }
 
         if (GetInput(Input.GetKey, ControlAction.Down))
         {
-            movementDirection += Vector2.down;
+            MovementDirection += Vector2.down;
             lookDir = Vector2.down;
             sr.sprite = playerSprites[1];
         }
 
         if (GetInput(Input.GetKey, ControlAction.Up))
         {
-            movementDirection += Vector2.up;
+            MovementDirection += Vector2.up;
             lookDir = Vector2.up;
             sr.sprite = playerSprites[0];
         }
 
         if (GetInput(Input.GetKey, ControlAction.Sneak))
         {
-            currentSpeed = speed * sneakMultiplier;
+            CurrentSpeed = speed * sneakMultiplier;
         }
        
 
@@ -226,7 +229,12 @@ public class PlayerController : MonoBehaviour
         if (GeneralUI.Instance.Health <= 0)
         {
             // you lost motherfucker
-            Destroy(gameObject);
+            #if UNITY_EDITOR
+            if (EditorApplication.isPlaying)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
+            #endif
         }
         else if(GeneralUI.Instance.Health <= 50)
         {

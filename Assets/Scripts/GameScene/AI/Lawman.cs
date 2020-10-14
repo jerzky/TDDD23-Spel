@@ -34,10 +34,10 @@ public abstract class Lawman : AI
         if(building != null)
             if (PlayerController.Instance.IsHostile || building.PlayerReportedAsHostile)
                 building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile);
-
+        
         switch (CurrentState)
         {
-            case State.Investigate:
+            default:
                 CurrentState = State.Pursuit;
                 CurrentAction = ActionE.Pursue;
                 break;
