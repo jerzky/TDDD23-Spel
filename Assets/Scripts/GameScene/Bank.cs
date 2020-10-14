@@ -102,7 +102,14 @@ public class Bank : Building
         switch(alertType)
         {
             case AlertType.Guard_CCTV:
-                SendGuardToInvestigate(pos, alertIntensity);
+                PoliceController.Instance.NotifyPolice(this);
+                //SendGuardToInvestigate(pos, alertIntensity);
+                break;
+            case AlertType.None:
+                break;
+            case AlertType.Guard_Radio:
+                break;
+            case AlertType.Sound:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(alertType), alertType, null);

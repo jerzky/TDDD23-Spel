@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 
-public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit };
+public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, CoverEntrance, StormBuilding };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, CoverEntrance, StormBuilding };
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
 
@@ -55,7 +55,7 @@ public abstract class AI : MonoBehaviour
     // Follow Route variables
     public List<Node> Path = new List<Node>();
     public NodePath CurrentRoute { get; private set; }
-    private const AI_Type AiType = AI_Type.Guard;
+    protected AI_Type AiType = AI_Type.Guard;
 
     protected virtual void Start()
     {
@@ -68,6 +68,8 @@ public abstract class AI : MonoBehaviour
 
     void FixedUpdate()
     {
+
+
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
         // Reset variables that need to be reset every frame for functionality.

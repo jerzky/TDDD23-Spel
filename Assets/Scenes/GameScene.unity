@@ -5870,6 +5870,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _securityStation: {fileID: 761912892}
+  Entrances:
+  - {x: 19, y: 76}
+  - {x: 15, y: 92}
+  PoliceSpawnPoint: {x: 0, y: 0}
   _nodeHolder: {fileID: 817231395}
 --- !u!1 &1193453251
 GameObject:
@@ -10097,6 +10101,7 @@ GameObject:
   - component: {fileID: 1920875596}
   - component: {fileID: 1920875597}
   - component: {fileID: 1920875598}
+  - component: {fileID: 1920875599}
   m_Layer: 0
   m_Name: SCRIPTS
   m_TagString: Untagged
@@ -10220,7 +10225,7 @@ MonoBehaviour:
   infoTextGameObject: {fileID: 480203684}
   infoText: {fileID: 214888934}
   infoPic: {fileID: 1528478106}
-  infoTextOn: 1
+  infoTextOn: 0
 --- !u!114 &1920875593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10379,6 +10384,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a23e1817088c2654d93aea860e722b2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1920875599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b357b89525947744aa0f8c5dc110dd0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1946856260

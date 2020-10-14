@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 4654424804761483036}
   - component: {fileID: 4262160194682538033}
   m_Layer: 11
-  m_Name: POLICE 1
+  m_Name: POLICE
   m_TagString: humanoid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,8 +455,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023951ec81e4fd0499f477e05fb63db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateVisionAround: {fileID: 4262160193276550912}
-  leftOffsetPoint: {fileID: 4262160194406443574}
-  rightOffsetPoint: {fileID: 4262160193782322695}
-  inVision: []
-  speedMultiplier: 1
+  RotateVisionAround: {fileID: 4262160193276550912}
+  LeftOffsetPoint: {fileID: 4262160194406443574}
+  RightOffsetPoint: {fileID: 4262160193782322695}
+  InVision: []
+  SpeedMultiplier: 1
