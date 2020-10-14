@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class FollowPath : Action
@@ -43,7 +44,9 @@ public class FollowPath : Action
 
         Move(dir);
         if (Vector2.Distance(ai.transform.position, ai.Path[0].Position) < 0.1f)
+        {
             FinishedNode();
+        }
 
         if (ai.Path.Count <= 0)
             return (uint)ReturnType.Finished;
@@ -170,9 +173,6 @@ public class FollowPath : Action
     {
         dir += offset.normalized * offsetForceMultiplier;
 
-        float angle = Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
-        ai.RotateVisionAround.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
-
         ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.MoveSpeed * Time.fixedDeltaTime);
     }
 
@@ -254,7 +254,9 @@ public class FollowPath : Action
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
         if (lastActionReturnValue == (uint)ReturnType.StartedWithoutPath && currentState == State.FollowRoute)
+        {
             return ActionE.FindPathToRouteNode;
+        }
 
         switch(currentState)
         {
@@ -265,6 +267,11 @@ public class FollowPath : Action
                     return ActionE.LookAround;
             case State.Investigate:
                 return ActionE.LookAround;
+            case State.Panic:
+                if (ai.CurrentBuilding.PlayerReportedAsHostile)
+                    return ActionE.Flee;
+                else
+                    return ActionE.None;
         }
         return ActionE.None;
     }

@@ -61,18 +61,8 @@ public class Pursue : Action
 
     public bool LineOfSight()
     {
-        Vector2 dir = (_player.position - ai.transform.position).normalized;
         var layerMask = ~LayerMask.GetMask("AI", "Ignore Raycast");
-        var hit = Physics2D.Raycast(ai.transform.position, dir, Mathf.Infinity, layerMask);
-        if (hit.collider == null)
-            return false;
-        Debug.Log("LINE OF SIGHT HIT: " + hit.collider.name);
-        if (hit.collider.CompareTag("Player"))
-        {
-            LastPlayerPos = _player.transform.position;
-            return true;
-        }
-        return false; 
+        return Utils.LineOfSight(ai.transform.position, _player.gameObject, layerMask);
     }
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)

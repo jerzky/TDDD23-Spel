@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.WSA.Input;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, CoverEntrance, StormBuilding };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, CoverEntrance, StormBuilding };
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, CoverEntrance, StormBuilding, Freeze, Flee };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, CoverEntrance, StormBuilding, Panic };
+
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
 
@@ -19,9 +18,12 @@ public abstract class AI : MonoBehaviour
     [SerializeField]
     public Transform RightOffsetPoint;
 
+    protected Sprite[] sprites = new Sprite[4];
+    Vector2 lastPos; // used to determine movement direction to assign sprite
+
 
     public List<Collider2D> InVision = new List<Collider2D>();
-    protected SortedDictionary<string, float> JustEnteredVision = new SortedDictionary<string, float>();
+    protected SortedDictionary<int, float> JustEnteredVision = new SortedDictionary<int, float>();
 
     public SortedDictionary<ActionE, Action> Actions = new SortedDictionary<ActionE, Action>();
     public FollowPath FollowPath;
@@ -48,15 +50,30 @@ public abstract class AI : MonoBehaviour
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
     protected State CurrentState = State.None;
+    public State GetCurrentState { get; }
     protected ActionE CurrentAction = ActionE.None;
+    public ActionE GetCurrentAction { get; }
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
     
 
     // Follow Route variables
     public List<Node> Path = new List<Node>();
     public NodePath CurrentRoute { get; private set; }
-    protected AI_Type AiType = AI_Type.Guard;
 
+
+    public AI_Type AiType = AI_Type.Guard;
+    private Building lastBuilding { get; set; }
+    public Building CurrentBuilding
+    {
+        get
+        {
+            var building = BuildingController.Instance.GetBuilding(transform.position);
+            if (building != null)
+                lastBuilding = building;
+
+            return lastBuilding;
+        }
+    }
     protected virtual void Start()
     {
         Cuffs = Instantiate(Resources.Load<GameObject>("Prefabs/cuffs"), transform.position + new Vector3(0f, -0.3f, -1f), Quaternion.identity, transform);
@@ -64,6 +81,7 @@ public abstract class AI : MonoBehaviour
         FollowPath = new FollowPath(this);
         Actions.Add(ActionE.FollowPath, FollowPath);
         Actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
+        Actions.Add(ActionE.Idle, new IdleAtRouteNode(this));
     }
 
     void FixedUpdate()
@@ -72,18 +90,33 @@ public abstract class AI : MonoBehaviour
 
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
-        // Reset variables that need to be reset every frame for functionality.
+        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (IsIncapacitated)
             return;
 
+
+        HandleCharacterRotation();
         uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
             GetNextAction(actionReturnType);
         }
 
+    }
+
+    void HandleCharacterRotation()
+    {
+        Vector2 dir = (Vector2)transform.position - lastPos;
+        lastPos = (Vector2)transform.position;
+        if (dir != Vector2.zero)
+        {
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y)) GetComponent<SpriteRenderer>().sprite = dir.x > 0f ? sprites[3] : sprites[2];
+            else GetComponent<SpriteRenderer>().sprite = dir.y > 0f ? sprites[1] : sprites[0];
+            float angle = -Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
+            RotateVisionAround.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
     }
 
     public AI_Type Type()
@@ -105,6 +138,15 @@ public abstract class AI : MonoBehaviour
                 CurrentAlertIntensity = AlertIntensity.Nonexistant;
                 break;
         }
+
+        if(AiType != AI_Type.Civilian)
+        {
+            var building = CurrentBuilding;
+            if (building != null && CurrentAlertIntensity == AlertIntensity.ConfirmedHostile)
+                building.OnAlert(sound.origin, AlertType.Sound, AlertIntensity.ConfirmedHostile);
+        }
+        
+
         return Alert(sound.origin, CurrentAlertIntensity);
     }
 
@@ -147,24 +189,25 @@ public abstract class AI : MonoBehaviour
     {
         if(CompareTag(col.tag))
         {
-            if(!InVision.Contains(col) && !JustEnteredVision.ContainsKey(col.gameObject.name))
-                JustEnteredVision.Add(col.gameObject.name, 0f);
+            if(!InVision.Contains(col) && !JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
+                JustEnteredVision.Add(col.gameObject.GetInstanceID(), 0f);
         }
         if (col.CompareTag("Player"))
         {
-            PlayerSeen();
+            if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
+                PlayerSeen();
         }
     }
 
     public void OnVisionStay(Collider2D col)
     {
-        if(JustEnteredVision.ContainsKey(col.gameObject.name))
+        if(JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
         {
-            JustEnteredVision[col.gameObject.name] += Time.deltaTime;
-            if(JustEnteredVision[col.gameObject.name] > 0.15f)
+            JustEnteredVision[col.gameObject.GetInstanceID()] += Time.deltaTime;
+            if(JustEnteredVision[col.gameObject.GetInstanceID()] > 0.15f)
             {
                 InVision.Add(col);
-                JustEnteredVision.Remove(col.gameObject.name);
+                JustEnteredVision.Remove(col.gameObject.GetInstanceID());
             }
         }
     }
@@ -173,7 +216,7 @@ public abstract class AI : MonoBehaviour
     {
         if (CompareTag(col.tag))
         {
-            JustEnteredVision.Remove(col.gameObject.name);
+            JustEnteredVision.Remove(col.gameObject.GetInstanceID());
             InVision.Remove(col);
         }
     }

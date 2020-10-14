@@ -18,6 +18,7 @@ public class Pistol : Gun
         reloadSpeed = 1f;
 
         magSize = 16;
+        currentMagSize = 0;
         damage = ItemList.ITEM_SILENCED_PISTOL.HumanDamage;
         bulletPrefab = Resources.Load<GameObject>("Prefabs/bullet");
         if (bulletPrefab == null)

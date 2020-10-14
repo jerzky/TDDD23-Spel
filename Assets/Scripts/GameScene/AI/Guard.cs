@@ -11,6 +11,10 @@ public class Guard : Lawman
         Health = 100;
         HaltTime = 2f;
         ShootTime = 0.5f;
+        sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[60];
+        sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[61];
+        sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[62];
+        sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[63];
         base.Start();
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;

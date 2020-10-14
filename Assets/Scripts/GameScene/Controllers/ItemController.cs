@@ -70,6 +70,7 @@ public class ItemController : MonoBehaviour
 
     public void CancelCurrentItem()
     {
-        Items[currentItem.UID].Cancel();
+        if (currentItem != null && Items.ContainsKey(currentItem.UID))
+            Items[currentItem.UID].Cancel();
     }
 }

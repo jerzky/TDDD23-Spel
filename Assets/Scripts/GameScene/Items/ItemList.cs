@@ -13,7 +13,7 @@ namespace Assets.Items
     {
         public uint UID { get; set; }
         public string Name { get; set; }
-        public string IconPath { get; set; }
+        public string IconPath { private get; set; }
         public uint IconIndex { get; set; }
         public uint InventoryStackSize { get; set; } = 64;
         public float AverageUseTime { get; set; }
@@ -28,6 +28,14 @@ namespace Assets.Items
         public float SoundRadius { get; set; } = 25f;
         public string Tooltip { get; set; }
 
+        public Sprite Sprite 
+        { 
+            get 
+            {
+                return Resources.LoadAll<Sprite>(IconPath)[IconIndex];
+            } 
+        }
+
     }
 
 
@@ -38,7 +46,7 @@ namespace Assets.Items
         {
             UID = 1,
             Name = "Lockpick",
-            IconPath = "Textures/drilltesticon",
+            IconPath = "Textures/lockpick",
             IconIndex = 0,
             AverageUseTime = 5f,
             InventoryStackSize = 10,
@@ -176,7 +184,7 @@ namespace Assets.Items
             Name = "Drill",
             IconPath = "Textures/drilltesticon",
             IconIndex = 0,
-            AverageUseTime = 15f,
+            AverageUseTime = 1.5f,
             ItemType = ItemType.Usable,
             InventoryStackSize = 1,
             SellPrice = 2000,
@@ -190,7 +198,7 @@ namespace Assets.Items
         {
             UID = 12,
             Name = "MAC-10",
-            IconPath = "NoSpriteAtlasTextures/mac_10",
+            IconPath = "Textures/mac_10",
             IconIndex = 0,
             AverageUseTime = 0f,
             HumanDamage = 50,
@@ -225,7 +233,7 @@ namespace Assets.Items
         {
             UID = 14,
             Name = "CellPhoneJammer",
-            IconPath = "NoSpriteAtlasTextures/cellphonejammer",
+            IconPath = "Textures/cellphonejammer",
             IconIndex = 0, 
             AverageUseTime = 1f,
             HumanDamage = 0,

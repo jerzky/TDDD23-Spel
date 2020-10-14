@@ -42,7 +42,6 @@ public class CCTV : Interactable
     {
         _cameraSprites = Resources.LoadAll<Sprite>("Textures/camerasprites");
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[2];
-        SetCameraLookDir(new Vector3(0f, 0f, -90f));
         _originalRotation = transform.rotation.eulerAngles;
     }
 
@@ -102,14 +101,6 @@ public class CCTV : Interactable
         if (!_isMonitored || !col.CompareTag("Player"))
             return;
 
-        
-        
-        var hit = Physics2D.Raycast(_rayCastOrigin.transform.position, col.transform.position - transform.position);
-
-
-        if (hit.collider == null || !hit.collider.CompareTag("Player"))
-            return;
-
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
         // Check if player is hostile
         // this bool should be kept in some kind of controller
@@ -132,10 +123,7 @@ public class CCTV : Interactable
 
     public void OnVisionStay(Collider2D col)
     {
-        if(col.CompareTag("Player"))
-        {
-            
-        }
+
     }
 
     public void OnVisionExit(Collider2D col)

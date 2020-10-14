@@ -46,6 +46,8 @@ public abstract class Gun : UsableItem
     }
     public uint Reload()
     {
+        if (currentMagSize == magSize)
+            return 0;
         if (!WeaponController.Instance.cantShootTimer.Done)
             return 0;
 

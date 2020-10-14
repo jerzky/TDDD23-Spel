@@ -1,8 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Dynamic;
 using UnityEngine;
 
+
+public class BuildingPart
+{
+    public Vector2 Position { get; private set; }
+    public Vector2 Size { get; private set; }
+    public BuildingPart(Vector2 pos, Vector2 size)
+    {
+        Position = pos;
+        Size = size;
+    }
+
+    public bool IsWithin(Vector2 pos)
+    {
+        if (pos.x > Position.x + Size.x / 2 || pos.x < Position.x - Size.x / 2)
+            return false;
+        if (pos.y > Position.y + Size.y / 2 || pos.y < Position.y - Size.y / 2)
+            return false;
+
+        return true;
+    }
+}
 public class Building : MonoBehaviour
 {
 
@@ -20,12 +40,22 @@ public class Building : MonoBehaviour
     private readonly Dictionary<Vector2, List<Police>> _entranceCover = new Dictionary<Vector2, List<Police>>();
 
 
+    protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
+    SimpleTimer playerHostileTimer = new SimpleTimer(30);
+    public bool PlayerReportedAsHostile { get; private set; } = false;
+    // Start is called before the first frame update
     void Start()
     {
         foreach (var entrance in Entrances)
         {
             _entranceCover.Add(entrance, new List<Police>());
         }
+    }
+
+    void Update()
+    {
+        if (PlayerReportedAsHostile && playerHostileTimer.TickAndReset())
+            ResetPlayerHostility();
     }
 
     public Vector2 FindBestEntrance()
@@ -46,6 +76,19 @@ public class Building : MonoBehaviour
         }
 
         return best;
+
+
+    }
+
+
+    protected virtual void ReportPlayerAsHostile()
+    {
+        PlayerReportedAsHostile = true;
+        playerHostileTimer.Reset();
+    }
+    protected virtual void ResetPlayerHostility()
+    {
+        PlayerReportedAsHostile = false;
     }
 
     public bool IsEntranceCovered(Vector2 entrance)
@@ -75,6 +118,20 @@ public class Building : MonoBehaviour
 
     public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
     {
-        
+        if (alertIntesity == AlertIntensity.ConfirmedHostile)
+        {
+            ReportPlayerAsHostile();
+            PoliceController.Instance.CallPolice(pos);
+        }
+    }
+
+    public bool IsWithin(Vector2 position)
+    {
+        foreach(var v in _buildingParts)
+        {
+            if (v.IsWithin(position))
+                return true;
+        }
+        return false;
     }
 }

@@ -51,7 +51,7 @@ public class ControlMenu : MenuScreen
     Text currentRedText;
 
     // Start is called before the first frame update
-    public ControlMenu(GameObject holder, string name, GameObject textPrefab) : base(holder, name)
+    public ControlMenu(GameObject holder, Screen screen, GameObject textPrefab) : base(holder, screen)
     {
         this.textPrefab = textPrefab;
         controlMap = Json.JsonToContainer<SortedDictionary<ControlAction, ControlInfo>>("controldata.json");
@@ -90,7 +90,7 @@ public class ControlMenu : MenuScreen
                 keyTexts[(int)position.x, (int)position.y].color = Color.green;
                 break;
             case KeyCode.Escape:
-                MenuController.Instance.ChangeMenuScreen("MainMenu");
+                MenuController.Instance.ChangeMenuScreen(Screen.MainMenu);
                 break;
 
         }

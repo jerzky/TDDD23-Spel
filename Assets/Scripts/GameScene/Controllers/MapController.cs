@@ -147,7 +147,7 @@ public class MapController : MonoBehaviour
                                         temp.GetComponent<Door>().isVertical = true;
                                     break;
                                 case "searchablecontainer":
-                                    temp.AddComponent<SearchableContainer>().AssignUnlockItems(new HashSet<uint> { ItemList.ITEM_LOCKPICK.UID });
+                                    temp.AddComponent<SearchableContainer>();
                                     break;
                                 case "vault":
                                     Door door = temp.AddComponent<Door>();

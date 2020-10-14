@@ -28,11 +28,18 @@ public class ItemBar : MonoBehaviour
         firstItemPositionBar = new Vector3(32+5, 32+5, 0);
         firstItemPositionInventory = inventory.GetComponent<RectTransform>().position + new Vector3(-inventory.GetComponent<RectTransform>().rect.width/2, inventory.GetComponent<RectTransform>().rect.height/2, 0);
         firstItemPositionInventory += new Vector3(32 + 5, -(32 + 5), 0);
-
         for (int i = 0; i < 8; i++)
         {
-            inventoryItems[i, 0] = Instantiate(item, firstItemPositionBar + new Vector3((64+5)*i, 0, 0), Quaternion.identity, bar.transform);
+            inventoryItems[i, 0] = Instantiate(item, firstItemPositionBar + new Vector3((64 + 5) * i, 0, 0), Quaternion.identity, bar.transform);
             inventoryItems[i, 0].name = i + " " + 0;
+            Debug.Log(inventoryItems[i, 0].transform.GetChild(0).name);
+            Debug.Log(inventoryItems[i, 0].transform.GetChild(1).name);
+            Text text = inventoryItems[i, 0].transform.GetChild(1).GetComponent<Text>();
+            if(text != null) text.text = ((KeyCode)PlayerController.Instance.ActionToKeys[(int)PlayerController.Instance.ItemBarActions[i], 0]).ToString();
+            if(text.text.Contains("Alpha"))
+            {
+                text.text = text.text.Substring(5, text.text.Length - 5);
+            }
         }
 
         arrow = Instantiate(arrow, inventoryItems[0, 0].transform.position + new Vector3(0f, 0f, -1f), Quaternion.identity, bar.transform);
@@ -54,10 +61,7 @@ public class ItemBar : MonoBehaviour
    
     public void AddItem(Vector2 position, Inventory.InventoryItem item)
     {
-        var sprite = Resources.Load<Sprite>(item.ItemInfo.IconPath);
-        if (sprite == null)
-            Debug.LogError(item.ItemInfo.IconPath);
-        inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = sprite;
+        inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = item.ItemInfo.Sprite;
         if(item.ItemInfo.InventoryStackSize > 1)
             inventoryItems[(int)position.x, (int)position.y].transform.GetChild(0).GetComponent<Text>().text = item.Count.ToString();
     }
@@ -68,7 +72,7 @@ public class ItemBar : MonoBehaviour
 
     public void RemoveItem(Vector2 position)
     {
-        inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = originalItemSprite;
+        inventoryItems[(int)position.x, (int)position.y].GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/invisible");
         inventoryItems[(int)position.x, (int)position.y].transform.GetChild(0).GetComponent<Text>().text = "";
     }
 

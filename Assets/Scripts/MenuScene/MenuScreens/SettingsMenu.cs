@@ -39,7 +39,7 @@ public class SettingsMenu : MenuScreen
 
     Setting setting;
 
-    public SettingsMenu(GameObject holder, string name, GameObject textPrefab) : base(holder, name)
+    public SettingsMenu(GameObject holder, Screen screen, GameObject textPrefab) : base(holder, screen)
     {
         this.textPrefab = textPrefab;
         monitoredKeys = new List<KeyCode> { KeyCode.Return, KeyCode.Escape };

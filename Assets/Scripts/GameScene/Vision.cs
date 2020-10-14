@@ -6,7 +6,9 @@ using UnityEngine;
 public class Vision : MonoBehaviour
 {
     public enum VisionType { CCTV, GUARD, WORKER, BANKCASHIER, STORECASHIER };
-    
+
+    HashSet<Collider2D> inVision = new HashSet<Collider2D>();
+
     PolygonCollider2D pc;
     [SerializeField]
     VisionType visionType;
@@ -22,22 +24,35 @@ public class Vision : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnVision(Collider2D col)
     {
+        if(inVision.Contains(col))
+            OnVisionStay(col);
+        else
+            OnVisionEnter(col);
+    }
 
-        switch (visionType)
+    private void OnVisionEnter(Collider2D col)
+    {
+        if (!inVision.Contains(col))
         {
-            case VisionType.GUARD:
-                GetComponentInParent<Transform>().GetComponentInParent<AI>().OnVisionEnter(col);
-                break;
-            case VisionType.CCTV:
-                GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionEnter(col);
-                break;
+            inVision.Add(col);
+            switch (visionType)
+            {
+                case VisionType.GUARD:
+                    GetComponentInParent<Transform>().GetComponentInParent<AI>().OnVisionEnter(col);
+                    break;
+                case VisionType.CCTV:
+                    GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionEnter(col);
+                    break;
+            }
         }
     }
 
-    private void OnTriggerStay2D(Collider2D col)
+    private void OnVisionStay(Collider2D col)
     {
+        if (!inVision.Contains(col))
+            return;
         switch (visionType)
         {
             case VisionType.GUARD:
@@ -48,9 +63,12 @@ public class Vision : MonoBehaviour
                 break;
         }
     }
-    private void OnTriggerExit2D(Collider2D col)
-    {
 
+    private void OnVisionExit(Collider2D col)
+    {
+        if (!inVision.Contains(col))
+            return;
+        inVision.Remove(col);
         switch (visionType)
         {
             case VisionType.GUARD:
@@ -60,5 +78,38 @@ public class Vision : MonoBehaviour
                 GetComponentInParent<Transform>().GetComponentInParent<CCTV>().OnVisionExit(col);
                 break;
         }
+    }
+
+    bool LineOfSight(Collider2D col)
+    {
+        if (Utils.LineOfSight(GetComponentInParent<Transform>().position, col.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
+            return true;
+        return false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if(LineOfSight(col))
+            OnVisionEnter(col);
+        else
+            OnVisionExit(col);
+    }
+
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        if (LineOfSight(col))
+        {
+            // We can see col, OnVision will handle seen object
+            OnVision(col);
+        }
+        else
+        {
+            // We cant see col
+            OnVisionExit(col);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        OnVisionExit(col);
     }
 }

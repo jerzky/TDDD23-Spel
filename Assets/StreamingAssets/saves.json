@@ -1,0 +1,56 @@
+{
+  "0": {
+    "Items": [
+      {
+        "Item1": 7,
+        "Item2": 1
+      }
+    ],
+    "ItemToInfo": {
+      "1": "The lockpick can be used on locked interactables, such as doors or cabinets, by pressing the use item key(102).",
+      "2": "This can be used to break walls, so you can enter a building from a different direction. Unless you want to simply hit the guards with it. It is used as a weapon by pressing the Shoot key(323).",
+      "6": "The C4 is a highpowered explosive which can break down pretty much anything on the map. Use it by pressing the use item key(102).",
+      "9": "The drill is used to open locked interactables, similar to the lockpick, however, its main use is to open the vault doors in the bank. Use it by pressing the use item key(102)."
+    },
+    "NearbyToInfo": {
+      "Drill": "The drill interactable is spawned when you use your drill item, you can leave it to work on its own, unlike the lockpick, if you want to cancel it and pick it up again, simply use your interact key(101).",
+      "Searchable Container": "Searchable Containers are interactable, they come in different shapes and sizes, for instance a searchable container could be a desk or cabinet, simply press your interactable key(101) to open it. If its locked, maybe you should consider buying a lockpick."
+    },
+    "Name": "10/10/2020 12:03:18 PM",
+    "Credits": 20870,
+    "Kills": 2
+  },
+  "1": {
+    "Items": [
+      {
+        "Item1": 1,
+        "Item2": 2
+      },
+      {
+        "Item1": 2,
+        "Item2": 1
+      },
+      {
+        "Item1": 4,
+        "Item2": 640
+      },
+      {
+        "Item1": 6,
+        "Item2": 64
+      },
+      {
+        "Item1": 8,
+        "Item2": 1
+      },
+      {
+        "Item1": 12,
+        "Item2": 1
+      }
+    ],
+    "ItemToInfo": {},
+    "NearbyToInfo": {},
+    "Name": "10/8/2020 7:33:37 PM",
+    "Credits": 1500,
+    "Kills": 0
+  }
+}

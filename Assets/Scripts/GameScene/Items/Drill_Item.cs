@@ -25,10 +25,11 @@ public class Drill_Item : UsableItem
             Interactable inter = hit.collider.GetComponent<Interactable>();
             if(inter != null)
             {
-                var position = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 1f) + (Vector3)PlayerController.Instance.lookDir * -0.3f;
+                var position = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 1f) + (Vector3)PlayerController.Instance.lookDir * -0.4f;
                 GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Drill"), position, Quaternion.identity, null);
                 temp.GetComponent<Drill_Interactable>().StartDrilling(inter);
                 Inventory.Instance.RemoveItem(ItemList.ITEM_DRILL.UID, 1);
+                inter.Interact(item.UID);
             }
         }
         

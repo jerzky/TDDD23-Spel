@@ -106,7 +106,7 @@ public class WeaponController : MonoBehaviour
         if (info.ItemType == ItemType.Weapon || info.ItemType == ItemType.MeleeWeapon)
         {
             weaponGO.GetComponent<SpriteRenderer>().enabled = true;
-            weaponGO.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(info.IconPath);
+            weaponGO.GetComponent<SpriteRenderer>().sprite = info.Sprite;
         }  
         else
             weaponGO.GetComponent<SpriteRenderer>().enabled = false;

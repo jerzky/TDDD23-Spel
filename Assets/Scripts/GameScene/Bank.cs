@@ -32,6 +32,12 @@ public class Bank : Building
 
         _guards[0].SetRoute(_nodePaths[0]);
         _guards[1].SetRoute(_nodePaths[1]);
+
+        var sizeX = 23 - 0;
+        var sizeY = 99 - 77;
+        var posX = 0 + sizeX / 2;
+        var posY = 77 + sizeY / 2;
+        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
     }
 
 
@@ -50,16 +56,8 @@ public class Bank : Building
         {
             if (r.childCount == 0 || r.name == _nodeHolder.name)
                 continue;
-            var nodePath = new NodePath(r.name, null, new List<NodePath.RouteNode>());
-            var nodes = r.GetComponentsInChildren<Transform>();
-
-            foreach (var node in nodes.OrderBy(c => c.name))
-            {
-                if (node == r)
-                    continue;
-                nodePath.Nodes.Add(ParseNodeName(node.name, node.transform.position, r.name));
-            }
-            _nodePaths.Add(nodePath);
+            
+            _nodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));
         }
 
         foreach (var path in _nodePaths)
@@ -68,38 +66,11 @@ public class Bank : Building
         }
     }
 
-    private static NodePath.RouteNode ParseNodeName(string name, Vector2 pos, string parentName = "")
-    {
-        var firstDashIndex = name.IndexOf('-') + 1;
-        var secondDash = name.IndexOf('-', firstDashIndex);
-        if (secondDash == -1)
-        {
-            Debug.Log(string.IsNullOrEmpty(parentName)
-                ? "Added walk node"
-                : $"Added walk node to parent: {parentName}");
-
-            return new NodePath.RouteNode(pos, NodePath.RouteNodeType.Walk);
-        }
-
-        var type = int.Parse(name.Substring(firstDashIndex, secondDash - firstDashIndex));
-
-        var enumType = (NodePath.RouteNodeType) type;
-
-        var length = name.Substring(secondDash + 1, name.Length - secondDash - 1);
-        var intLength = int.Parse(length);
-
-        Debug.Log(string.IsNullOrEmpty(parentName)
-            ? $"Added a {enumType} with length: {intLength}"
-            : $"Added a {enumType} with length: {intLength} to parent: {parentName}");
-      
-        return new NodePath.RouteNode(pos, enumType, intLength);
-    }
-
-
-
     public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
     {
-        switch(alertType)
+        base.OnAlert(pos, alertType, alertIntensity);
+
+        switch (alertType)
         {
             case AlertType.Guard_CCTV:
                 PoliceController.Instance.NotifyPolice(this);
@@ -111,12 +82,17 @@ public class Bank : Building
                 break;
             case AlertType.Sound:
                 break;
+            case AlertType.Guard_Radio:
+                // if it is confirmed hostile send more guards
+                if(alertIntensity == AlertIntensity.ConfirmedHostile)
+                    SendGuardToInvestigate(pos, alertIntensity);
+                break;
+            case AlertType.Sound:
+                SendGuardToInvestigate(pos, alertIntensity);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(alertType), alertType, null);
         }
-
-
-        base.OnAlert(pos, alertType, alertIntensity);
     }
 
     private void SendGuardToInvestigate(Vector2 pos, AlertIntensity alertIntensity)

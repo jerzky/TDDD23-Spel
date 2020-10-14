@@ -101,7 +101,7 @@ public class Explosive : UsableItem
      
         gameObj.transform.position = pos;
         gameObj.transform.parent = null;
-        gameObj.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(item.IconPath);
+        gameObj.AddComponent<SpriteRenderer>().sprite = item.Sprite;
         return gameObj;
     }
 

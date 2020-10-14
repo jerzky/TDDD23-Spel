@@ -14,6 +14,7 @@ public class Drill_Interactable : Interactable
     {
         continousSoundID = SoundController.Instance.GenerateContinousSound(new Sound(transform.position, ItemList.ITEM_DRILL.SoundRadius, Sound.SoundType.Construction));
         audioSource = gameObject.GetComponent<AudioSource>();
+        audioSource.loop = true;
         audioSource.Play();
         active = true;
     }
@@ -44,7 +45,10 @@ public class Drill_Interactable : Interactable
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("bullet"))
+        {
+            SoundController.Instance.CancelContinousSound(continousSoundID);
             Destroy(gameObject);
+        }
     }
 
     public override bool Interact(uint itemIndex)

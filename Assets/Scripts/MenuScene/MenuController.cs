@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
-using UnityEditor.Experimental.TerrainAPI;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,8 +24,8 @@ public class MenuController : MonoBehaviour
 
     public BackgroundController bc;
     public bool startGameAnimationActive = false;
-    Dictionary<string, MenuScreen> menuScreens = new Dictionary<string, MenuScreen>();
-    string currentMenu = "MainMenu";
+    Dictionary<MenuScreen.Screen, MenuScreen> menuScreens = new Dictionary<MenuScreen.Screen, MenuScreen>();
+    MenuScreen.Screen currentMenu = MenuScreen.Screen.MainMenu;
     string sceneToBeLoaded = "GameScene";
     
 
@@ -38,10 +34,10 @@ public class MenuController : MonoBehaviour
     {
         Instance = this;
         bc = new BackgroundController(background, Resources.LoadAll<Sprite>("NoSpriteAtlasTextures/bg"));
-        menuScreens.Add("MainMenu", new MainMenu(mainMenuButtonHolder, "MainMenu"));
-        menuScreens.Add("ControlEditor", new ControlMenu(controlEditHolder, "ControlEditor", controlEditorTextPrefab));
-        menuScreens.Add("LoadGamesMenu", new LoadGamesMenu(loadSaveHolder, "LoadGamesMenu", loadGamesTextPrefab));
-        menuScreens["MainMenu"].Activate();
+        menuScreens.Add(MenuScreen.Screen.MainMenu, new MainMenu(mainMenuButtonHolder, MenuScreen.Screen.MainMenu));
+        menuScreens.Add(MenuScreen.Screen.ControlEditor, new ControlMenu(controlEditHolder, MenuScreen.Screen.ControlEditor, controlEditorTextPrefab));
+        menuScreens.Add(MenuScreen.Screen.LoadGame, new LoadGamesMenu(loadSaveHolder, MenuScreen.Screen.LoadGame, loadGamesTextPrefab));
+        menuScreens[MenuScreen.Screen.MainMenu].Activate();
     }
 
     // Update is called once per frame
@@ -71,11 +67,11 @@ public class MenuController : MonoBehaviour
                 menuScreens[currentMenu].KeyPressed(v);
     }
 
-    public void ChangeMenuScreen(string name)
+    public void ChangeMenuScreen(MenuScreen.Screen screen)
     {
 
         menuScreens[currentMenu].DeActivate();
-        currentMenu = name;
+        currentMenu = screen;
         menuScreens[currentMenu].Activate();
     }
 

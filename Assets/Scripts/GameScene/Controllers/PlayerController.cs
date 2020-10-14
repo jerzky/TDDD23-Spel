@@ -27,7 +27,9 @@ public class PlayerController : MonoBehaviour
     public Interactable CurrentInteractable;
 
     uint[,] actionToKeys;
-    ControlAction[] itemBarActions = { ControlAction.Itembar_1, ControlAction.Itembar_2, ControlAction.Itembar_3, ControlAction.Itembar_4, ControlAction.Itembar_5, ControlAction.Itembar_6, ControlAction.Itembar_7, ControlAction.Itembar_8 };
+    public uint[,] ActionToKeys { get => actionToKeys; }
+    private ControlAction[] itemBarActions = { ControlAction.Itembar_1, ControlAction.Itembar_2, ControlAction.Itembar_3, ControlAction.Itembar_4, ControlAction.Itembar_5, ControlAction.Itembar_6, ControlAction.Itembar_7, ControlAction.Itembar_8 };
+    public ControlAction[] ItemBarActions { get => itemBarActions; }
 
     ItemController itemController;
     [SerializeField]
@@ -37,6 +39,8 @@ public class PlayerController : MonoBehaviour
     public bool IsHostile { 
         get
         {
+            if (Inventory.Instance.GetCurrentItem() == null)
+                return false;
             return Inventory.Instance.GetCurrentItem().ItemType == ItemType.Weapon;
         }
     }
@@ -175,7 +179,9 @@ public class PlayerController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 // over UI element
-                Inventory.Instance.SelectItem();
+                if(EventSystem.current.currentSelectedGameObject == null || !EventSystem.current.currentSelectedGameObject.CompareTag("infobox"))
+                    Inventory.Instance.SelectItem();
+
             }
         }
         // HANDLES INGAME CLICKS

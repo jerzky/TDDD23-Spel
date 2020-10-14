@@ -425,11 +425,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9a930b942ac04aa2e53382a1d3b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateVisionAround: {fileID: 393767117859180879}
-  leftOffsetPoint: {fileID: 393767118984782969}
-  rightOffsetPoint: {fileID: 393767119701039176}
-  inVision: []
-  speedMultiplier: 1
+  RotateVisionAround: {fileID: 393767117859180879}
+  LeftOffsetPoint: {fileID: 393767118984782969}
+  RightOffsetPoint: {fileID: 393767119701039176}
+  InVision: []
+  SpeedMultiplier: 1
+  AiType: 0
 --- !u!1 &393767119701039183
 GameObject:
   m_ObjectHideFlags: 0
