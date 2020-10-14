@@ -5953,6 +5953,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _securityStation: {fileID: 1433336415}
+  Entrances:
+  - {x: 13, y: 77}
+  PoliceSpawnPoint: {x: 13, y: 80}
   _nodeHolder: {fileID: 817231395}
 --- !u!1 &1193453251
 GameObject:
@@ -10125,6 +10128,7 @@ GameObject:
   - component: {fileID: 1920875596}
   - component: {fileID: 1920875597}
   - component: {fileID: 1920875594}
+  - component: {fileID: 1920875600}
   m_Layer: 0
   m_Name: SCRIPTS
   m_TagString: Untagged
@@ -10422,9 +10426,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed5460537afc7b49979ebc4c9988cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _apartments: {fileID: 0}
   _buildings:
   - {fileID: 1149382528}
+--- !u!114 &1920875600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920875585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b357b89525947744aa0f8c5dc110dd0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1946856260
 GameObject:
   m_ObjectHideFlags: 0
@@ -11530,7 +11545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5674542132903679601, guid: c34fd028961293a41a86bb9254eadf7b, type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 5878540272989647507, guid: c34fd028961293a41a86bb9254eadf7b, type: 3}
       propertyPath: _building

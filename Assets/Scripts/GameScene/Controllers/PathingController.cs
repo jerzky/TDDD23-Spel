@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public enum NodeType { Clear, Blocked, Door, DoorNeighbour, AvailableAction, Visited };
-public class Node 
+public class Node
 {
     public Vector2 Position;
     public Node Parent;
@@ -79,9 +79,9 @@ public class PathingController : MonoBehaviour
         if (waitingQueue.Count > 0)
         {
             delayBetweenPathFindings -= Time.deltaTime;
-            if(delayBetweenPathFindings <= 0f)
+            if (delayBetweenPathFindings <= 0f)
             {
-                while(waitingQueue.Count > 0)
+                while (waitingQueue.Count > 0)
                 {
                     PathFindingQueueItem pfqi = waitingQueue.Dequeue();
                     if (pfqi.AI != null)
@@ -95,7 +95,7 @@ public class PathingController : MonoBehaviour
         }
 
         delayBetweenDoorQueueChecks += Time.deltaTime;
-        if(delayBetweenDoorQueueChecks > maxDelayBetweenDoorQueueChecks)
+        if (delayBetweenDoorQueueChecks > maxDelayBetweenDoorQueueChecks)
         {
             delayBetweenDoorQueueChecks = 0f;
         }
@@ -108,7 +108,7 @@ public class PathingController : MonoBehaviour
 
     public void CreateNodeGrid()
     {
-        grid = new NodeType[(int)MapController.MapSize.x, (int)MapController.MapSize.y];
+        grid = new NodeType[(int)MapController.MapSize.x + 1, (int)MapController.MapSize.y + 1];
         for (int y = 0; y < MapController.MapSize.y; y++)
         {
             for (int x = 0; x < MapController.MapSize.x; x++)
@@ -120,7 +120,7 @@ public class PathingController : MonoBehaviour
                     BoxCollider2D bc = v.GetComponent<BoxCollider2D>();
                     if (bc != null && !bc.isTrigger)
                     {
-                        if(v.GetComponent<Door>() != null)
+                        if (v.GetComponent<Door>() != null)
                         {
                             grid[x, y] = NodeType.Door;
                             doors.Add(new Vector2(x, y), new List<DoorQueueItem>());
@@ -139,10 +139,10 @@ public class PathingController : MonoBehaviour
 
         foreach (var v in doors)
         {
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 Vector2 pos = v.Key + neighbours[i];
-                if(grid[(int)pos.x, (int)pos.y] != NodeType.Blocked)
+                if (grid[(int)pos.x, (int)pos.y] != NodeType.Blocked)
                 {
                     grid[(int)pos.x, (int)pos.y] = NodeType.DoorNeighbour;
                 }
@@ -181,10 +181,10 @@ public class PathingController : MonoBehaviour
 
     public float RequestDoorAccess(Vector2 doorPosition, AI ai)
     {
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             Vector2 pos = doorPosition + neighbours[i];
-            if(grid[(int)pos.x, (int)pos.y] == NodeType.Door)
+            if (grid[(int)pos.x, (int)pos.y] == NodeType.Door)
             {
                 doorPosition = pos;
                 break;
@@ -202,18 +202,18 @@ public class PathingController : MonoBehaviour
             if (v.AI.GetCurrentAction != ActionE.FollowPath)
                 queue.Remove(v);
             v.Distance = Vector2.Distance(doorPosition, v.AI.transform.position);
-            if(v.AI.name == ai.name)
+            if (v.AI.name == ai.name)
             {
                 contains = v;
             }
-            if(closest == null || v.Distance < closest.Distance)
+            if (closest == null || v.Distance < closest.Distance)
             {
                 closest = v;
             }
         }
-        if(contains != null)
+        if (contains != null)
         {
-            if(closest.Distance == contains.Distance)
+            if (closest.Distance == contains.Distance)
             {
                 return 0f;
             }
@@ -253,13 +253,13 @@ public class PathingController : MonoBehaviour
             if (doors[doorPosition].Count <= 0)
                 doorsScripts[doorPosition].Close();
         }
-            
+
     }
 
     Vector2 GetClearNodeNeighbour(Vector2 pos)
     {
         Vector2 notBlocked = new Vector2(-1, -1);
-        foreach(var v in neighbours)
+        foreach (var v in neighbours)
         {
             Vector2 current = pos + v;
             if (grid[(int)Mathf.Round(current.x), (int)Mathf.Round(current.y)] == NodeType.Clear)
@@ -279,7 +279,7 @@ public class PathingController : MonoBehaviour
             return null;
 
         NodeType[,] gridCopy = (NodeType[,])grid.Clone();
-        foreach(var v in excluding)
+        foreach (var v in excluding)
         {
             gridCopy[(int)v.x, (int)v.y] = NodeType.Blocked;
         }
@@ -319,7 +319,7 @@ public class PathingController : MonoBehaviour
 
             if (current.Position == goalPos)
             {
-                while(current.Parent != null)
+                while (current.Parent != null)
                 {
                     current.Parent.Child = current;
                     current = current.Parent;
@@ -359,7 +359,7 @@ public class PathingController : MonoBehaviour
                 float distance = actionDistance[i];
                 if (gridCopy[(int)current.x, (int)current.y] == NodeType.DoorNeighbour)
                     distance += 1.5f;
-                availableActions.AddFirst(new Node(current, origin, origin.Distance + distance, neighbours[i])); 
+                availableActions.AddFirst(new Node(current, origin, origin.Distance + distance, neighbours[i]));
                 gridCopy[(int)current.x, (int)current.y] = NodeType.Blocked;
             }
         }

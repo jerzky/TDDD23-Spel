@@ -17,11 +17,24 @@ public class Police : Lawman
         ShootTime = 0.25f;
         AiType = AI_Type.Police;
         Actions.Add(ActionE.CoverEntrance, new CoverEntrance(this));
+        sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[4];
+        sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[5];
+        sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[6];
+        sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[7];
         base.Start();
+        IdleState = State.None;
+        IdleAction = ActionE.None;
         CurrentState = State.CoverEntrance;
         CurrentAction = ActionE.CoverEntrance;
         DeadHat = Resources.Load<Sprite>("Textures/guardhat");
     }
+
+
+
+
+
+
+
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
@@ -44,6 +57,8 @@ public class Police : Lawman
 
     public static GameObject Generate(Vector2 position, State state, ActionE action, Building building)
     {
+       Debug.Log($"Spawning police at pos: {position}");
+        
         if (_standardPrefab == null)
             _standardPrefab = Resources.Load<GameObject>("Prefabs/POLICE");
 

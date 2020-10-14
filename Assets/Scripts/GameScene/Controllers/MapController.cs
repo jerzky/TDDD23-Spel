@@ -111,14 +111,12 @@ public class MapController : MonoBehaviour
             for (int y = 0; y < bitMap.height; y++)
             {
                 Color pixelColor = bitMap.GetPixel(x, y);
-                if (level == 2)
-                    Debug.Log(pixelColor);
+
 
                 if (tileDict.TryGetValue(pixelColor.ToString(), out MapTileData tile) && pixelColor.ToString() != new Color(0, 0, 0).ToString())
                 {
                     Sprite sprite = Resources.LoadAll<Sprite>(tile.Path)[tile.Index];
-                    if (level == 2)
-                        Debug.Log("CREATING NODE");
+
                     GameObject temp = new GameObject(tile.Name);
                     temp.transform.parent = tiles[level].transform;
                     temp.transform.position = new Vector3(x, y, 99 - level);

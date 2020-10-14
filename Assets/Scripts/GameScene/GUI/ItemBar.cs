@@ -32,8 +32,8 @@ public class ItemBar : MonoBehaviour
         {
             inventoryItems[i, 0] = Instantiate(item, firstItemPositionBar + new Vector3((64 + 5) * i, 0, 0), Quaternion.identity, bar.transform);
             inventoryItems[i, 0].name = i + " " + 0;
-            Debug.Log(inventoryItems[i, 0].transform.GetChild(0).name);
-            Debug.Log(inventoryItems[i, 0].transform.GetChild(1).name);
+
+
             Text text = inventoryItems[i, 0].transform.GetChild(1).GetComponent<Text>();
             if(text != null) text.text = ((KeyCode)PlayerController.Instance.ActionToKeys[(int)PlayerController.Instance.ItemBarActions[i], 0]).ToString();
             if(text.text.Contains("Alpha"))

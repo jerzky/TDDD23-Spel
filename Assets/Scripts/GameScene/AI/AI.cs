@@ -90,6 +90,9 @@ public abstract class AI : MonoBehaviour
 
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
+
+        if (CurrentAction == ActionE.None || CurrentState == State.None)
+            return;
         // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
@@ -161,6 +164,7 @@ public abstract class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
+        Debug.Log($"Path to position");
         Path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }

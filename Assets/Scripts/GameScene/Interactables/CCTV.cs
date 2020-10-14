@@ -105,6 +105,10 @@ public class CCTV : Interactable
         // Check if player is hostile
         // this bool should be kept in some kind of controller
 
+        //For testing
+        _building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_CCTV,
+            AlertIntensity.ConfirmedHostile);
+
         if (PlayerController.Instance.IsHostile || _locationType == LocationType.Hostile)
         {
             // if the player is hostile in camera vision or if the location type is hostile (maybe inside vault?)

@@ -41,10 +41,13 @@ public class Building : MonoBehaviour
 
 
     protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
-    SimpleTimer playerHostileTimer = new SimpleTimer(30);
+    private readonly SimpleTimer _playerHostileTimer = new SimpleTimer(30);
+    protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(60);
+
+
     public bool PlayerReportedAsHostile { get; private set; } = false;
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         foreach (var entrance in Entrances)
         {
@@ -54,7 +57,7 @@ public class Building : MonoBehaviour
 
     void Update()
     {
-        if (PlayerReportedAsHostile && playerHostileTimer.TickAndReset())
+        if (PlayerReportedAsHostile && _playerHostileTimer.TickAndReset())
             ResetPlayerHostility();
     }
 
@@ -62,7 +65,6 @@ public class Building : MonoBehaviour
     {
         var lowest = int.MaxValue;
         var best = Vector2.zero;
-
         foreach (var pair in _entranceCover)
         {
             if (pair.Value.Count >= lowest)
@@ -74,7 +76,6 @@ public class Building : MonoBehaviour
             if (lowest == 0)
                 break;
         }
-
         return best;
 
 
@@ -84,7 +85,7 @@ public class Building : MonoBehaviour
     protected virtual void ReportPlayerAsHostile()
     {
         PlayerReportedAsHostile = true;
-        playerHostileTimer.Reset();
+        _playerHostileTimer.Reset();
     }
     protected virtual void ResetPlayerHostility()
     {
