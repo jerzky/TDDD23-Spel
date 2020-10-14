@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using UnityEngine;
 
@@ -23,7 +24,9 @@ public class BuildingPart
         return true;
     }
 }
-public class Building : MonoBehaviour
+public enum BuildingType { Bank, Appartment, Bar }
+
+public abstract class Building : MonoBehaviour
 {
 
     public bool IsSomeoneMonitoringCCTV => _securityStation.IsMonitored;
@@ -34,6 +37,7 @@ public class Building : MonoBehaviour
     protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
     SimpleTimer playerHostileTimer = new SimpleTimer(30);
     public bool PlayerReportedAsHostile { get; private set; } = false;
+    public BuildingType BuildingType { get; protected set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -76,4 +80,6 @@ public class Building : MonoBehaviour
         }
         return false;
     }
+
+    public abstract NodePath GetCivilianPath();
 }

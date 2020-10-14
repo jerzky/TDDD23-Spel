@@ -61,7 +61,7 @@ public class NodePath
         var nodes = holder.GetComponentsInChildren<Transform>().ToList();
         foreach (var node in nodes.OrderBy(c => c.name))
         {
-            if (node == holder)
+            if (node.gameObject.GetInstanceID() == holder.GetInstanceID())
                 continue;
             nodePath.Nodes.Add(ParseNodeName(node.name, node.transform.position, holder.name));
         }

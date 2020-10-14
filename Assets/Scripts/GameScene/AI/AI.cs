@@ -57,7 +57,7 @@ public abstract class AI : MonoBehaviour
 
     // Follow Route variables
     public List<Node> Path = new List<Node>();
-    public NodePath CurrentRoute { get; private set; }
+    public NodePath CurrentRoute { get; protected set; }
 
 
     public AI_Type AiType = AI_Type.Guard;

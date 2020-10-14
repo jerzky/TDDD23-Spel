@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class Apartment
 {
-    public AI Resident;
+    public AI Resident = null;
     public NodePath ApartmentRotation;
     public Vector2 position;
     public Apartment(NodePath nodePath, Vector2 position)
@@ -30,6 +30,7 @@ public class ApartmentBuilding : Building
         _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
 
         NodePath nodePath = NodePath.LoadPathNodesFromHolder(nodeHolder);
+        apartments.Add(new Apartment(nodePath, new Vector2(52, 48)));
         float xInc = 15;
         float xIncOver3 = 4;
         float yIncOver4 = -17;
@@ -44,8 +45,12 @@ public class ApartmentBuilding : Building
                 var v = nodePath.Nodes[j];
                 newPath.Nodes.Add(new NodePath.RouteNode(v.Position + offset, v.Type, v.IdleTime));
             }
-
+            apartments.Add(new Apartment(newPath, apartments[0].position + offset));
         }
+
+        BuildingType = BuildingType.Appartment;
+        Debug.Log("CIVIVIVIVIVIVIVI APAPAPPAPAPAP PAATATHS " + apartments.Count);
+
     }
 
     // Update is called once per frame
@@ -54,12 +59,13 @@ public class ApartmentBuilding : Building
         
     }
 
-    public Vector2 FindEmptyHome()
+    public override NodePath GetCivilianPath()
     {
-        foreach(var v in apartments)
+        foreach (var v in apartments)
         {
-            if (v.Resident != null) return v.ApartmentRotation.CurrentNode.Position;
+            if (v.Resident == null) return v.ApartmentRotation;
         }
-        return new Vector2(-100, -100);
+
+        return null;
     }
 }

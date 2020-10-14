@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 public abstract class Action
@@ -17,7 +18,7 @@ public abstract class Action
 
 public class FindPathToRouteNode : Action
 {
-    public enum ReturnType { NotFinished, NewPathCreated, Idle }
+    public enum ReturnType { NotFinished, NewPathCreated, Idle, NoRoute }
     bool hasWaited = false;
     public FindPathToRouteNode(AI ai) : base(ai)
     {
@@ -25,6 +26,9 @@ public class FindPathToRouteNode : Action
     }
     public override uint PerformAction()
     {
+        if (ai.CurrentRoute == null)
+            return (uint)ReturnType.NoRoute;
+
         if (!hasWaited && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle)
         {
             hasWaited = true;
@@ -37,6 +41,8 @@ public class FindPathToRouteNode : Action
 
     public override ActionE GetNextAction(State currentState, uint lastActionReturnValue, AlertIntensity alertIntensity)
     {
+        if (lastActionReturnValue == (uint)ReturnType.NoRoute)
+            return ActionE.None;
         if (lastActionReturnValue == (uint)ReturnType.Idle)
             return ActionE.Idle;
         return ActionE.FollowPath;

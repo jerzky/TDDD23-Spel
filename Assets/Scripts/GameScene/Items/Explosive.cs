@@ -119,9 +119,6 @@ public class Explosive : UsableItem
             {
                BreakableController.Instance.HitObject(c.gameObject, info.ItemInfo.UID);
             }
-            else
-                Debug.Log(Vector2.Distance(c.gameObject.transform.position, info.GameObject.transform.position));
-
         }
 
     }

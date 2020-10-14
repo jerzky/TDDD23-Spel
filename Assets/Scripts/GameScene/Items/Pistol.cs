@@ -21,8 +21,6 @@ public class Pistol : Gun
         currentMagSize = 0;
         damage = ItemList.ITEM_SILENCED_PISTOL.HumanDamage;
         bulletPrefab = Resources.Load<GameObject>("Prefabs/bullet");
-        if (bulletPrefab == null)
-            Debug.Log("BULLET NULL????");
     }
 
     void Update()

@@ -96,7 +96,6 @@ public abstract class Gun : UsableItem
 
     public int Ammo()
     {
-        Debug.Log(currentMagSize);
         return currentMagSize;
     }
 }

@@ -108,7 +108,7 @@ public class PathingController : MonoBehaviour
 
     public void CreateNodeGrid()
     {
-        grid = new NodeType[(int)MapController.MapSize.x, (int)MapController.MapSize.y];
+        grid = new NodeType[(int)MapController.MapSize.x+1, (int)MapController.MapSize.y+1];
         for (int y = 0; y < MapController.MapSize.y; y++)
         {
             for (int x = 0; x < MapController.MapSize.x; x++)
@@ -305,6 +305,7 @@ public class PathingController : MonoBehaviour
 
     Node FindPath(Vector2 s, Vector2 g, NodeType[,] gridCopy)
     {
+        Debug.Log("FIND PATH");
         Vector2 startPos = new Vector2((int)Mathf.Round(s.x), (int)Mathf.Round(s.y));
         Vector2 goalPos = new Vector2((int)Mathf.Round(g.x), (int)Mathf.Round(g.y));
 

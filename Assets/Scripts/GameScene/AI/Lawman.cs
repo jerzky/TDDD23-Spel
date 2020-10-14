@@ -87,7 +87,6 @@ public abstract class Lawman : AI
         base.OnVisionEnter(col);
         if (col.CompareTag("lawmandestroy"))
         {
-            Debug.Log("Found a lawmandestroy");
             _weaponHandler.Shoot(transform.position, col.transform.position, true);
         }
     }

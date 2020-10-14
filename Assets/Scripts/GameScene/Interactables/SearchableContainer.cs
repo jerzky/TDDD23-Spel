@@ -48,7 +48,6 @@ public class SearchableContainer : Openable
     public override void Open()
     {
         // somehow give player the items in the container.
-        Debug.Log("container open");
     }
 
     public override void UnLock()
@@ -56,7 +55,6 @@ public class SearchableContainer : Openable
         timeLeft = ItemList.AllItems[currentItem].AverageUseTime;
         LoadingCircle.Instance.StartLoading();
         timerActive = true;
-        Debug.Log("Attempting LockPicking");
     }
 
     public override string Name()

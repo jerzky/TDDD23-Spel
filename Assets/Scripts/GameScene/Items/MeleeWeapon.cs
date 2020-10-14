@@ -36,7 +36,6 @@ public abstract class MeleeWeapon : UsableItem
         if (WeaponController.Instance.AnimationActive)
             if (SwingAnimation())
             {
-                Debug.Log("CHANGING ANIMATION ACTIVE TO FALSE IN MELEEWEAPON:");
                 WeaponController.Instance.AnimationActive = false;
                 if (Inventory.Instance.GetCurrentItem().ItemType == ItemType.MeleeWeapon)
                     WeaponController.Instance.weaponGO.GetComponent<SpriteRenderer>().enabled = true;

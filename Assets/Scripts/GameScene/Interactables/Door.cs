@@ -57,11 +57,7 @@ public class Door : Openable
         else
         {
             timeLeft -= Time.deltaTime;
-            Debug.Log(timeLeft);
         }
-            
-
-        
     }
 
     public virtual void MoveDoor()
@@ -116,7 +112,6 @@ public class Door : Openable
 
     public override void UnLock()
     {
-        Debug.Log("UnLock");
         timeLeft = ItemList.AllItems[currentItem].AverageUseTime * timerMultiplier;
         LoadingCircle.Instance.StartLoading();
         timerActive = true;

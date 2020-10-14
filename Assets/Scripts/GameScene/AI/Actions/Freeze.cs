@@ -55,17 +55,13 @@ public class Freeze : Action
                 else
                 {
                     // cant see player, return flee if hostile, or none if safe
-                    Debug.Log("FREEZE IS OVER, WE DO NOT HAVE LINE OF SIGHT");
                     var building = ai.CurrentBuilding;
                     if (building != null && building.PlayerReportedAsHostile)
                     {
-                        Debug.Log("PLAYER REPORTED AS HOSTILE TRUE");
                         return ActionE.Flee;
                     }
                     else
                     {
-                        Debug.Log("PLAYER NOT REPORTED AS HOSTILE");
-
                         return ActionE.None;
                     }
                 }

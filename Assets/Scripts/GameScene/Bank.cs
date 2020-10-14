@@ -11,14 +11,18 @@ public class Bank : Building
     private readonly List<NodePath> _nodePaths = new List<NodePath>();
     private readonly List<AI> _guards = new List<AI>();
 
-
+    private readonly List<NodePath> _civilianNodePaths = new List<NodePath>();
+    private int _civilianNodePathIndex = 0;
     [SerializeField] 
     private GameObject _nodeHolder;
+    [SerializeField]
+    private GameObject _civilianNodeHolder;
 
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
+        BuildingType = BuildingType.Bank;
         LoadPathingNodes();
         var allGuards = GetComponentsInChildren<AI>();
 
@@ -38,6 +42,8 @@ public class Bank : Building
         var posX = 0 + sizeX / 2;
         var posY = 77 + sizeY / 2;
         _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+        SetUpCivilianRoutes();
+        Debug.Log("CIVIVIVIVIVIVIVI BANANANAKJK PAATATHS " + _civilianNodePaths.Count);
     }
 
 
@@ -45,6 +51,21 @@ public class Bank : Building
     void Update()
     {
         
+    }
+
+    private void SetUpCivilianRoutes()
+    {
+        _civilianNodePaths.Add(NodePath.LoadPathNodesFromHolder(_civilianNodeHolder));
+        for (int i = 0; i < 5; i++)
+        {
+            NodePath nodePath = new NodePath((i + 1).ToString(), null);
+            Vector2 offset = new Vector2(0f, 1f);
+            foreach(var v in _civilianNodePaths[0].Nodes)
+            {
+                nodePath.Nodes.Add(new NodePath.RouteNode(v.Position + offset * i, v.Type, v.IdleTime));
+            }
+            _civilianNodePaths.Add(nodePath);
+        }
     }
 
 
@@ -97,4 +118,10 @@ public class Bank : Building
         }
     }
 
+    public override NodePath GetCivilianPath()
+    {
+        Debug.Log(_civilianNodePaths.Count);
+        if (_civilianNodePathIndex >= _civilianNodePaths.Count) _civilianNodePathIndex = _civilianNodePathIndex % _civilianNodePaths.Count;
+        return _civilianNodePaths[_civilianNodePathIndex++];
+    }
 }
