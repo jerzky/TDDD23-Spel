@@ -74,9 +74,9 @@ public class NodePath
         var secondDash = name.IndexOf('-', firstDashIndex);
         if (secondDash == -1)
         {
-            Debug.Log(string.IsNullOrEmpty(parentName)
+           /* Debug.Log(string.IsNullOrEmpty(parentName)
                 ? "Added walk node"
-                : $"Added walk node to parent: {parentName}");
+                : $"Added walk node to parent: {parentName}");*/
 
             return new NodePath.RouteNode(pos, NodePath.RouteNodeType.Walk);
         }
@@ -87,10 +87,10 @@ public class NodePath
         var length = name.Substring(secondDash + 1, name.Length - secondDash - 1);
         var intLength = int.Parse(length);
 
-        Debug.Log(string.IsNullOrEmpty(parentName)
+    /*    Debug.Log(string.IsNullOrEmpty(parentName)
             ? $"Added a {enumType} with length: {intLength}"
             : $"Added a {enumType} with length: {intLength} to parent: {parentName}");
-
+    */
         return new NodePath.RouteNode(pos, enumType, intLength);
     }
 }

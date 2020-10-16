@@ -47,13 +47,12 @@ public class Pursue : Action
             return (uint)ReturnType.NotFinished;
         }
         
-      //  Debug.Log("We have no line of sight, follow path");
+
         // We lost line of sight, check if our current path is to the correct location
         if (_currentFollowPos == LastPlayerPos)
             return (uint)ReturnType.LostLineOfSight;
 
         // update path
-   //     Debug.Log(LastPlayerPos + " p: " + _player.position);
         _currentFollowPos = LastPlayerPos;
         ai.SetPathToPosition(LastPlayerPos);
         return (uint)ReturnType.LostLineOfSight;

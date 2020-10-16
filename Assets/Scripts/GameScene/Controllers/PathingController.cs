@@ -71,11 +71,15 @@ public class PathingController : MonoBehaviour
         CreateNodeGrid();
         //FindObjectOfType<AI>().Alert(new Vector2(30, 90), AlertType.Investigate);
     }
-    int t = 0;
+
     // Update is called once per frame
+    private int test = 0;
     void Update()
     {
+        if(test != waitingQueue.Count)
+            Debug.Log(waitingQueue.Count);
 
+        test = waitingQueue.Count;
         if (waitingQueue.Count > 0)
         {
             delayBetweenPathFindings -= Time.deltaTime;
@@ -199,10 +203,10 @@ public class PathingController : MonoBehaviour
         for (int i = 0; i < queue.Count; i++)
         {
             var v = queue[i];
-            if (v.AI.GetCurrentAction != ActionE.FollowPath)
+            if (v.AI.CurrentAction != ActionE.FollowPath)
                 queue.Remove(v);
             v.Distance = Vector2.Distance(doorPosition, v.AI.transform.position);
-            if (v.AI.name == ai.name)
+            if (v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
             {
                 contains = v;
             }
@@ -229,7 +233,7 @@ public class PathingController : MonoBehaviour
         foreach (var v in queue)
         {
             distance++;
-            if (v.AI.name == ai.name)
+            if (v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
                 break;
         }
         return distance;
@@ -249,7 +253,7 @@ public class PathingController : MonoBehaviour
 
         if (doors.ContainsKey(doorPosition))
         {
-            doors[doorPosition].Remove(doors[doorPosition].Find(c => c.AI.name == ai.name));
+            doors[doorPosition].Remove(doors[doorPosition].Find(c => c.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID()));
             if (doors[doorPosition].Count <= 0)
                 doorsScripts[doorPosition].Close();
         }
@@ -288,16 +292,19 @@ public class PathingController : MonoBehaviour
 
     public bool FindPath(Vector2 s, Vector2 g, AI ai)
     {
-        if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
+        // g = new Vector2(Mathf.Clamp(g.x, 0, 125), Mathf.Clamp(g.y, 0, 100));
+        if (g.x >= grid.GetUpperBound(0) || g.y >= grid.GetUpperBound(1) || g.x < 0 ||
+            g.y < 0)
+            return false;
+
+
+        if (grid[(int) Mathf.Round(g.x), (int) Mathf.Round(g.y)] != NodeType.Clear)
             g = GetClearNodeNeighbour(g);
         if (g == new Vector2(-1, -1)) // no neighbour
             return false;
 
-        foreach (var v in waitingQueue)
-        {
-            if (v.AI.name == ai.name)
-                return true;
-        }
+        if (waitingQueue.Any(v => v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID()))
+            return true;
 
         waitingQueue.Enqueue(new PathFindingQueueItem(s, g, ai));
         return true;

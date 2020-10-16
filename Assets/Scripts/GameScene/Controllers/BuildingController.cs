@@ -24,7 +24,7 @@ public class BuildingController : MonoBehaviour
         foreach (var v in _buildings)
             if (v.IsWithin(position))
                 return v;
-      //  Debug.Log("SHOULD NOT RETURN NULL IN GET BUILDING DURING THIS TEST, _buildings.Count = " + _buildings.Count);
+
         return null;
     }
 }

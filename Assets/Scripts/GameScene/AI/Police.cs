@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Police : Lawman
 {
-    public Building CurrentBuilding { get; private set; }
+    public Building CoverBuilding { get; private set; }
 
 
     protected override void Start()
@@ -36,7 +36,7 @@ public class Police : Lawman
     protected override void PlayerSeen()
     {
         Debug.Log($"Player seen. Current State {CurrentState}");
-        base.PlayerSeen();
+        //base.PlayerSeen();
     }
 
 
@@ -45,6 +45,7 @@ public class Police : Lawman
     {
         if (CurrentState == State.Pursuit)
             return true;
+
 
         Pursue.LastPlayerPos = position;
         CurrentState = State.Pursuit;
@@ -55,7 +56,7 @@ public class Police : Lawman
 
 
 
-    public void SetCurrentBuilding(Building building) => CurrentBuilding = building;
+    public void SetCoverBuilding(Building building) => CoverBuilding = building;
 
     protected override void IncapacitateFailedReaction()
     {
@@ -66,8 +67,7 @@ public class Police : Lawman
 
     public static GameObject Generate(Vector2 position, State state, ActionE action, Building building)
     {
-       Debug.Log($"Spawning police at pos: {position}");
-        
+
         if (_standardPrefab == null)
             _standardPrefab = Resources.Load<GameObject>("Prefabs/POLICE");
 
@@ -76,7 +76,7 @@ public class Police : Lawman
 
         police.GetComponent<Police>().SetCurrentState(state);
         police.GetComponent<Police>().SetCurrentAction(action);
-        police.GetComponent<Police>().SetCurrentBuilding(building);
+        police.GetComponent<Police>().SetCoverBuilding(building);
         return police;
     }
 }

@@ -34,7 +34,7 @@ public abstract class AI : MonoBehaviour
     public const float PursueSpeed = 3f;
     public const float PatrolSpeed = 2f;
     public float SpeedMultiplier = 1f;
-
+  
 
     // Health
     protected int Health = 100;
@@ -50,9 +50,17 @@ public abstract class AI : MonoBehaviour
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
     protected State CurrentState = State.None;
-    public State GetCurrentState { get; }
-    protected ActionE CurrentAction = ActionE.None;
-    public ActionE GetCurrentAction { get; }
+
+    public ActionE CurrentAction
+    {
+        get => _currentAction;
+        protected set
+        {
+            Debug.Log($"{_currentAction} -> {value}");
+            _currentAction = value;
+        }
+    }
+
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
     public void SetCurrentState(State state) => CurrentState = state;
 
@@ -64,6 +72,7 @@ public abstract class AI : MonoBehaviour
 
 
     public AI_Type AiType = AI_Type.Guard;
+    private ActionE _currentAction = ActionE.None;
     private Building lastBuilding { get; set; }
     public Building CurrentBuilding
     {
@@ -88,15 +97,15 @@ public abstract class AI : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
-
+/*
         if (CurrentAction == ActionE.None || CurrentState == State.None)
-            return;
-        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
-        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            return;*/
+
 
         if (IsIncapacitated)
             return;
@@ -166,9 +175,11 @@ public abstract class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log($"Path to position");
         Path.Clear();
-        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+
+        FollowPath.IsWaitingForPath = PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+
+        Debug.Log($"SetPathToPosition - iswaiting {FollowPath.IsWaitingForPath}");
     }
 
     public void GoToNextRouteNode()

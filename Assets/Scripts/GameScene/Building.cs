@@ -1,6 +1,7 @@
 ﻿﻿using System.Collections.Generic;
 using System.Dynamic;
-using UnityEngine;
+ using System.Linq;
+ using UnityEngine;
 
 
 public class BuildingPart
@@ -32,12 +33,11 @@ public class Building : MonoBehaviour
     private SecurityStation _securityStation;
 
     [SerializeField] 
-    public List<Vector2> Entrances;
+    public List<Entrance> Entrances;
 
     [SerializeField]
     public Vector2 PoliceSpawnPoint;
 
-    private readonly Dictionary<Vector2, List<Police>> _entranceCover = new Dictionary<Vector2, List<Police>>();
 
 
     protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
@@ -51,7 +51,7 @@ public class Building : MonoBehaviour
     {
         foreach (var entrance in Entrances)
         {
-            _entranceCover.Add(entrance, new List<Police>());
+            entrance.GenerateTiles();
         }
     }
 
@@ -61,23 +61,24 @@ public class Building : MonoBehaviour
             ResetPlayerHostility();
     }
 
-    public Vector2 FindBestEntrance()
+    public Vector2 AddCoveringLawman(Lawman lawman)
     {
         var lowest = int.MaxValue;
-        var best = Vector2.zero;
-        foreach (var pair in _entranceCover)
+        Entrance best = null;
+        foreach (var entrance in Entrances.Where(entrance => entrance.GetTileCount() < lowest))
         {
-            if (pair.Value.Count >= lowest)
-                continue;
-
-            lowest = pair.Value.Count;
-            best = pair.Key;
+            lowest = entrance.GetTileCount();
+            best = entrance;
 
             if (lowest == 0)
                 break;
         }
-        return best;
 
+        if (best == null)
+            return (Vector2) lawman.transform.position;
+
+        var pos = best.TryAddLawman(lawman, out var success);
+        return success ? pos : (Vector2) lawman.transform.position;
 
     }
 
@@ -92,28 +93,7 @@ public class Building : MonoBehaviour
         PlayerReportedAsHostile = false;
     }
 
-    public bool IsEntranceCovered(Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return false;
 
-        return _entranceCover[entrance].Count > 0;
-    }
-
-    public void AddToEnterance(Police police, Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return;
-        _entranceCover[entrance].Add(police);
-    }
-
-    public void RemoveFromEnterance(Police police, Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return;
-
-        _entranceCover[entrance].Remove(police);
-    }
 
 
 

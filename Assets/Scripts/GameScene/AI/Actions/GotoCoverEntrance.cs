@@ -9,36 +9,31 @@ public class GotoCoverEntrance : Action
     public GotoCoverEntrance(Police ai) : base(ai)
     {
         _police = ai;
-
+       
     }
 
     public override uint PerformAction()
     {
-        if (ai.Path.Count > 0)
-            return (uint)ReturnType.FollowPath;
-        
+
         SetBestEntrance();
         SetCoverPosition();
-        return (uint)ReturnType.NotFinished;
-    }
-    private void SetBestEntrance()
-    {
-        var building = _police.CurrentBuilding;
-        var bestEntrance = building.FindBestEntrance();
-      
-        building.AddToEnterance(_police, bestEntrance);
-        _currentEntrance = bestEntrance;
+     //   Debug.Log($"HoldPos {_currentEntrance} = {PathingController.Instance.IsClear(_currentEntrance)}");
+        
+        return (uint) ReturnType.FollowPath;
     }
 
-    private static float count = 0;
+    private void SetBestEntrance()
+    {
+        var building = _police.CoverBuilding;
+        _currentEntrance = building.AddCoveringLawman(_police);
+
+    }
+
     private void SetCoverPosition()
     {
 
         ai.Path.Clear();
-        var pos = new Vector2(11 + count, 68);
-        count += 0.5f;
-        ai.SetPathToPosition(pos);
-        Debug.Log($"Set the police cover to: {pos}");
+        ai.SetPathToPosition(_currentEntrance);
     }
 
 

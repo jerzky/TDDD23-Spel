@@ -21,7 +21,6 @@ public class LockPick : UsableItem
     }
     public override uint Use(ItemInfo item, Vector3 pos)
     {
-        Debug.Log("USE ITEM LOCKPICK");
         continousSoundID = SoundController.Instance.GenerateContinousSound(new Sound(transform.position, ItemList.ITEM_LOCKPICK.SoundRadius, Sound.SoundType.Construction), ItemList.ITEM_LOCKPICK.AverageUseTime);
         audioSource.enabled = true;
         audioSource.volume = 0.5f;
@@ -31,7 +30,7 @@ public class LockPick : UsableItem
 
     public override void Cancel()
     {
-        Debug.Log("CANCEL ITEM LOCKPICK");
+      
         audioSource.enabled = false;
         SoundController.Instance.CancelContinousSound(continousSoundID);
     }

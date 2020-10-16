@@ -6,7 +6,9 @@ using UnityEngine;
 public class FollowPath : Action
 {
     public enum ReturnType { NotFinished, Finished, StartedWithoutPath }
-    public bool isWaitingForPath = false;
+    public bool IsWaitingForPath { get; set; } = false;
+    
+
     bool movingThroughDoor = false;
     bool walkingPassedDoor = false;
     float hasNotMovedTimer = 0f;
@@ -29,8 +31,13 @@ public class FollowPath : Action
 
     public override uint PerformAction()
     {
-        if (ai.Path.Count <= 0)
+        if (IsWaitingForPath)
+            return (uint) ReturnType.NotFinished;
+        
+        if (ai.Path.Count <= 0 )
             return (uint) ReturnType.StartedWithoutPath;
+
+
 
         if (IsStuck())
             if (RecalculatePath())
@@ -69,7 +76,7 @@ public class FollowPath : Action
         }
         if (ai.Path.Count == 0)
         {
-            isWaitingForPath = false;
+            IsWaitingForPath = false;
             return true;
         }
         return false;
@@ -215,11 +222,12 @@ public class FollowPath : Action
     {
         if (ai == null)
             return;
+
         Node node = startNode;
         if (node == null)
             return;
         ai.Path.Clear();
-        
+        IsWaitingForPath = false;
         if (node.Child == null)
         {
             ai.Path.Add(node);
@@ -258,23 +266,21 @@ public class FollowPath : Action
             return ActionE.FindPathToRouteNode;
         }
 
-        switch(currentState)
+        switch (currentState)
         {
             case State.Pursuit:
-                if (((Lawman) ai).Pursue.LineOfSight())
-                    return ActionE.Pursue;
-                else
-                    return ActionE.LookAround;
+                return ((Lawman) ai).Pursue.LineOfSight() ? ActionE.Pursue : ActionE.LookAround;
             case State.Investigate:
                 return ActionE.LookAround;
             case State.Panic:
-                if (ai.CurrentBuilding.PlayerReportedAsHostile)
-                    return ActionE.Flee;
-                else
-                    return ActionE.None;
+                return ai.CurrentBuilding.PlayerReportedAsHostile ? ActionE.Flee : ActionE.None;
             case State.GotoCoverEntrance:
-                return ActionE.HoldCoverEntrance;
+                return lastActionReturnValue == (uint) ReturnType.StartedWithoutPath
+                    ? ActionE.GotoCoverEntrance
+                    : ActionE.HoldCoverEntrance;
+
         }
+
         return ActionE.None;
     }
 }

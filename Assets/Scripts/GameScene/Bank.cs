@@ -22,22 +22,27 @@ public class Bank : Building
         LoadPathingNodes();
         var allGuards = GetComponentsInChildren<AI>();
 
-        foreach (var guard in allGuards)
+        if (allGuards.Length > 0)
         {
-            _guards.Add(guard);
-        }
-        
-        _nodePaths[0].Guard = _guards[0];
-        _nodePaths[1].Guard = _guards[1];
+            foreach (var guard in allGuards)
+            {
+                _guards.Add(guard);
+            }
 
-        _guards[0].SetRoute(_nodePaths[0]);
-        _guards[1].SetRoute(_nodePaths[1]);
+            _nodePaths[0].Guard = _guards[0];
+            _nodePaths[1].Guard = _guards[1];
+
+            _guards[0].SetRoute(_nodePaths[0]);
+            _guards[1].SetRoute(_nodePaths[1]);
+        }
 
         var sizeX = 23 - 0;
         var sizeY = 99 - 77;
         var posX = 0 + sizeX / 2;
         var posY = 77 + sizeY / 2;
         _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+
+
         base.Start();
     }
 
@@ -55,7 +60,7 @@ public class Bank : Building
         var rooms = _nodeHolder.GetComponentsInChildren<Transform>();
         foreach (var r in rooms)
         {
-            if (r.childCount == 0 || r.name == _nodeHolder.name)
+            if (r.childCount == 0 || r.gameObject.GetInstanceID() == _nodeHolder.gameObject.GetInstanceID())
                 continue;
             
             _nodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));

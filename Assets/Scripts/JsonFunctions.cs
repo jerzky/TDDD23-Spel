@@ -24,7 +24,6 @@ public static class Json
     {
         var pathc = Path.Combine(Application.streamingAssetsPath, path);
         var fileContent = File.ReadAllText(pathc);
-        Debug.Log(fileContent);
         return JsonConvert.DeserializeObject<T>(fileContent);
     }
 
