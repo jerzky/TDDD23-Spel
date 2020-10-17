@@ -113,7 +113,7 @@ public class Bank : Building
         }
     }
 
-    public override NodePath GetCivilianPath()
+    public override NodePath GetCivilianPath(AI ai)
     {
         if (_civilianNodePathIndex >= _civilianNodePaths.Count) _civilianNodePathIndex = _civilianNodePathIndex % _civilianNodePaths.Count;
         return _civilianNodePaths[_civilianNodePathIndex++];

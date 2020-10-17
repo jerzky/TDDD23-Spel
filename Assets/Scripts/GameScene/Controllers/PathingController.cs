@@ -113,7 +113,7 @@ public class PathingController : MonoBehaviour
         {
             for (int x = 0; x < MapController.MapSize.x; x++)
             {
-                Collider2D[] hits = Physics2D.OverlapCircleAll(new Vector2(x, y), 0.45f);
+                Collider2D[] hits = Physics2D.OverlapCircleAll(new Vector2(x, y), 0.35f);
                 grid[x, y] = (uint)NodeType.Clear;
                 foreach (var v in hits)
                 {
@@ -293,6 +293,7 @@ public class PathingController : MonoBehaviour
 
     public bool FindPath(Vector2 s, Vector2 g, AI ai)
     {
+        g = new Vector2(Mathf.Clamp(g.x, 0, 125), Mathf.Clamp(g.y, 0, 100));
         if (grid[(int)Mathf.Round(g.x), (int)Mathf.Round(g.y)] != NodeType.Clear)
             g = GetClearNodeNeighbour(g);
         if (g == new Vector2(-1, -1)) // no neighbour
@@ -310,7 +311,6 @@ public class PathingController : MonoBehaviour
 
     Node FindPath(Vector2 s, Vector2 g, NodeType[,] gridCopy)
     {
-        Debug.Log("FIND PATH");
         Vector2 startPos = new Vector2((int)Mathf.Round(s.x), (int)Mathf.Round(s.y));
         Vector2 goalPos = new Vector2((int)Mathf.Round(g.x), (int)Mathf.Round(g.y));
 

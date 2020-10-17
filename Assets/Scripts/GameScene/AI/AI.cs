@@ -70,10 +70,7 @@ public abstract class AI : MonoBehaviour
         get
         {
             var building = BuildingController.Instance.GetBuilding(transform.position);
-            if (building != null)
-                lastBuilding = building;
-
-            return lastBuilding;
+            return building;
         }
     }
     protected virtual void Start()
@@ -166,7 +163,6 @@ public abstract class AI : MonoBehaviour
 
     public void SetPathToPosition(Vector2 pos)
     {
-        Debug.Log($"Path to position");
         Path.Clear();
         PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
     }

@@ -12,8 +12,10 @@ public class Civilian : AI
     float foodGainMultiplier = 4f;
     float cashGainMultiplier = 4f;
     float funGainMultiplier = 4f;
+    float ffcMax = 300f;
 
     SimpleTimer switchCurrentRouteTimer = new SimpleTimer(30f);
+    int currentFFC = -1;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -29,50 +31,76 @@ public class Civilian : AI
         sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
         sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
 
-        fun = Random.Range(0, 100);
-        food = Random.Range(0, 100);
-        cash = Random.Range(0, 100);
+        fun = Random.Range(0, ffcMax);
+        food = 0;//Random.Range(0, ffcMax);
+        cash = Random.Range(0, ffcMax);
+        ChooseRoute();
     }
 
     void Update()
     {
-        food -= Time.deltaTime;
-        fun -= Time.deltaTime;
-        cash -= Time.deltaTime;
+        if(CurrentAction == ActionE.None)
+        {
+            currentFFC = -1;
+            ChooseRoute();
+            return;
+        }
+        if(food > 0)
+            food -= Time.deltaTime;
+        if (fun > 0)
+            fun -= Time.deltaTime;
+        if (cash > 0)
+            cash -= Time.deltaTime;
         Building building = CurrentBuilding;
-        if (building == null)
+        if (building == null || CurrentState != State.FollowRoute)
             return;
         switch(building.BuildingType)
         {
             case BuildingType.Appartment:
-                food += foodGainMultiplier * Time.deltaTime;
+                if((building as ApartmentBuilding).GetApartment(transform.position) != null)
+                    food += foodGainMultiplier * Time.deltaTime;
+                if (food >= ffcMax && currentFFC == 0)
+                    ChooseRoute();
                 break;
             case BuildingType.Bank:
                 cash += cashGainMultiplier * Time.deltaTime;
+                if (cash >= ffcMax && currentFFC == 1)
+                    ChooseRoute();
                 break;
             case BuildingType.Bar:
                 fun += funGainMultiplier * Time.deltaTime;
+                if (fun >= ffcMax && currentFFC == 2)
+                    ChooseRoute();
                 break;
         }
+        
+    }
 
-        if(switchCurrentRouteTimer.TickAndReset())
+    private void ChooseRoute()
+    {
+        float val = Mathf.Min(food, cash);
+        CurrentState = State.FollowRoute;
+        CurrentAction = ActionE.FollowPath;
+        if(currentFFC == 0 && val != food)
         {
-            Debug.Log("Choose New Building");
-            float val = Mathf.Min(food, cash);
-            CurrentState = State.FollowRoute;
-            CurrentAction = ActionE.FollowPath;
-            if (val == food)
-            {
-                CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment);
-                Path.Clear();
-                SetPathToPosition(CurrentRoute.CurrentNode.Position);
-            }
-            else if (val == cash)
-            {
-                CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank);
-                Path.Clear();
-                SetPathToPosition(CurrentRoute.CurrentNode.Position);
-            }
+            Building building = CurrentBuilding;
+            if (building != null)
+                (building as ApartmentBuilding).GetApartment(transform.position).Resident = null;
+        }
+        if (val == food)
+        {
+            currentFFC = 0;
+            CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment, this);
+            Path.Clear();
+            SetPathToPosition(CurrentRoute.CurrentNode.Position);
+            
+        }
+        else if (val == cash)
+        {
+            currentFFC = 1;
+            CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank, this);
+            Path.Clear();
+            SetPathToPosition(CurrentRoute.CurrentNode.Position);
         }
     }
 

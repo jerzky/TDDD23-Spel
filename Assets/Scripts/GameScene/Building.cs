@@ -140,5 +140,5 @@ public abstract class Building : MonoBehaviour
         return false;
     }
 
-    public abstract NodePath GetCivilianPath();
+    public abstract NodePath GetCivilianPath(AI ai);
 }

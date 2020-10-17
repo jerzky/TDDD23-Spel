@@ -27,12 +27,12 @@ public class BuildingController : MonoBehaviour
         return null;
     }
 
-    public NodePath GetCivilianNodePath(BuildingType type)
+    public NodePath GetCivilianNodePath(BuildingType type, AI ai)
     {
         foreach(var v in _buildings)
         {
             if (v.BuildingType == type)
-                return v.GetCivilianPath();
+                return v.GetCivilianPath(ai);
         }
         return null;
     }

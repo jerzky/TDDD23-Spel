@@ -272,7 +272,8 @@ public class FollowPath : Action
             case State.Investigate:
                 return ActionE.LookAround;
             case State.Panic:
-                if (ai.CurrentBuilding.PlayerReportedAsHostile)
+                var building = ai.CurrentBuilding;
+                if (building != null && building.PlayerReportedAsHostile)
                     return ActionE.Flee;
                 else
                     return ActionE.None;
