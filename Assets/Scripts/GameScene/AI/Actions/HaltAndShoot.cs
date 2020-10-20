@@ -16,7 +16,6 @@ public class HaltAndShoot : Action
     }
     public override uint PerformAction()
     {
-        
         //Shoot or do we still have time left?
         if (_weaponHandler.Shoot(ai.transform.position, PlayerController.Instance.transform.position))
             return (uint)ReturnType.Finished;

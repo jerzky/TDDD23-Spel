@@ -13,6 +13,8 @@ public class Flee : Action
     
     public override uint PerformAction()
     {
+        if (ai == null)
+            return (uint)ReturnType.NotFinished;
         if (Utils.LineOfSight(ai.transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast")))
             return (uint)ReturnType.Finished;
 

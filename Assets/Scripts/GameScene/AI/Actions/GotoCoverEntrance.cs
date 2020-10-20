@@ -14,7 +14,6 @@ public class GotoCoverEntrance : Action
 
     public override uint PerformAction()
     {
-
         SetBestEntrance();
         SetCoverPosition();
      //   Debug.Log($"HoldPos {_currentEntrance} = {PathingController.Instance.IsClear(_currentEntrance)}");

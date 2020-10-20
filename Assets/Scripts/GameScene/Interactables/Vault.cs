@@ -8,6 +8,7 @@ public class Vault : Door
     protected override void Start()
     {
         base.Start();
+        tag = "Untagged";
     }
 
     public override void MoveDoor()
