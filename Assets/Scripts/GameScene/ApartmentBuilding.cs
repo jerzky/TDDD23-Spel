@@ -42,7 +42,7 @@ public class ApartmentBuilding : Building
         var posX = 45 + sizeX / 2;
         var posY = 33 + sizeY / 2;
 
-        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+        BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         NodePath nodePath = NodePath.LoadPathNodesFromHolder(nodeHolder);
         apartments.Add(new Apartment(nodePath, new Vector2(52, 60)));
 

@@ -32,14 +32,20 @@ public class Guard : Lawman
         var building = CurrentBuilding;
         if (building != null)
             if (PlayerController.Instance.IsHostile || building.PlayerReportedAsHostile)
-                building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile);
-        base.PlayerSeen();
+            {
+                building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile, this);
+                base.PlayerSeen();
+            }
+                
+        
     }
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
         if (IsIncapacitated)
             return false;
+        //Pursue.LastPlayerPos = position;
+        LastSeenPlayerLocation = PlayerController.Instance.transform.position;
         if (CurrentState == State.Pursuit)
             return true;
 
@@ -53,7 +59,6 @@ public class Guard : Lawman
                 StartInvestigate(position);
                 break;
             case AlertIntensity.ConfirmedHostile:
-                Pursue.LastPlayerPos = position;
                 CurrentState = State.Pursuit;
                 CurrentAction = ActionE.Pursue;
                 break;

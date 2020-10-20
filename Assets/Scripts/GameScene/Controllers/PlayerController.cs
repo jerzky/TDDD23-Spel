@@ -228,6 +228,7 @@ public class PlayerController : MonoBehaviour
         GeneralUI.Instance.Health -= damage;
         if (GeneralUI.Instance.Health <= 0)
         {
+            return;
             // you lost motherfucker
             #if UNITY_EDITOR
             if (EditorApplication.isPlaying)

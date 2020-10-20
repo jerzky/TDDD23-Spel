@@ -82,14 +82,22 @@ public class Vision : MonoBehaviour
 
     bool LineOfSight(Collider2D col)
     {
-        if (Utils.LineOfSight(GetComponentInParent<Transform>().position, col.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
+        return LineOfSight(col, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv"));
+    }
+    bool LineOfSight(Collider2D col, LayerMask layermask)
+    {
+        if (Utils.LineOfSight(GetComponentInParent<Transform>().position, col.gameObject, layermask))
             return true;
         return false;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if(LineOfSight(col))
+        LayerMask layermask = ~LayerMask.GetMask("Ignore Raycast", "cctv");
+        if (!col.CompareTag("humanoid"))
+           layermask = ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv");
+
+        if (LineOfSight(col, layermask))
             OnVisionEnter(col);
         else
             OnVisionExit(col);
@@ -97,7 +105,11 @@ public class Vision : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D col)
     {
-        if (LineOfSight(col))
+        LayerMask layermask = ~LayerMask.GetMask("Ignore Raycast", "cctv");
+        if (!col.CompareTag("humanoid"))
+            layermask = ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv");
+
+        if (LineOfSight(col, layermask))
         {
             // We can see col, OnVision will handle seen object
             OnVision(col);

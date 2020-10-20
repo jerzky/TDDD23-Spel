@@ -69,17 +69,12 @@ public class PathingController : MonoBehaviour
     {
         Instance = this;
         CreateNodeGrid();
-        //FindObjectOfType<AI>().Alert(new Vector2(30, 90), AlertType.Investigate);
     }
 
     // Update is called once per frame
     private int test = 0;
     void Update()
     {
-        if(test != waitingQueue.Count)
-            Debug.Log(waitingQueue.Count);
-
-        test = waitingQueue.Count;
         if (waitingQueue.Count > 0)
         {
             delayBetweenPathFindings -= Time.deltaTime;
@@ -198,37 +193,16 @@ public class PathingController : MonoBehaviour
             return 0f;
 
         List<DoorQueueItem> queue = doors[doorPosition];
-        DoorQueueItem contains = null;
-        DoorQueueItem closest = null;
-        for (int i = 0; i < queue.Count; i++)
+        int queuecount = queue.Count;
+        queue.RemoveAll(c => c.AI == null);
+        queue.Sort((a, b) => Vector2.Distance(a.AI.transform.position, doorPosition).CompareTo(Vector2.Distance(b.AI.transform.position, doorPosition)));
+        Debug.Log("old " + queuecount + " new " + queue.Count);
+        bool contains = queue.Any(c => c.AI == ai);
+        if (contains)
         {
-            var v = queue[i];
-            if(v.AI == null)
-            {
-                queue.Remove(v);
-                continue;
-            }
-
-            if (v.AI.CurrentAction != ActionE.FollowPath)
-                queue.Remove(v);
-
-            v.Distance = Vector2.Distance(doorPosition, v.AI.transform.position);
-            if (v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
-            {
-                contains = v;
-            }
-            if (closest == null || v.Distance < closest.Distance)
-            {
-                closest = v;
-            }
-        }
-        if (contains != null)
-        {
-            if (closest.Distance == contains.Distance)
-            {
+            if (queue[0].AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
                 return 0f;
-            }
-        }
+        } 
         else
         {
             queue.Add(new DoorQueueItem(ai, Vector2.Distance(doorPosition, ai.transform.position)));
@@ -239,15 +213,16 @@ public class PathingController : MonoBehaviour
         queue = queue.OrderBy(c => c.Distance).ToList();
         foreach (var v in queue)
         {
-            distance++;
             if (v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
                 break;
+            distance++;
         }
         return distance;
     }
 
     public void DoorPassed(Vector2 doorPosition, AI ai)
     {
+        Debug.Log("DoorPassed");
         for (int i = 0; i < 8; i++)
         {
             Vector2 pos = doorPosition + neighbours[i];

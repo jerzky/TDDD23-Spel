@@ -10,12 +10,13 @@ public static class Utils
     }
     public static bool LineOfSight(Vector2 from, GameObject target, LayerMask layerMask, float distance = Mathf.Infinity, float offsetDistance = 0f)
     {
-        return LineOfSight(from, target.transform.position, layerMask, distance, offsetDistance, target);
+        return LineOfSight(from, target.transform.position, layerMask, distance, offsetDistance, target); ;
     }
     public static bool LineOfSight(Vector2 from, Vector2 to, LayerMask layerMask, float distance = Mathf.Infinity, float offsetDistance = 0f, GameObject target = null, string compareTag = "")
     {
         Vector2 dir = to - from;
         var hit = Physics2D.Raycast(from + dir * offsetDistance, dir, distance, layerMask);
+
         if (hit.collider == null)
             return false;
 

@@ -20,6 +20,8 @@ public abstract class AI : MonoBehaviour
     [SerializeField]
     public Transform RightOffsetPoint;
 
+    public const float LOOKRANGE = 7f;
+
     protected Sprite[] sprites = new Sprite[4];
     Vector2 lastPos; // used to determine movement direction to assign sprite
 
@@ -58,7 +60,7 @@ public abstract class AI : MonoBehaviour
         get => _currentAction;
         protected set
         {
-            Debug.Log($"{_currentAction} -> {value}");
+           // Debug.Log($"{_currentAction} -> {value}");
             _currentAction = value;
         }
     }
@@ -101,29 +103,37 @@ public abstract class AI : MonoBehaviour
 
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
-/*
-        if (CurrentAction == ActionE.None || CurrentState == State.None)
-            return;*/
-
 
         if (IsIncapacitated)
             return;
 
+        CheckForPlayerInVision();
 
         HandleCharacterRotation();
-        Debug.Log("Current Action: " + CurrentAction);
         uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
-        
             GetNextAction(actionReturnType);
         }
 
     }
 
+    void CheckForPlayerInVision()
+    {
+        if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")) &&
+            Vector2.Distance(transform.position, PlayerController.Instance.transform.position) < LOOKRANGE)
+            PlayerSeen();
+
+    }
+
     void HandleCharacterRotation()
     {
-        Vector2 dir = (Vector2)transform.position - lastPos;
+        Vector2 dir;
+        if(CurrentAction == ActionE.Pursue || CurrentAction == ActionE.HaltAndShoot)
+            dir = (Vector2)(PlayerController.Instance.transform.position - transform.position);
+        else
+            dir = (Vector2)transform.position - lastPos;
+
         lastPos = (Vector2)transform.position;
         if (dir != Vector2.zero)
         {
@@ -132,6 +142,7 @@ public abstract class AI : MonoBehaviour
             float angle = -Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
             RotateVisionAround.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
+
     }
 
     public AI_Type Type()
@@ -214,8 +225,8 @@ public abstract class AI : MonoBehaviour
         }
         if (col.CompareTag("Player"))
         {
-            if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
-                PlayerSeen();
+            /*if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
+                PlayerSeen();*/
         }
     }
 

@@ -118,11 +118,7 @@ public abstract class Building : MonoBehaviour
         PlayerReportedAsHostile = false;
     }
 
-
-
-
-
-    public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity)
+    public virtual void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntesity, AI reporter = null)
     {
         if (alertIntesity == AlertIntensity.ConfirmedHostile)
         {

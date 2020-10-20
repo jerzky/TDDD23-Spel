@@ -47,32 +47,28 @@ public class PoliceController : MonoBehaviour
             Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
     }
 
-    public void AlertAll(Vector2 pos)
+    public void AlertAll(Vector2 pos, Police reporter = null)
     {
         foreach (var police in AllPolice)
         {
-            police.Alert(pos, AlertIntensity.ConfirmedHostile);
+            if(police != reporter)
+                police.Alert(pos, AlertIntensity.ConfirmedHostile);
         }
     }
 
     public void ReportWaiting()
     {
-        List<Police> temp = new List<Police>();
-
-        if (AllPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count == AllPolice.Count)
-        {
-            temp.AddRange(AllPolice);
-            AllPolice.Clear();
-        }
-        else
+        Debug.Log("REPORT WAITING");
+        if (AllPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != AllPolice.Count)
             return;
 
 
-        foreach (var police in AllPolice)
+        foreach (var police in AllPolice.ToList())
         {
             Debug.Log("DELETING");
             police.OnDeath();
             Destroy(police.gameObject);
         }
+        AllPolice.Clear();
     }
 }

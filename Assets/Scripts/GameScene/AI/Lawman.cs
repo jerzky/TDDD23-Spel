@@ -12,7 +12,7 @@ public abstract class Lawman : AI
     private protected float HaltTime = 2f;
     private protected float ShootTime = 2f;
     private AIWeaponHandler _weaponHandler;
-   
+    public static Vector2 LastSeenPlayerLocation { get; set; }
 
     // Start is called before the first frame update
     protected override void Start()
@@ -30,21 +30,18 @@ public abstract class Lawman : AI
     {
         // call onalert on our building incase other guards are looking in the wrong place or this is first time player is noticed.
         // only call onalert if player is hostile or has been reported hostile in this building
-      
-        
+
+        //Pursue.LastPlayerPos = PlayerController.Instance.transform.position;
+        LastSeenPlayerLocation = PlayerController.Instance.transform.position;
         switch (CurrentState)
         {
+            case State.Pursuit:
+                if(CurrentAction != ActionE.HaltAndShoot)
+                    CurrentAction = ActionE.Pursue;
+                break;
             default:
                 CurrentState = State.Pursuit;
                 CurrentAction = ActionE.Pursue;
-                break;
-            case State.Pursuit:
-                if (CurrentAction != ActionE.Pursue && CurrentAction != ActionE.HaltAndShoot)
-                {
-                    // If we are not already in pursuit or shooting (looking for player), restart pursue.
-                    Pursue.LastPlayerPos = PlayerController.Instance.transform.position;
-                    CurrentAction = ActionE.Pursue;
-                }
                 break;
         }
     }

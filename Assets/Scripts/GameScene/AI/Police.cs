@@ -46,7 +46,7 @@ public class Police : Lawman
         if (CurrentAction == ActionE.GotoCoverEntrance || CurrentAction == ActionE.HoldCoverEntrance)
             return;
 
-        PoliceController.Instance.AlertAll(PlayerController.Instance.transform.position);
+        PoliceController.Instance.AlertAll(PlayerController.Instance.transform.position, this);
         base.PlayerSeen();
     }
 
@@ -55,7 +55,8 @@ public class Police : Lawman
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
         Vector2 temp = Pursue.LastPlayerPos;
-        Pursue.LastPlayerPos = position;
+        //Pursue.LastPlayerPos = position;
+        LastSeenPlayerLocation = PlayerController.Instance.transform.position;
         if (CurrentState == State.Pursuit)
             return true;
         if(temp != Pursue.LastPlayerPos)

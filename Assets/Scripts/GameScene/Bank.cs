@@ -26,7 +26,7 @@ public class Bank : Building
         LoadPathingNodes();
         var allGuards = GetComponentsInChildren<AI>();
 
-        if (allGuards.Length > 0)
+        if (allGuards.Length > 1)
         {
             foreach (var guard in allGuards)
             {
@@ -44,7 +44,7 @@ public class Bank : Building
         var sizeY = 99 - 77;
         var posX = 0 + sizeX / 2;
         var posY = 77 + sizeY / 2;
-        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+        BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         SetUpCivilianRoutes();
         base.Start();
     }
@@ -81,7 +81,7 @@ public class Bank : Building
         }
     }
 
-    public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity)
+    public override void OnAlert(Vector2 pos, AlertType alertType, AlertIntensity alertIntensity, AI reporter = null)
     {
         base.OnAlert(pos, alertType, alertIntensity);
        
@@ -97,19 +97,19 @@ public class Bank : Building
             case AlertType.Guard_Radio:
                 // if it is confirmed hostile send more guards
                 if(alertIntensity == AlertIntensity.ConfirmedHostile)
-                    SendGuardToInvestigate(pos, alertIntensity);
+                    SendGuardToInvestigate(pos, alertIntensity, reporter);
                 break;
             case AlertType.Sound:
-                SendGuardToInvestigate(pos, alertIntensity);
+                SendGuardToInvestigate(pos, alertIntensity, reporter);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(alertType), alertType, null);
         }
     }
 
-    private void SendGuardToInvestigate(Vector2 pos, AlertIntensity alertIntensity)
+    private void SendGuardToInvestigate(Vector2 pos, AlertIntensity alertIntensity, AI reporter = null)
     {
-        foreach (var guard in _guards.Where(guard => guard != null))
+        foreach (var guard in _guards.Where(guard => guard != null && guard != reporter))
         {
             //Alerts guards d
             guard.Alert(pos, alertIntensity);

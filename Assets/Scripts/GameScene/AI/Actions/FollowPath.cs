@@ -22,7 +22,7 @@ public class FollowPath : Action
     float[] angle = { 270f, 90f, 180f, 0f, 225f, 135f, 315f, 45f };
     Vector2 offset = Vector2.zero;
     float offsetForceMultiplier = 0f;
-    float forceMultiplierSpeed = 2f;
+    float forceMultiplierSpeed = 5f;
 
     public FollowPath(AI ai) : base(ai)
     {
@@ -36,6 +36,8 @@ public class FollowPath : Action
         
         if (ai.Path.Count <= 0 )
             return (uint) ReturnType.StartedWithoutPath;
+
+        // if line of sight && state.pursuit , return pursue ;
 
 
 
@@ -63,7 +65,7 @@ public class FollowPath : Action
 
     bool RecalculatePath()
     {
-        hasNotMovedTimer = 0f;
+        /*hasNotMovedTimer = 0f;
         Node current = ai.Path[0];
         while (current.Child != null)
         {
@@ -78,7 +80,7 @@ public class FollowPath : Action
         {
             IsWaitingForPath = false;
             return true;
-        }
+        }*/
         return false;
     }
 
@@ -99,10 +101,6 @@ public class FollowPath : Action
                     Vector2 myDir = Vector2.one;
                     if (ai.Path.Count > 0 && ai.Path[0].Parent != null)
                         myDir = ai.Path[0].Position - ai.Path[0].Parent.Position;
-
-                    RaycastHit2D hit = Physics2D.Raycast(ai.transform.position, v.transform.position - ai.transform.position);
-                    if (!hit.collider.CompareTag("humanoid"))
-                        continue;
 
                     if ((vDir != myDir || Vector2.Distance(ai.transform.position, v.transform.position) < 1f) && (closest == null || Vector2.Distance(v.transform.position, ai.transform.position) < Vector2.Distance(closest.transform.position, ai.transform.position)))
                     {
@@ -180,14 +178,15 @@ public class FollowPath : Action
     {
         dir += offset.normalized * offsetForceMultiplier;
 
-        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.MoveSpeed * Time.fixedDeltaTime);
+        ai.GetComponent<Rigidbody2D>().MovePosition((Vector2)ai.transform.position + dir.normalized * ai.MoveSpeed * ai.SpeedMultiplier * Time.fixedDeltaTime);
     }
 
     void FinishedNode()
     {
-        movingThroughDoor = false;
+        
         if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(ai.Path[0].Child.Position))
         {
+            movingThroughDoor = false;
             PathingController.Instance.DoorPassed(lastDoorNeighbourPos, ai);
             walkingPassedDoor = false;
             lastDoorNeighbourPos = new Vector2(-1, -1);
@@ -282,9 +281,13 @@ public class FollowPath : Action
                     ? ActionE.GotoCoverEntrance
                     : ActionE.HoldCoverEntrance;
             case State.StormBuilding:
-                return ActionE.ClearRoom;
+                return lastActionReturnValue == (uint)ReturnType.StartedWithoutPath
+                    ? ActionE.FollowPath
+                    : ActionE.LookAround;
             case State.PoliceGoToCar:
-                return ActionE.WaitingForAllPolice;
+                return lastActionReturnValue == (uint)ReturnType.StartedWithoutPath
+                    ? ActionE.FollowPath
+                    : ActionE.WaitingForAllPolice;
 
         }
 

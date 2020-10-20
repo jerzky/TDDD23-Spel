@@ -12,7 +12,7 @@ public class Pursue : Action
 
 
 
-    public Vector2 LastPlayerPos { get; set; } = Vector2.zero;
+    public Vector2 LastPlayerPos { get => Lawman.LastSeenPlayerLocation; private set { } }
 
     public Pursue(Lawman ai, Transform player, float haltTime) : base(ai)
     {
@@ -71,7 +71,7 @@ public class Pursue : Action
             return ActionE.None;
         if (lastActionReturnValue == (uint)Pursue.ReturnType.InFireRange || lastActionReturnValue == (uint)Pursue.ReturnType.ReadyToHaltAndShoot)
         {
-            if (PlayerController.Instance.IsHostile || alertIntensity == AlertIntensity.ConfirmedHostile)
+            if (PlayerController.Instance.IsHostile || alertIntensity == AlertIntensity.ConfirmedHostile || true)
             {
                 (ai.Actions[ActionE.HaltAndShoot] as HaltAndShoot).ResetShootTimer();
                 return ActionE.HaltAndShoot;

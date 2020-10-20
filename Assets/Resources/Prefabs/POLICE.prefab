@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4262160194635409923}
   - component: {fileID: 4262160194635409932}
   - component: {fileID: 4262160194635409933}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: AIVision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,4 +460,5 @@ MonoBehaviour:
   RightOffsetPoint: {fileID: 4262160193782322695}
   InVision: []
   SpeedMultiplier: 1
+  CurrentState: 0
   AiType: 4
