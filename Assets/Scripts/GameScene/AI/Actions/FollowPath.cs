@@ -278,6 +278,10 @@ public class FollowPath : Action
                 return lastActionReturnValue == (uint) ReturnType.StartedWithoutPath
                     ? ActionE.GotoCoverEntrance
                     : ActionE.HoldCoverEntrance;
+            case State.StormBuilding:
+                return ActionE.ClearRoom;
+            case State.PoliceGoToCar:
+                return ActionE.WaitingForAllPolice;
 
         }
 

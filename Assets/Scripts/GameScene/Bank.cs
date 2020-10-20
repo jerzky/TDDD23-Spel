@@ -40,7 +40,7 @@ public class Bank : Building
         var sizeY = 99 - 77;
         var posX = 0 + sizeX / 2;
         var posY = 77 + sizeY / 2;
-        _buildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+        BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
 
 
         base.Start();

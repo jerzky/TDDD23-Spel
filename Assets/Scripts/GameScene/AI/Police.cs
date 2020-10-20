@@ -8,8 +8,8 @@ using UnityEngine;
 public class Police : Lawman
 {
     public Building CoverBuilding { get; private set; }
-
-
+    public new AlertIntensity CurrentAlertIntensity => AlertIntensity.ConfirmedHostile;
+    public FindRoomToClear FindRoomToClear { get; set; }
     protected override void Start()
     {
         Health = 150;
@@ -18,13 +18,19 @@ public class Police : Lawman
         AiType = AI_Type.Police;
         Actions.Add(ActionE.GotoCoverEntrance, new GotoCoverEntrance(this));
         Actions.Add(ActionE.HoldCoverEntrance, new HoldCoverEntrance(this));
+        FindRoomToClear = new FindRoomToClear(this);
+
+        Actions.Add(ActionE.FindRoomToClear, FindRoomToClear);
+        Actions.Add(ActionE.ClearRoom, new ClearRoom(this));
+        Actions.Add(ActionE.WaitingForAllPolice, new WaitingForAllPolice(this) );
+
         sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[4];
         sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[5];
         sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[6];
         sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[7];
         base.Start();
-        IdleState = State.None;
-        IdleAction = ActionE.None;
+        IdleState = State.GotoCoverEntrance;
+        IdleAction = ActionE.GotoCoverEntrance;
         CurrentState = State.GotoCoverEntrance;
         CurrentAction = ActionE.GotoCoverEntrance;
         DeadHat = Resources.Load<Sprite>("Textures/guardhat");
@@ -36,25 +42,36 @@ public class Police : Lawman
     protected override void PlayerSeen()
     {
         Debug.Log($"Player seen. Current State {CurrentState}");
-        //base.PlayerSeen();
+
+        if (CurrentAction == ActionE.GotoCoverEntrance || CurrentAction == ActionE.HoldCoverEntrance)
+            return;
+
+        PoliceController.Instance.AlertAll(PlayerController.Instance.transform.position);
+        base.PlayerSeen();
     }
 
 
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
     {
+        Vector2 temp = Pursue.LastPlayerPos;
+        Pursue.LastPlayerPos = position;
         if (CurrentState == State.Pursuit)
             return true;
+        if(temp != Pursue.LastPlayerPos)
+             PoliceController.Instance.AlertAll(position);
 
-
-        Pursue.LastPlayerPos = position;
         CurrentState = State.Pursuit;
         CurrentAction = ActionE.Pursue;
 
         return true;
     }
 
-
+    public override void OnDeath()
+    {
+        PoliceController.AllPolice.Remove(this);
+        CoverBuilding.RemoveCoveringLawman(this);
+    }
 
     public void SetCoverBuilding(Building building) => CoverBuilding = building;
 
@@ -77,6 +94,9 @@ public class Police : Lawman
         police.GetComponent<Police>().SetCurrentState(state);
         police.GetComponent<Police>().SetCurrentAction(action);
         police.GetComponent<Police>().SetCoverBuilding(building);
+
+        PoliceController.AllPolice.Add(police.GetComponent<Police>());
+
         return police;
     }
 }

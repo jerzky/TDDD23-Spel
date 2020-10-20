@@ -203,6 +203,12 @@ public class PathingController : MonoBehaviour
         for (int i = 0; i < queue.Count; i++)
         {
             var v = queue[i];
+            if(v.AI == null)
+            {
+                doors[doorPosition].Remove(v);
+                continue;
+            }
+
             if (v.AI.CurrentAction != ActionE.FollowPath)
                 queue.Remove(v);
             v.Distance = Vector2.Distance(doorPosition, v.AI.transform.position);
@@ -253,7 +259,7 @@ public class PathingController : MonoBehaviour
 
         if (doors.ContainsKey(doorPosition))
         {
-            doors[doorPosition].Remove(doors[doorPosition].Find(c => c.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID()));
+            doors[doorPosition].Remove(doors[doorPosition].Find(c => c.AI == null || c.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID()));
             if (doors[doorPosition].Count <= 0)
                 doorsScripts[doorPosition].Close();
         }

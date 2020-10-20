@@ -1,4 +1,5 @@
-﻿﻿using System.Collections.Generic;
+﻿﻿using System;
+ using System.Collections.Generic;
 using System.Dynamic;
  using System.Linq;
  using UnityEngine;
@@ -26,6 +27,15 @@ public class BuildingPart
 }
 public class Building : MonoBehaviour
 {
+    [Serializable]
+    public class Room
+    {
+        [SerializeField]
+        public Vector2 Position;
+
+        public bool IsCleared { get; set; } = false;
+        public bool IsTaken { get; set; } = false;
+    }
 
     public bool IsSomeoneMonitoringCCTV => _securityStation.IsMonitored;
 
@@ -36,11 +46,14 @@ public class Building : MonoBehaviour
     public List<Entrance> Entrances;
 
     [SerializeField]
+    public List<Room> Rooms;
+
+    [SerializeField]
     public Vector2 PoliceSpawnPoint;
 
 
 
-    protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
+    protected List<BuildingPart> BuildingParts = new List<BuildingPart>();
     private readonly SimpleTimer _playerHostileTimer = new SimpleTimer(30);
     protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(60);
 
@@ -83,6 +96,15 @@ public class Building : MonoBehaviour
     }
 
 
+    public void RemoveCoveringLawman(Lawman lawman)
+    {
+        foreach (var entrance in Entrances)
+        {
+            entrance.RemoveLawman(lawman);
+        }
+    }
+
+
     protected virtual void ReportPlayerAsHostile()
     {
         PlayerReportedAsHostile = true;
@@ -108,11 +130,17 @@ public class Building : MonoBehaviour
 
     public bool IsWithin(Vector2 position)
     {
-        foreach(var v in _buildingParts)
-        {
-            if (v.IsWithin(position))
-                return true;
-        }
-        return false;
+        return BuildingParts.Any(v => v.IsWithin(position));
     }
+
+    public bool IsWithin(AI ai)
+    {
+        return IsWithin(ai.gameObject.transform.position);
+    }
+
+    public bool Contains(AI_Type type)
+    {
+        return FindObjectsOfType<AI>().Any(ai => ai.AiType == type);
+    }
+
 }

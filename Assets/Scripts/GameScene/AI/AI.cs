@@ -2,8 +2,10 @@
 using UnityEngine;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Freeze, Flee };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Panic };
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, Freeze, Flee,
+    FindRoomToClear, ClearRoom, WaitingForAllPolice
+};
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, StormBuilding, Panic, PoliceGoToCar, WaitingForAllPolice };
 
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
@@ -49,7 +51,7 @@ public abstract class AI : MonoBehaviour
     // StateMachineVariables
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
-    protected State CurrentState = State.None;
+    public State CurrentState = State.None;
 
     public ActionE CurrentAction
     {
@@ -112,9 +114,11 @@ public abstract class AI : MonoBehaviour
 
 
         HandleCharacterRotation();
+        Debug.Log("Current Action: " + CurrentAction);
         uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
+        
             GetNextAction(actionReturnType);
         }
 
@@ -168,7 +172,9 @@ public abstract class AI : MonoBehaviour
 
     public virtual void GetNextAction(uint lastActionReturnValue)
     {
-        CurrentAction = Actions[CurrentAction].GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
+
+        CurrentAction = Actions[CurrentAction]
+            .GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
         if (CurrentAction == ActionE.None)
             CancelCurrentState();
     }
@@ -244,6 +250,7 @@ public abstract class AI : MonoBehaviour
         Health -= damage;
         if (Health <= 0)
         {
+            OnDeath();
             DieAnimation(dir);
             GeneralUI.Instance.Kills++;
             Destroy(gameObject);
@@ -258,6 +265,10 @@ public abstract class AI : MonoBehaviour
 
     protected abstract void DieAnimation(Vector3 dir);
 
+    public virtual void OnDeath()
+    {
+
+    }
     public void Incapacitate()
     {
         // raycast behind me

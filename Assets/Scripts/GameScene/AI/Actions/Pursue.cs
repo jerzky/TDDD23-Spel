@@ -85,6 +85,7 @@ public class Pursue : Action
         else if (lastActionReturnValue == (uint)Pursue.ReturnType.LostLineOfSight)
             return ActionE.FollowPath;
 
+        
         return ActionE.None;
     }
 }
