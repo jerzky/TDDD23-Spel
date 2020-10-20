@@ -1,11 +1,18 @@
-﻿using Assets.Items;
+﻿using System;
+using Assets.Items;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PoliceController : MonoBehaviour
 {
     public static PoliceController Instance;
+    public static List<Police> AllPolice = new List<Police>();
+    private int _currentlyWaiting = 0;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,5 +45,34 @@ public class PoliceController : MonoBehaviour
     {
         for(var i = 0; i < 5; i++)
             Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
+    }
+
+    public void AlertAll(Vector2 pos)
+    {
+        foreach (var police in AllPolice)
+        {
+            police.Alert(pos, AlertIntensity.ConfirmedHostile);
+        }
+    }
+
+    public void ReportWaiting()
+    {
+        List<Police> temp = new List<Police>();
+
+        if (AllPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count == AllPolice.Count)
+        {
+            temp.AddRange(AllPolice);
+            AllPolice.Clear();
+        }
+        else
+            return;
+
+
+        foreach (var police in AllPolice)
+        {
+            Debug.Log("DELETING");
+            police.OnDeath();
+            Destroy(police.gameObject);
+        }
     }
 }

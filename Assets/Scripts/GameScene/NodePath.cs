@@ -81,7 +81,7 @@ public class NodePath
         var secondDash = name.IndexOf('-', firstDashIndex);
         if (secondDash == -1)
         {
-            /*Debug.Log(string.IsNullOrEmpty(parentName)
+           /* Debug.Log(string.IsNullOrEmpty(parentName)
                 ? "Added walk node"
                 : $"Added walk node to parent: {parentName}");*/
 
@@ -97,7 +97,6 @@ public class NodePath
         /*Debug.Log(string.IsNullOrEmpty(parentName)
             ? $"Added a {enumType} with length: {intLength} at position {pos}"
             : $"Added a {enumType} with length: {intLength} at position {pos} to parent: {parentName}");*/
-
         return new NodePath.RouteNode(pos, enumType, intLength);
     }
 }

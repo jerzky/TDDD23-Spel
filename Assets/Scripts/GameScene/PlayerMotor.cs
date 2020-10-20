@@ -58,7 +58,6 @@ public class PlayerMotor : MonoBehaviour
 
     public void Interact(Vector2 lookDir, uint itemID)
     {
-
         RaycastHit2D hit = Physics2D.Raycast(rb.position, lookDir, 2, LayerMask.GetMask("interactables"), -Mathf.Infinity, Mathf.Infinity);
         if (hit.collider == null)
         {

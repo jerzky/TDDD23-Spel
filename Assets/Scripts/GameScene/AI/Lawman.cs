@@ -30,10 +30,7 @@ public abstract class Lawman : AI
     {
         // call onalert on our building incase other guards are looking in the wrong place or this is first time player is noticed.
         // only call onalert if player is hostile or has been reported hostile in this building
-        var building = CurrentBuilding;
-        if(building != null)
-            if (PlayerController.Instance.IsHostile || building.PlayerReportedAsHostile)
-                building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile);
+      
         
         switch (CurrentState)
         {

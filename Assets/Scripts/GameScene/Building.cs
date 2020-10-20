@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using UnityEngine;
+ using System.Linq;
+ using UnityEngine;
 
 
 public class BuildingPart
@@ -28,6 +29,15 @@ public enum BuildingType { Bank, Appartment, Bar }
 
 public abstract class Building : MonoBehaviour
 {
+    [Serializable]
+    public class Room
+    {
+        [SerializeField]
+        public Vector2 Position;
+
+        public bool IsCleared { get; set; } = false;
+        public bool IsTaken { get; set; } = false;
+    }
 
     public bool IsSomeoneMonitoringCCTV => _securityStation.IsMonitored;
 
@@ -35,15 +45,17 @@ public abstract class Building : MonoBehaviour
     private SecurityStation _securityStation;
 
     [SerializeField] 
-    public List<Vector2> Entrances;
+    public List<Entrance> Entrances;
+
+    [SerializeField]
+    public List<Room> Rooms;
 
     [SerializeField]
     public Vector2 PoliceSpawnPoint;
 
-    private readonly Dictionary<Vector2, List<Police>> _entranceCover = new Dictionary<Vector2, List<Police>>();
 
 
-    protected List<BuildingPart> _buildingParts = new List<BuildingPart>();
+    protected List<BuildingPart> BuildingParts = new List<BuildingPart>();
     private readonly SimpleTimer _playerHostileTimer = new SimpleTimer(30);
     protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(60);
 
@@ -55,7 +67,7 @@ public abstract class Building : MonoBehaviour
     {
         foreach (var entrance in Entrances)
         {
-            _entranceCover.Add(entrance, new List<Police>());
+            entrance.GenerateTiles();
         }
     }
 
@@ -65,24 +77,34 @@ public abstract class Building : MonoBehaviour
             ResetPlayerHostility();
     }
 
-    public Vector2 FindBestEntrance()
+    public Vector2 AddCoveringLawman(Lawman lawman)
     {
         var lowest = int.MaxValue;
-        var best = Vector2.zero;
-        foreach (var pair in _entranceCover)
+        Entrance best = null;
+        foreach (var entrance in Entrances.Where(entrance => entrance.GetTileCount() < lowest))
         {
-            if (pair.Value.Count >= lowest)
-                continue;
-
-            lowest = pair.Value.Count;
-            best = pair.Key;
+            lowest = entrance.GetTileCount();
+            best = entrance;
 
             if (lowest == 0)
                 break;
         }
-        return best;
+
+        if (best == null)
+            return (Vector2) lawman.transform.position;
+
+        var pos = best.TryAddLawman(lawman, out var success);
+        return success ? pos : (Vector2) lawman.transform.position;
+
+    }
 
 
+    public void RemoveCoveringLawman(Lawman lawman)
+    {
+        foreach (var entrance in Entrances)
+        {
+            entrance.RemoveLawman(lawman);
+        }
     }
 
 
@@ -96,28 +118,7 @@ public abstract class Building : MonoBehaviour
         PlayerReportedAsHostile = false;
     }
 
-    public bool IsEntranceCovered(Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return false;
 
-        return _entranceCover[entrance].Count > 0;
-    }
-
-    public void AddToEnterance(Police police, Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return;
-        _entranceCover[entrance].Add(police);
-    }
-
-    public void RemoveFromEnterance(Police police, Vector2 entrance)
-    {
-        if (!_entranceCover.ContainsKey(entrance))
-            return;
-
-        _entranceCover[entrance].Remove(police);
-    }
 
 
 
@@ -132,13 +133,19 @@ public abstract class Building : MonoBehaviour
 
     public bool IsWithin(Vector2 position)
     {
-        foreach(var v in _buildingParts)
-        {
-            if (v.IsWithin(position))
-                return true;
-        }
-        return false;
+        return BuildingParts.Any(v => v.IsWithin(position));
     }
 
+    public bool IsWithin(AI ai)
+    {
+        return IsWithin(ai.gameObject.transform.position);
+    }
+
+
     public abstract NodePath GetCivilianPath(AI ai);
+
+    public bool Contains(AI_Type type)
+    {
+        return FindObjectsOfType<AI>().Any(ai => ai.AiType == type);
+    }
 }

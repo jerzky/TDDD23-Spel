@@ -35,10 +35,10 @@ public class Store : Interactable
 
     public override bool Interact(uint itemIndex)
     {
-        Debug.Log("STORE INTERACT" + itemIndex);
+
         if (itemIndex != 0) 
             return false;
-        Debug.Log("STORE WITH ITEM 0");
+
         if (!isOpen)
             Open();
         else

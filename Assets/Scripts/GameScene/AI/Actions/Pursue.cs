@@ -48,7 +48,7 @@ public class Pursue : Action
                 
             return (uint)ReturnType.NotFinished;
         }
-        
+
         // We lost line of sight, check if our current path is to the correct location
         if (_currentFollowPos == LastPlayerPos)
             return (uint)ReturnType.LostLineOfSight;
@@ -88,6 +88,7 @@ public class Pursue : Action
         else if (lastActionReturnValue == (uint)Pursue.ReturnType.LostLineOfSight)
             return ActionE.FollowPath;
 
+        
         return ActionE.None;
     }
 }

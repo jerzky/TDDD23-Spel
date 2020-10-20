@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Sound
@@ -49,18 +50,16 @@ public class SoundController : MonoBehaviour
     void Update()
     {
         timer.Tick();
-
-        foreach(var v in continousSounds)
-        {
-            if(v.Value.timer.TickAndReset())
-            {
-                GenerateSound(v.Value.sound);
-                if (--v.Value.timesLeft <= 0)
-                    continousSounds.Remove(v.Key);
-            }
-        }
+        continousSounds.ToList().RemoveAll(RemoveAndRun);
     }
 
+    private bool RemoveAndRun(KeyValuePair<uint, ContinousSound> val)
+    {
+        if (!val.Value.timer.TickAndReset()) 
+            return false;
+        GenerateSound(val.Value.sound);
+        return --val.Value.timesLeft <= 0;
+    }
     public void GenerateSound(Sound sound)
     {
         var colliders = Physics2D.OverlapCircleAll(sound.origin, sound.radius);

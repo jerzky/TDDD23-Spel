@@ -2,8 +2,10 @@
 using UnityEngine;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
-public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Freeze, Flee };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, HoldCoverEntrance, StormBuilding, Panic };
+public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, Freeze, Flee,
+    FindRoomToClear, ClearRoom, WaitingForAllPolice
+};
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, StormBuilding, Panic, PoliceGoToCar, WaitingForAllPolice };
 
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
@@ -34,7 +36,7 @@ public abstract class AI : MonoBehaviour
     public const float PursueSpeed = 3f;
     public const float PatrolSpeed = 2f;
     public float SpeedMultiplier = 1f;
-
+  
 
     // Health
     protected int Health = 100;
@@ -49,10 +51,18 @@ public abstract class AI : MonoBehaviour
     // StateMachineVariables
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
-    protected State CurrentState = State.None;
-    public State GetCurrentState { get; }
-    protected ActionE CurrentAction = ActionE.None;
-    public ActionE GetCurrentAction { get; }
+    public State CurrentState = State.None;
+
+    public ActionE CurrentAction
+    {
+        get => _currentAction;
+        protected set
+        {
+            Debug.Log($"{_currentAction} -> {value}");
+            _currentAction = value;
+        }
+    }
+
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
     public void SetCurrentState(State state) => CurrentState = state;
 
@@ -64,6 +74,7 @@ public abstract class AI : MonoBehaviour
 
 
     public AI_Type AiType = AI_Type.Guard;
+    private ActionE _currentAction = ActionE.None;
     private Building lastBuilding { get; set; }
     public Building CurrentBuilding
     {
@@ -85,24 +96,26 @@ public abstract class AI : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
 
         if (!IsZipTied && _incapacitateTimer.TickFixed())
             IsIncapacitated = false;
-
+/*
         if (CurrentAction == ActionE.None || CurrentState == State.None)
-            return;
-        // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
-        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            return;*/
+
 
         if (IsIncapacitated)
             return;
 
 
         HandleCharacterRotation();
+        Debug.Log("Current Action: " + CurrentAction);
         uint actionReturnType = Actions[CurrentAction].PerformAction();
         if (actionReturnType != 0)
         {
+        
             GetNextAction(actionReturnType);
         }
 
@@ -156,7 +169,9 @@ public abstract class AI : MonoBehaviour
 
     public virtual void GetNextAction(uint lastActionReturnValue)
     {
-        CurrentAction = Actions[CurrentAction].GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
+
+        CurrentAction = Actions[CurrentAction]
+            .GetNextAction(CurrentState, lastActionReturnValue, CurrentAlertIntensity);
         if (CurrentAction == ActionE.None)
             CancelCurrentState();
     }
@@ -164,7 +179,10 @@ public abstract class AI : MonoBehaviour
     public void SetPathToPosition(Vector2 pos)
     {
         Path.Clear();
-        PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+
+        FollowPath.IsWaitingForPath = PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
+
+        Debug.Log($"SetPathToPosition - iswaiting {FollowPath.IsWaitingForPath}");
     }
 
     public void GoToNextRouteNode()
@@ -229,6 +247,7 @@ public abstract class AI : MonoBehaviour
         Health -= damage;
         if (Health <= 0)
         {
+            OnDeath();
             DieAnimation(dir);
             GeneralUI.Instance.Kills++;
             Destroy(gameObject);
@@ -243,6 +262,10 @@ public abstract class AI : MonoBehaviour
 
     protected abstract void DieAnimation(Vector3 dir);
 
+    public virtual void OnDeath()
+    {
+
+    }
     public void Incapacitate()
     {
         // raycast behind me

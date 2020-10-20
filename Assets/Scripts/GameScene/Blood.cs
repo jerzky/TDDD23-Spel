@@ -12,7 +12,6 @@ public class Blood : MonoBehaviour
     void Start()
     {
         bloodSprites = Resources.LoadAll<Sprite>("Textures/blood");
-      //  Debug.Log(bloodSprites.Length);
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = bloodSprites[index++];
     }

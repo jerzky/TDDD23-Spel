@@ -18,12 +18,14 @@ public class HoldCoverEntrance : Action
 
     public override uint PerformAction()
     {
-        if (ai == null)
-            return 0;
-        var layerMask = ~LayerMask.GetMask("AI", "Ignore Raycast");
-        return Utils.LineOfSight(_police.transform.position, PlayerController.Instance.gameObject, layerMask)
-            ? (uint)ReturnType.FoundPlayer
-            : (uint)ReturnType.NotFinished;
+        if (_police.CoverBuilding.IsWithin(PlayerController.Instance.transform.position))
+            return (uint) ReturnType.FoundPlayer;
+
+        if (_police.CoverBuilding.Contains(AI_Type.Civilian))
+            return (uint)ReturnType.NotFinished;
+
+
+        return (uint)ReturnType.FoundPlayer;
     }
 
 
@@ -33,8 +35,8 @@ public class HoldCoverEntrance : Action
     {
         if (lastActionReturnValue == (uint) ReturnType.FoundPlayer)
         {
-            _police.SetCurrentState(State.Pursuit);
-            return ActionE.Pursue;
+            _police.SetCurrentState(State.StormBuilding);
+            return ActionE.FindRoomToClear;
         }
         return ActionE.HoldCoverEntrance;
     }
