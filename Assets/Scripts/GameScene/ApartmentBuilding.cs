@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -47,14 +48,14 @@ public class ApartmentBuilding : Building
         apartments.Add(new Apartment(nodePath, new Vector2(52, 60)));
 
         float xInc = 15;
-        float xIncOver3 = 4;
+        float xIncOver2 = 4;
         float yIncOver4 = -17;
 
-        for(int i = 0; i < numberOfApartments; i++)
+        for(int i = 1; i < numberOfApartments; i++)
         {
             Vector2 offset = Vector2.zero;
-            offset.x = ((i > 3 && i < 5) || i > 7) ? xInc * i + xIncOver3 : xInc * i;
-            offset.y = i > 5 ? yIncOver4 : 0f;
+            offset.x = ((i > 2 && i < 5) || i > 7) ? xInc * (i % 5) + xIncOver2 : xInc * (i % 5);
+            offset.y = i > 4 ? yIncOver4 : 0f;
             NodePath newPath = new NodePath("Apartment" + i, null);
             for(int j = 0; j < nodePath.Nodes.Count; j++)
             {
@@ -65,6 +66,7 @@ public class ApartmentBuilding : Building
         }
 
         BuildingType = BuildingType.Appartment;
+        Transform civParent = new GameObject("CivParent").transform;
     }
 
     // Update is called once per frame
@@ -75,7 +77,16 @@ public class ApartmentBuilding : Building
 
     public override NodePath GetCivilianPath(AI ai)
     {
-        foreach (var v in apartments)
+        Apartment a = apartments.Find(c => c.Resident != null && c.Resident.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID());
+        if (a == default(Apartment))
+        {
+            a = apartments.Find(c => c.Resident == null);
+            a.Resident = ai;
+        }
+
+        return a.ApartmentRotation;
+
+        /*foreach (var v in apartments)
         {
             if (v.Resident == null)
             {
@@ -83,7 +94,7 @@ public class ApartmentBuilding : Building
                 return v.ApartmentRotation;
             }
         }
-        return null;
+        return null;*/
     }
 
     public Apartment GetApartment(Vector2 pos)
@@ -91,6 +102,6 @@ public class ApartmentBuilding : Building
         foreach (var v in apartments)
             if (v.IsWithin(pos))
                 return v;
-        return apartments[(int)Random.Range(0, apartments.Count-1)];
+        return apartments[(int)UnityEngine.Random.Range(0, apartments.Count-1)];
     }
 }

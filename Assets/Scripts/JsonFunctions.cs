@@ -7,19 +7,6 @@ using System;
 
 public static class Json
 {
-    [Serializable]
-    public struct SerializeableContainer<T>
-    {
-        public T container;
-    }
-
-    public struct mytest
-    {
-        int i;
-        int k;
-    }
-
-
     public static T JsonToContainer<T>(string path)
     {
         var pathc = Path.Combine(Application.streamingAssetsPath, path);

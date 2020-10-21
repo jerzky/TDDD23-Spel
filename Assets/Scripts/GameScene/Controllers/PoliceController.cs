@@ -58,14 +58,12 @@ public class PoliceController : MonoBehaviour
 
     public void ReportWaiting()
     {
-        Debug.Log("REPORT WAITING");
         if (AllPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != AllPolice.Count)
             return;
 
 
         foreach (var police in AllPolice.ToList())
         {
-            Debug.Log("DELETING");
             police.OnDeath();
             Destroy(police.gameObject);
         }

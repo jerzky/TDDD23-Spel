@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 
 public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
 public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, Freeze, Flee,
-    FindRoomToClear, ClearRoom, WaitingForAllPolice
+    FindRoomToClear, ClearRoom, WaitingForAllPolice, RemoveBody, Rebuild
 };
-public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, StormBuilding, Panic, PoliceGoToCar, WaitingForAllPolice };
+public enum State { None, Idle, IdleHome, Investigate, BathroomBreak, Civilian, FollowRoute, Pursuit, GotoCoverEntrance, StormBuilding, Panic, PoliceGoToCar, WaitingForAllPolice, Medical, Construction };
 
 public enum AlertType { None, Guard_CCTV, Guard_Radio, Sound };
 public enum AlertIntensity { Nonexistant, NonHostile, ConfirmedHostile }
@@ -38,6 +39,7 @@ public abstract class AI : MonoBehaviour
     public const float PursueSpeed = 3f;
     public const float PatrolSpeed = 2f;
     public float SpeedMultiplier = 1f;
+    public int lookDir = 0;
   
 
     // Health
@@ -49,35 +51,34 @@ public abstract class AI : MonoBehaviour
     protected bool IsZipTied = false;
     protected GameObject Cuffs;
 
+    protected GameObject DeadBodyHolder;
+    protected Sprite DeadHead;
+
 
     // StateMachineVariables
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
-    public State CurrentState = State.None;
-
-    public ActionE CurrentAction
+    public State CurrentState { get; set; }
+    protected ActionE _currentAction = ActionE.None;
+    public ActionE CurrentAction 
     {
         get => _currentAction;
-        protected set
+        set 
         {
-           // Debug.Log($"{_currentAction} -> {value}");
+            //Debug.Log($"{_currentAction} -> {value}");
             _currentAction = value;
-        }
+        } 
     }
 
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
-    public void SetCurrentState(State state) => CurrentState = state;
-
-    public void SetCurrentAction(ActionE action) => CurrentAction = action;
 
     // Follow Route variables
     public List<Node> Path = new List<Node>();
     public NodePath CurrentRoute { get; protected set; }
 
+    private GameObject incapacitatedVisual;
 
     public AI_Type AiType = AI_Type.Guard;
-    private ActionE _currentAction = ActionE.None;
-    private Building lastBuilding { get; set; }
     public Building CurrentBuilding
     {
         get
@@ -94,6 +95,11 @@ public abstract class AI : MonoBehaviour
         Actions.Add(ActionE.FollowPath, FollowPath);
         Actions.Add(ActionE.FindPathToRouteNode, new FindPathToRouteNode(this));
         Actions.Add(ActionE.Idle, new IdleAtRouteNode(this));
+        CurrentAction = IdleAction;
+        CurrentState = IdleState;
+
+        incapacitatedVisual = Instantiate(Resources.Load<GameObject>("Prefabs/incap"), transform.position + new Vector3(-0.1f, 0.1f, -1f), Quaternion.identity, transform);
+        DeadHead = Resources.Load<Sprite>("Textures/deadhead");
     }
 
     void FixedUpdate()
@@ -105,7 +111,14 @@ public abstract class AI : MonoBehaviour
             IsIncapacitated = false;
 
         if (IsIncapacitated)
+        {
+            incapacitatedVisual.SetActive(true);
             return;
+        }
+        else
+            incapacitatedVisual.SetActive(false);
+
+        
 
         CheckForPlayerInVision();
 
@@ -137,8 +150,9 @@ public abstract class AI : MonoBehaviour
         lastPos = (Vector2)transform.position;
         if (dir != Vector2.zero)
         {
-            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y)) GetComponent<SpriteRenderer>().sprite = dir.x > 0f ? sprites[3] : sprites[2];
-            else GetComponent<SpriteRenderer>().sprite = dir.y > 0f ? sprites[1] : sprites[0];
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))  lookDir = dir.x > 0f ? 3 : 2;
+            else lookDir = dir.y > 0f ? 1 : 0;
+            GetComponent<SpriteRenderer>().sprite = sprites[lookDir];
             float angle = -Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
             RotateVisionAround.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
@@ -190,10 +204,7 @@ public abstract class AI : MonoBehaviour
     public void SetPathToPosition(Vector2 pos)
     {
         Path.Clear();
-
         FollowPath.IsWaitingForPath = PathingController.Instance.FindPath(new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), pos, this);
-
-        Debug.Log($"SetPathToPosition - iswaiting {FollowPath.IsWaitingForPath}");
     }
 
     public void GoToNextRouteNode()
@@ -223,10 +234,21 @@ public abstract class AI : MonoBehaviour
             if(!InVision.Contains(col) && !JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
                 JustEnteredVision.Add(col.gameObject.GetInstanceID(), 0f);
         }
-        if (col.CompareTag("Player"))
+        else if (col.CompareTag("Player"))
         {
             /*if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv")))
                 PlayerSeen();*/
+        }
+        else if(col.CompareTag("broken"))
+        {
+            ConstructionWorker con = FindObjectOfType<ConstructionWorker>();
+            if (con == null)
+            {
+                // spawn a new construction worker in the old construction workers apartment?
+
+            }
+            Debug.Log("found broken object");
+            con.AssignObject(col.gameObject);
         }
     }
 
@@ -258,8 +280,8 @@ public abstract class AI : MonoBehaviour
         Health -= damage;
         if (Health <= 0)
         {
-            OnDeath();
             DieAnimation(dir);
+            OnDeath();
             GeneralUI.Instance.Kills++;
             Destroy(gameObject);
             return;
@@ -275,17 +297,37 @@ public abstract class AI : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        MedicalWorker med = FindObjectOfType<MedicalWorker>();
+        if(med == null)
+        {
+            // spawn a new medical worker in the old medical workers apartment?
 
+        }
+        DeadBodyHolder.tag = "body";
+        med.AssignBody(DeadBodyHolder);
     }
     public void Incapacitate()
     {
+        Transform player = PlayerController.Instance.transform;
         // raycast behind me
-        Vector3 dir = transform.position - GetComponentInChildren<Vision>().transform.position;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + dir * 0.3f, dir, 1f);
-        if (hit.collider == null ||!hit.collider.CompareTag("Player"))
+        switch(lookDir)
         {
-            IncapacitateFailedReaction();
-            return;
+            case 0: // down
+                if(transform.position.y > player.position.y || Mathf.Abs(transform.position.x - player.position.x) > 0.5f)
+                    IncapacitateFailedReaction();
+                break;
+            case 1: // up
+                if (transform.position.y < player.position.y || Mathf.Abs(transform.position.x - player.position.x) > 0.5f)
+                    IncapacitateFailedReaction();
+                break;
+            case 2: // left
+                if (transform.position.x > player.position.x || Mathf.Abs(transform.position.y - player.position.y) > 0.5f)
+                    IncapacitateFailedReaction();
+                break;
+            case 3: // right
+                if (transform.position.x < player.position.x || Mathf.Abs(transform.position.y - player.position.y) > 0.5f)
+                    IncapacitateFailedReaction();
+                break;
         }
         IsIncapacitated = true;
         _incapacitateTimer.ResetTo(_incapacitateTimer.Max * UnityEngine.Random.Range(0.5f, 1.5f));

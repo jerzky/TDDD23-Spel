@@ -7,6 +7,16 @@ public class BuildingController : MonoBehaviour
     public static BuildingController Instance;
     [SerializeField]
     List<Building> _buildings;
+
+    public bool PlayerHostile { 
+        get
+        {
+            foreach (var v in _buildings)
+                if (v.PlayerReportedAsHostile)
+                    return true;
+            return false;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

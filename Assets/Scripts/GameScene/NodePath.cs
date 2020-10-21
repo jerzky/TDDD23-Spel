@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class NodePath
         public Vector2 Position { get; }
         public RouteNodeType Type { get; }
         public int IdleTime { get; }
+
         public RouteNode(Vector2 position, RouteNodeType type,  int idleTime = 0)
         {
             Type = type;
@@ -24,7 +26,6 @@ public class NodePath
         }
     }
     public List<RouteNode> Nodes { get; }
-
 
     private int _currentNodeIndex;
 

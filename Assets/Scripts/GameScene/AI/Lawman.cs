@@ -7,7 +7,7 @@ public abstract class Lawman : AI
 {
     public Pursue Pursue { get; set; }
     protected Sprite DeadHat;
-    protected Sprite DeadHead;
+    
 
     private protected float HaltTime = 2f;
     private protected float ShootTime = 2f;
@@ -23,7 +23,6 @@ public abstract class Lawman : AI
         Pursue = new Pursue(this, FindObjectOfType<PlayerController>().transform, HaltTime);
         Actions.Add(ActionE.HaltAndShoot, new HaltAndShoot(this, _weaponHandler));
         Actions.Add(ActionE.Pursue, Pursue);
-        DeadHead = Resources.Load<Sprite>("Textures/deadhead");
     }
 
     protected override void PlayerSeen()
@@ -55,12 +54,15 @@ public abstract class Lawman : AI
 
     protected override void DieAnimation(Vector3 dir)
     {
+        DeadBodyHolder = new GameObject("deadbodyholder");
         GameObject temp = new GameObject("DeadHead");
         temp.AddComponent<SpriteRenderer>().sprite = DeadHead;
         temp.transform.position = transform.position + Vector3.forward * 10f;
+        temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
         temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
+        temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadHat");
         float r = UnityEngine.Random.Range(0.4f, 0.8f);
         Vector3 hatDir = new Vector3(r * dir.normalized.x, dir.normalized.y * r, 9f);
@@ -69,6 +71,7 @@ public abstract class Lawman : AI
         temp.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rot));
         temp.transform.position = transform.position + hatDir;
         temp.AddComponent<SpriteRenderer>().sprite = DeadHat;
+        temp.transform.parent = DeadBodyHolder.transform;
     }
 
     protected override void IncapacitateFailedReaction()

@@ -184,7 +184,7 @@ public class FollowPath : Action
     void FinishedNode()
     {
         
-        if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour(ai.Path[0].Child.Position))
+        if (walkingPassedDoor && !PathingController.Instance.IsDoorNeighbour((ai.Path[0]?.Child).Position))
         {
             movingThroughDoor = false;
             PathingController.Instance.DoorPassed(lastDoorNeighbourPos, ai);
@@ -288,6 +288,10 @@ public class FollowPath : Action
                 return lastActionReturnValue == (uint)ReturnType.StartedWithoutPath
                     ? ActionE.FollowPath
                     : ActionE.WaitingForAllPolice;
+            case State.Medical:
+                return ActionE.RemoveBody;
+            case State.Construction:
+                return ActionE.Rebuild;
 
         }
 

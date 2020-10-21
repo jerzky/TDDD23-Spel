@@ -76,17 +76,22 @@ public class BreakableController : MonoBehaviour
     void Destroy(GameObject go)
     {
         go.GetComponent<SpriteRenderer>().enabled = false;
-        go.GetComponent<BoxCollider2D>().enabled = false;
+        //go.GetComponent<BoxCollider2D>().enabled = false;
+        go.GetComponent<BoxCollider2D>().isTrigger = true;
+        go.tag = "broken";
         brokenObjects.Add(go.transform.position.ToString(), go);
         damagedObjects.Remove(go.transform.position.ToString());
         PathingController.Instance.UpdateGrid((Vector2)go.transform.position, NodeType.Clear);
     }
 
-    void Rebuild(Vector3 position)
+    public void Rebuild(Vector3 position)
     {
         GameObject rebuiltObject = brokenObjects[position.ToString()];
         rebuiltObject.GetComponent<SpriteRenderer>().enabled = true;
-        rebuiltObject.GetComponent<BoxCollider2D>().enabled = true;
+        //rebuiltObject.GetComponent<BoxCollider2D>().enabled = true;
+        rebuiltObject.GetComponent<BoxCollider2D>().isTrigger = false;
+        rebuiltObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
+        rebuiltObject.tag = "breakable";
         PathingController.Instance.UpdateGrid((Vector2)rebuiltObject.transform.position, NodeType.Blocked);
     }
 }
