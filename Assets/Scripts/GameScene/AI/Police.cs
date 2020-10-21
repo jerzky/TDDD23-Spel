@@ -10,6 +10,9 @@ public class Police : Lawman
     public Building CoverBuilding { get; private set; }
     public new AlertIntensity CurrentAlertIntensity => AlertIntensity.ConfirmedHostile;
     public FindRoomToClear FindRoomToClear { get; set; }
+    public PoliceCar Car { get; set; }
+
+    public Vector2 MySpawnPoint { get; set; }
     protected override void Start()
     {
         Health = 150;
@@ -72,6 +75,11 @@ public class Police : Lawman
     {
         PoliceController.AllPolice.Remove(this);
         CoverBuilding.RemoveCoveringLawman(this);
+        if (Car != null)
+        {
+            Car.MyPolice.Remove(this);
+
+        }
     }
 
     public void SetCoverBuilding(Building building) => CoverBuilding = building;

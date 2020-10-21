@@ -7136,7 +7136,9 @@ MonoBehaviour:
   - Position: {x: 19, y: 94}
   - Position: {x: 12, y: 96}
   - Position: {x: 18, y: 81}
+  PoliceCarSpawnPoint: {x: -32, y: 70}
   PoliceSpawnPoint: {x: 13, y: 70}
+  PoliceCarAlignment: 1
   _nodeHolder: {fileID: 1294846223}
   _civilianNodeHolder: {fileID: 290188702}
 --- !u!1 &1154183895
@@ -14303,5 +14305,7 @@ MonoBehaviour:
   _securityStation: {fileID: 0}
   Entrances: []
   Rooms: []
+  PoliceCarSpawnPoint: {x: 0, y: 0}
   PoliceSpawnPoint: {x: 0, y: 0}
+  PoliceCarAlignment: 0
   nodeHolder: {fileID: 1454478419}

@@ -32,7 +32,8 @@ public class FindRoomToClear : Action
         var room = notCleared.FirstOrDefault(r => !r.IsTaken);
 
         if (room == default(Building.Room))
-            room = notCleared[Random.Range(0, notCleared.Length - 1)];
+            return (uint) ReturnType.NoMoreRooms;
+            // room = notCleared[Random.Range(0, notCleared.Length - 1)];
 
         _police.SetPathToPosition(room.Position);
         room.IsTaken = true;
@@ -47,7 +48,7 @@ public class FindRoomToClear : Action
         if (lastActionReturnValue != (uint) ReturnType.NoMoreRooms) 
             return ActionE.FollowPath;
 
-        _police.SetPathToPosition(_police.CoverBuilding.PoliceSpawnPoint);
+        _police.SetPathToPosition(_police.MySpawnPoint);
         _police.SetCurrentState(State.PoliceGoToCar);
         return ActionE.FollowPath;
     }
