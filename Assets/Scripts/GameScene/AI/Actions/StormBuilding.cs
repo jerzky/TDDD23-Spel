@@ -49,7 +49,7 @@ public class FindRoomToClear : Action
             return ActionE.FollowPath;
 
         _police.SetPathToPosition(_police.MySpawnPoint);
-        _police.SetCurrentState(State.PoliceGoToCar);
+        _police.CurrentState = State.PoliceGoToCar;
         return ActionE.FollowPath;
     }
 

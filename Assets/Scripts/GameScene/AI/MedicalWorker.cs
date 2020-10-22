@@ -4,23 +4,24 @@ using UnityEngine;
 
 public class MedicalWorker : Civilian
 {
-    RemoveBody removeBody;
-    Sprite[] medicalSprites = new Sprite[4];
-    Sprite[] regularSprites = new Sprite[4];
+    private RemoveBody _removeBody;
+    private readonly Sprite[] _medicalSprites = new Sprite[4];
+
+    private readonly Sprite[] _regularSprites = new Sprite[4];
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        removeBody = new RemoveBody(this);
-        Actions.Add(ActionE.RemoveBody, removeBody);
-        regularSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[12];
-        regularSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[13];
-        regularSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[14];
-        regularSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[15];
-        medicalSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[0];
-        medicalSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[1];
-        medicalSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[2];
-        medicalSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[3];
+        _removeBody = new RemoveBody(this);
+        Actions.Add(ActionE.RemoveBody, _removeBody);
+        _regularSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[12];
+        _regularSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[13];
+        _regularSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[14];
+        _regularSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[15];
+        _medicalSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[0];
+        _medicalSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[1];
+        _medicalSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[2];
+        _medicalSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[3];
         
 
     }
@@ -30,25 +31,26 @@ public class MedicalWorker : Civilian
     {
         if (CurrentState == State.Medical)
             return;
-        if (removeBody.Bodies.Count > 0 && !BuildingController.Instance.PlayerHostile && !PlayerController.Instance.IsHostile)
+        if (_removeBody.Bodies.Count > 0 && !BuildingController.Instance.PlayerHostile && !PlayerController.Instance.IsHostile)
         {
             CurrentState = State.Medical;
             CurrentAction = ActionE.FollowPath;
-            sprites = medicalSprites;
-            removeBody.Bodies.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position).CompareTo(Vector2.Distance(transform.position, b.transform.position)));
-            Debug.Log("Walk to: " + removeBody.Bodies[0].transform.position);
-            SetPathToPosition(removeBody.Bodies[0].transform.position);
+            Sprites = _medicalSprites;
+            _removeBody.Bodies.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position).CompareTo(Vector2.Distance(transform.position, b.transform.position)));
+            Debug.Log("Walk to: " + _removeBody.Bodies[0].transform.position);
+            SetPathToPosition(_removeBody.Bodies[0].transform.position);
         }
-        if (CurrentState != State.Medical)
-        {
-            sprites = regularSprites;
-            base.Update();
-        }
+
+        if (CurrentState == State.Medical) 
+            return;
+        
+        Sprites = _regularSprites;
+        base.Update();
     }
 
     public void AssignBody(GameObject body)
     {
         if (body.CompareTag("body"))
-            removeBody.Bodies.Add(body);
+            _removeBody.Bodies.Add(body);
     }
 }

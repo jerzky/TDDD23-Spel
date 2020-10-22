@@ -20,7 +20,7 @@
         }
 
         _police.Car.ReportWaiting();
-        ai.SetCurrentState(State.WaitingForAllPolice);
+        ai.CurrentState = State.WaitingForAllPolice;
         return (uint) ReturnType.NotFinished;
     }
 

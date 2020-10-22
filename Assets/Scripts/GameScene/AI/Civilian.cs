@@ -5,14 +5,16 @@ using UnityEngine.Experimental.AI;
 
 public class Civilian : AI
 {
-    float fun;
-    float food;
-    float cash;
-    float foodGainMultiplier = 4f;
-    float cashGainMultiplier = 4f;
-    float funGainMultiplier = 4f;
-    float ffcMax = 300f;
-    int currentFFC = -1;
+    private float _fun;
+    private float _food;
+    private float _cash;
+    private const float FoodGainMultiplier = 4f;
+    private const float CashGainMultiplier = 4f;
+    private const float FunGainMultiplier = 4f;
+    private const float FfcMax = 300f;
+    private int _currentFfc = -1;
+
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -25,15 +27,15 @@ public class Civilian : AI
         IdleState = CurrentState;
         IdleAction = CurrentAction;
         AiType = AI_Type.Civilian;
-        sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[8];
-        sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[9];
-        sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
-        sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
+        Sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[8];
+        Sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[9];
+        Sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
+        Sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
 
-        fun = Random.Range(0, ffcMax);
-        food = Random.Range(0, ffcMax);
-        cash = Random.Range(0, ffcMax);
-        Debug.Log("Food: " + food + " cash: " + cash);
+        _fun = Random.Range(0, FfcMax);
+        _food = Random.Range(0, FfcMax);
+        _cash = Random.Range(0, FfcMax);
+        Debug.Log("Food: " + _food + " cash: " + _cash);
         ChooseRoute();
     }
 
@@ -41,16 +43,16 @@ public class Civilian : AI
     {
         if(CurrentAction == ActionE.None)
         {
-            currentFFC = -1;
+            _currentFfc = -1;
             ChooseRoute();
             return;
         }
-        if(food > 0)
-            food -= Time.deltaTime;
-        if (fun > 0)
-            fun -= Time.deltaTime;
-        if (cash > 0)
-            cash -= Time.deltaTime;
+        if(_food > 0)
+            _food -= Time.deltaTime;
+        if (_fun > 0)
+            _fun -= Time.deltaTime;
+        if (_cash > 0)
+            _cash -= Time.deltaTime;
         Building building = CurrentBuilding;
         if (building == null || CurrentState != State.FollowRoute)
             return;
@@ -58,18 +60,18 @@ public class Civilian : AI
         {
             case BuildingType.Appartment:
                 if((building as ApartmentBuilding).GetApartment(transform.position) != null)
-                    food += foodGainMultiplier * Time.deltaTime;
-                if (food >= ffcMax && currentFFC == 0)
+                    _food += FoodGainMultiplier * Time.deltaTime;
+                if (_food >= FfcMax && _currentFfc == 0)
                     ChooseRoute();
                 break;
             case BuildingType.Bank:
-                cash += cashGainMultiplier * Time.deltaTime;
-                if (cash >= ffcMax && currentFFC == 1)
+                _cash += CashGainMultiplier * Time.deltaTime;
+                if (_cash >= FfcMax && _currentFfc == 1)
                     ChooseRoute();
                 break;
             case BuildingType.Bar:
-                fun += funGainMultiplier * Time.deltaTime;
-                if (fun >= ffcMax && currentFFC == 2)
+                _fun += FunGainMultiplier * Time.deltaTime;
+                if (_fun >= FfcMax && _currentFfc == 2)
                     ChooseRoute();
                 break;
         }
@@ -78,21 +80,21 @@ public class Civilian : AI
 
     private void ChooseRoute()
     {
-        float val = Mathf.Min(food, cash);
+        float val = Mathf.Min(_food, _cash);
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
-        if (val == food)
+        if (val == _food)
         {
-            currentFFC = 0;
+            _currentFfc = 0;
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment, this);
             Path.Clear();
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("FOOD");
             
         }
-        else if (val == cash)
+        else if (val == _cash)
         {
-            currentFFC = 1;
+            _currentFfc = 1;
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank, this);
             Path.Clear();
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
@@ -113,9 +115,11 @@ public class Civilian : AI
         CurrentAction = ActionE.Flee;
         Path.Clear();
 
-        if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast")))
-            if (PlayerController.Instance.IsHostile)
-                CurrentAction = ActionE.Freeze;
+        if (!Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject,
+            ~LayerMask.GetMask("AI", "Ignore Raycast"))) 
+            return true;
+        if (PlayerController.Instance.IsHostile)
+            CurrentAction = ActionE.Freeze;
 
         return true;
     }
@@ -130,7 +134,7 @@ public class Civilian : AI
         temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
-        temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
+        temp.AddComponent<SpriteRenderer>().sprite = Sprites[0];
         temp.transform.parent = DeadBodyHolder.transform;
     }
 
@@ -142,12 +146,12 @@ public class Civilian : AI
     protected override void PlayerSeen()
     {
         var building = CurrentBuilding;
-        if (PlayerController.Instance.IsHostile || (building != null && building.PlayerReportedAsHostile))
-        {
-            CurrentState = State.Panic;
-            CurrentAction = ActionE.Freeze;
-            Path.Clear();
-        }
+        if (!PlayerController.Instance.IsHostile && (building == null || !building.PlayerReportedAsHostile)) 
+            return;
+       
+        CurrentState = State.Panic;
+        CurrentAction = ActionE.Freeze;
+        Path.Clear();
     }
 
     

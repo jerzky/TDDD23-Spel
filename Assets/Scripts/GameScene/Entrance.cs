@@ -16,8 +16,11 @@
 public class Entrance
     {
         private const int PossibleTiles = 10;
-        private const int SpaceFromEntrance = 2;
-        [SerializeField] public Vector2 Location;
+        private const int SpaceFromEntrance = 3;
+        [SerializeField] 
+        public Transform Transform;
+
+        public Vector2 Location => Transform.position;
 
         [SerializeField] public Alignment Alignment;
 
@@ -47,7 +50,7 @@ public class Entrance
                         tile = new Vector2(Location.x + i, Location.y + SpaceFromEntrance );
                         break;
                     case Alignment.South:
-                        tile = new Vector2(Location.x + i, Location.y - SpaceFromEntrance - 2);
+                        tile = new Vector2(Location.x + i, Location.y - SpaceFromEntrance);
                         break;
                     case Alignment.East:
                         tile = new Vector2(Location.x - SpaceFromEntrance, Location.y + i);
