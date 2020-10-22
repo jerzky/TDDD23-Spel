@@ -1,13 +1,16 @@
 ﻿
     public class WaitingForAllPolice : Action
     {
+        private Police _police;
+
         public enum ReturnType : uint
         {
             NotFinished,
         };
-    public WaitingForAllPolice(AI ai) : base(ai)
-        {
-        }
+    public WaitingForAllPolice(Police ai) : base(ai)
+    {
+        _police = ai;
+    }
 
     public override uint PerformAction()
     {
@@ -16,7 +19,7 @@
             return (uint) ReturnType.NotFinished;
         }
 
-        PoliceController.Instance.ReportWaiting();
+        _police.Car.ReportWaiting();
         ai.CurrentState = State.WaitingForAllPolice;
         return (uint) ReturnType.NotFinished;
     }

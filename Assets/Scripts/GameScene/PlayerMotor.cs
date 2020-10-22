@@ -66,6 +66,7 @@ public class PlayerMotor : MonoBehaviour
         if(inter == null)
         {
             Debug.LogError("GameObject with interactable layer does not have script Interactable");
+            return;
         }
         if (inter.Interact(itemID))
         {

@@ -23,8 +23,8 @@ public abstract class AI : MonoBehaviour
 
     public const float LOOKRANGE = 7f;
 
-    protected Sprite[] sprites = new Sprite[4];
-    Vector2 lastPos; // used to determine movement direction to assign sprite
+    protected Sprite[] Sprites = new Sprite[4];
+    private Vector2 _lastPos; // used to determine movement direction to assign sprite
 
 
     public List<Collider2D> InVision = new List<Collider2D>();
@@ -39,7 +39,7 @@ public abstract class AI : MonoBehaviour
     public const float PursueSpeed = 3f;
     public const float PatrolSpeed = 2f;
     public float SpeedMultiplier = 1f;
-    public int lookDir = 0;
+    public int LookDir = 0;
   
 
     // Health
@@ -59,16 +59,7 @@ public abstract class AI : MonoBehaviour
     protected State IdleState = State.FollowRoute;
     protected ActionE IdleAction = ActionE.FollowPath;
     public State CurrentState { get; set; }
-    protected ActionE _currentAction = ActionE.None;
-    public ActionE CurrentAction 
-    {
-        get => _currentAction;
-        set 
-        {
-            //Debug.Log($"{_currentAction} -> {value}");
-            _currentAction = value;
-        } 
-    }
+    public ActionE CurrentAction { get; set; } = ActionE.None;
 
     protected AlertIntensity CurrentAlertIntensity = AlertIntensity.Nonexistant;
 
@@ -76,7 +67,7 @@ public abstract class AI : MonoBehaviour
     public List<Node> Path = new List<Node>();
     public NodePath CurrentRoute { get; protected set; }
 
-    private GameObject incapacitatedVisual;
+    private GameObject _incapacitatedVisual;
 
     public AI_Type AiType = AI_Type.Guard;
     public Building CurrentBuilding
@@ -98,7 +89,7 @@ public abstract class AI : MonoBehaviour
         CurrentAction = IdleAction;
         CurrentState = IdleState;
 
-        incapacitatedVisual = Instantiate(Resources.Load<GameObject>("Prefabs/incap"), transform.position + new Vector3(-0.1f, 0.1f, -1f), Quaternion.identity, transform);
+        _incapacitatedVisual = Instantiate(Resources.Load<GameObject>("Prefabs/incap"), transform.position + new Vector3(-0.1f, 0.1f, -1f), Quaternion.identity, transform);
         DeadHead = Resources.Load<Sprite>("Textures/deadhead");
     }
 
@@ -112,11 +103,11 @@ public abstract class AI : MonoBehaviour
 
         if (IsIncapacitated)
         {
-            incapacitatedVisual.SetActive(true);
+            _incapacitatedVisual.SetActive(true);
             return;
         }
         else
-            incapacitatedVisual.SetActive(false);
+            _incapacitatedVisual.SetActive(false);
 
         
 
@@ -145,14 +136,14 @@ public abstract class AI : MonoBehaviour
         if(CurrentAction == ActionE.Pursue || CurrentAction == ActionE.HaltAndShoot)
             dir = (Vector2)(PlayerController.Instance.transform.position - transform.position);
         else
-            dir = (Vector2)transform.position - lastPos;
+            dir = (Vector2)transform.position - _lastPos;
 
-        lastPos = (Vector2)transform.position;
+        _lastPos = (Vector2)transform.position;
         if (dir != Vector2.zero)
         {
-            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))  lookDir = dir.x > 0f ? 3 : 2;
-            else lookDir = dir.y > 0f ? 1 : 0;
-            GetComponent<SpriteRenderer>().sprite = sprites[lookDir];
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))  LookDir = dir.x > 0f ? 3 : 2;
+            else LookDir = dir.y > 0f ? 1 : 0;
+            GetComponent<SpriteRenderer>().sprite = Sprites[LookDir];
             float angle = -Mathf.Atan2(dir.x, dir.y) * 180 / Mathf.PI;
             RotateVisionAround.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
@@ -254,24 +245,26 @@ public abstract class AI : MonoBehaviour
 
     public void OnVisionStay(Collider2D col)
     {
-        if(JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
-        {
-            JustEnteredVision[col.gameObject.GetInstanceID()] += Time.deltaTime;
-            if(JustEnteredVision[col.gameObject.GetInstanceID()] > 0.15f)
-            {
-                InVision.Add(col);
-                JustEnteredVision.Remove(col.gameObject.GetInstanceID());
-            }
-        }
+        if (!JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
+            return;
+
+        JustEnteredVision[col.gameObject.GetInstanceID()] += Time.deltaTime;
+
+        if (JustEnteredVision[col.gameObject.GetInstanceID()] <= 0.15f)
+            return;
+
+        InVision.Add(col);
+        JustEnteredVision.Remove(col.gameObject.GetInstanceID());
+
     }
 
     public void OnVisionExit(Collider2D col)
     {
-        if (CompareTag(col.tag))
-        {
-            JustEnteredVision.Remove(col.gameObject.GetInstanceID());
-            InVision.Remove(col);
-        }
+        if (!CompareTag(col.tag)) 
+            return;
+
+        JustEnteredVision.Remove(col.gameObject.GetInstanceID());
+        InVision.Remove(col);
     }
 
     public void Injure(int damage, Vector3 dir)
@@ -310,7 +303,7 @@ public abstract class AI : MonoBehaviour
     {
         Transform player = PlayerController.Instance.transform;
         // raycast behind me
-        switch(lookDir)
+        switch(LookDir)
         {
             case 0: // down
                 if(transform.position.y > player.position.y || Mathf.Abs(transform.position.x - player.position.x) > 0.5f)

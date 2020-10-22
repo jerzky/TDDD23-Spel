@@ -61,7 +61,7 @@ public abstract class Lawman : AI
         temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
-        temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
+        temp.AddComponent<SpriteRenderer>().sprite = Sprites[0];
         temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadHat");
         float r = UnityEngine.Random.Range(0.4f, 0.8f);

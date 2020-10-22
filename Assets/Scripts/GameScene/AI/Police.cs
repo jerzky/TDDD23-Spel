@@ -10,6 +10,9 @@ public class Police : Lawman
     public Building CoverBuilding { get; private set; }
     public new AlertIntensity CurrentAlertIntensity => AlertIntensity.ConfirmedHostile;
     public FindRoomToClear FindRoomToClear { get; set; }
+    public PoliceCar Car { get; set; }
+
+    public Vector2 MySpawnPoint { get; set; }
     protected override void Start()
     {
         Health = 150;
@@ -24,10 +27,10 @@ public class Police : Lawman
         Actions.Add(ActionE.ClearRoom, new ClearRoom(this));
         Actions.Add(ActionE.WaitingForAllPolice, new WaitingForAllPolice(this) );
 
-        sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[4];
-        sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[5];
-        sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[6];
-        sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[7];
+        Sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[4];
+        Sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[5];
+        Sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[6];
+        Sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[7];
         base.Start();
         IdleState = State.GotoCoverEntrance;
         IdleAction = ActionE.GotoCoverEntrance;
@@ -72,6 +75,11 @@ public class Police : Lawman
         base.OnDeath();
         PoliceController.AllPolice.Remove(this);
         CoverBuilding.RemoveCoveringLawman(this);
+        if (Car != null)
+        {
+            Car.MyPolice.Remove(this);
+
+        }
     }
 
     public void SetCoverBuilding(Building building) => CoverBuilding = building;

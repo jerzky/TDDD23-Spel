@@ -43,8 +43,9 @@ public class PoliceController : MonoBehaviour
 
     private static void SpawnPolice(Building building, State state, ActionE action)
     {
-        for(var i = 0; i < 5; i++)
-            Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
+    //    for(var i = 0; i < 5; i++)
+       //     Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
+       PoliceCar.Generate(building);
     }
 
     public void AlertAll(Vector2 pos, Police reporter = null)
@@ -56,17 +57,4 @@ public class PoliceController : MonoBehaviour
         }
     }
 
-    public void ReportWaiting()
-    {
-        if (AllPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != AllPolice.Count)
-            return;
-
-
-        foreach (var police in AllPolice.ToList())
-        {
-            police.OnDeath();
-            Destroy(police.gameObject);
-        }
-        AllPolice.Clear();
-    }
 }

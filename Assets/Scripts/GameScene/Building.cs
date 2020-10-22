@@ -27,6 +27,11 @@ public class BuildingPart
 }
 public enum BuildingType { None, Bank, Apartment, Bar }
 
+public enum PoliceCarAlignment
+{
+    Vertical,
+    Horizontal
+}
 public abstract class Building : MonoBehaviour
 {
     [Serializable]
@@ -38,6 +43,9 @@ public abstract class Building : MonoBehaviour
         public bool IsCleared { get; set; } = false;
         public bool IsTaken { get; set; } = false;
     }
+
+
+
 
     public bool IsSomeoneMonitoringCCTV => _securityStation.IsMonitored;
 
@@ -51,7 +59,14 @@ public abstract class Building : MonoBehaviour
     public List<Room> Rooms;
 
     [SerializeField]
+    public Vector2 PoliceCarSpawnPoint;
+
+    [SerializeField]
     public Vector2 PoliceSpawnPoint;
+
+
+    [SerializeField]
+    public PoliceCarAlignment PoliceCarAlignment;
 
 
 

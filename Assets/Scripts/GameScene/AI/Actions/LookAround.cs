@@ -25,12 +25,12 @@ public class LookAround : Action
         var layerMask = ~LayerMask.GetMask("AI", "Ignore Raycast", "cctv");
         if (Utils.LineOfSight(ai.transform.position, PlayerController.Instance.gameObject, layerMask))
             return (uint)ReturnType.PlayerFound;
-
+/*
         if (Physics2D.OverlapCircleAll(ai.transform.position, ClearRadius).Any(co =>
              co.gameObject.GetInstanceID() == PlayerController.Instance.gameObject.GetInstanceID()))
             return (uint)ReturnType.PlayerFound;
 
-        
+        */
         return (uint)ReturnType.Finished;
 
     }
