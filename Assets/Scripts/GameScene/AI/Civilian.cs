@@ -132,6 +132,7 @@ public class Civilian : AI
         {
             currentFFC = BuildingType.Bar;
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bar, this);
+
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("FUN");
         }

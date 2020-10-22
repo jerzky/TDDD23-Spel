@@ -14,7 +14,7 @@ public class Vault : Door
     public override void MoveDoor()
     {
         base.MoveDoor();
-        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/VaultOpen"), transform.position);
+        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/vaultsound"), transform.position);
     }
 
     public override void AssignUnlockItems()
