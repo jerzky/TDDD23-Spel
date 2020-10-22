@@ -47,7 +47,6 @@
             if (Vector2.Distance(transform.position, Building.PoliceSpawnPoint) > 150 && AllPoliceAreDead)
                 {
                     Destroy(gameObject);
-                    Debug.Log("Destroy");
                 }
 
                 return;
@@ -139,14 +138,12 @@
 
         public void ReportWaiting()
         {
-            Debug.Log("REPORT WAITING");
             if (MyPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != MyPolice.Count)
                 return;
 
             SetPoliceOnTruck(true, MyPolice.Count);
             foreach (var police in MyPolice.ToList())
             {
-                Debug.Log("DELETING");
                 police.OnDeath();
                 Destroy(police.gameObject);
             }
