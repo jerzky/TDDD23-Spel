@@ -18,11 +18,12 @@ public class Bar : Building
         var sizeY = 59 - 49;
         var posX = 5 + sizeX / 2;
         var posY = 49 + sizeY / 2;
-
+        BuildingType = BuildingType.Bar;
         BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
 
         BuildingType = BuildingType.Bar;
         SetUpCivilianRoutes();
+    
     }
 
     // Update is called once per frame

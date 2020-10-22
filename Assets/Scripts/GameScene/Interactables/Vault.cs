@@ -21,9 +21,9 @@ public class Vault : Door
             hasPlayedSound = true;
         }
         base.MoveDoor();
+
         if (!moving)
             hasPlayedSound = false;
-
     }
 
     public override void AssignUnlockItems()

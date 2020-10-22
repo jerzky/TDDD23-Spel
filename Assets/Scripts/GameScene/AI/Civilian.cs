@@ -38,7 +38,6 @@ public class Civilian : AI
         food = UnityEngine.Random.Range(0, ffcMax);
         cash = UnityEngine.Random.Range(0, ffcMax);
         Debug.Log("Food: " + food + " cash: " + cash);
-
         ChooseRoute();
     }
 
@@ -114,6 +113,7 @@ public class Civilian : AI
     private void ChooseRoute()
     {
         float val = Mathf.Min(fun, food, cash);
+
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
         if (val == food)
@@ -136,7 +136,7 @@ public class Civilian : AI
             currentFFC = BuildingType.Bar;
             Debug.Log(BuildingController.Instance.gameObject.name);
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bar, this);
-            Debug.Log("CHOSEN ROUTE HAS NODECOUNT: " + CurrentRoute.Nodes.Count);
+
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("FUN");
         }
@@ -155,11 +155,9 @@ public class Civilian : AI
         CurrentAction = ActionE.Flee;
         Path.Clear();
 
-        if (!Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject,
-            ~LayerMask.GetMask("AI", "Ignore Raycast"))) 
-            return true;
-        if (PlayerController.Instance.IsHostile)
-            CurrentAction = ActionE.Freeze;
+        if (Utils.LineOfSight(transform.position, PlayerController.Instance.gameObject, ~LayerMask.GetMask("AI", "Ignore Raycast")))
+            if (PlayerController.Instance.IsHostile)
+                CurrentAction = ActionE.Freeze;
 
         return true;
     }
@@ -186,11 +184,11 @@ public class Civilian : AI
     protected override void PlayerSeen()
     {
         var building = CurrentBuilding;
-        if (!PlayerController.Instance.IsHostile && (building == null || !building.PlayerReportedAsHostile)) 
-            return;
-       
-        CurrentState = State.Panic;
-        CurrentAction = ActionE.Freeze;
-        Path.Clear();
+        if (PlayerController.Instance.IsHostile || (building != null && building.PlayerReportedAsHostile))
+        {
+            CurrentState = State.Panic;
+            CurrentAction = ActionE.Freeze;
+            Path.Clear();
+        }
     }
 }

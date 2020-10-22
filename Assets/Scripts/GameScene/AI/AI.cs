@@ -294,7 +294,7 @@ public abstract class AI : MonoBehaviour
         if(med == null)
         {
             // spawn a new medical worker in the old medical workers apartment?
-
+            return;
         }
         DeadBodyHolder.tag = "body";
         med.AssignBody(DeadBodyHolder);

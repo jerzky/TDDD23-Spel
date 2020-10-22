@@ -33,6 +33,8 @@ public class ConstructionWorker : Civilian
     {
         if (CurrentState == State.Construction)
             return;
+
+
         if (_rebuildObject.Objects.Count > 0 && !BuildingController.Instance.PlayerHostile && !PlayerController.Instance.IsHostile)
         {
             if (!_timer.TickAndReset())
