@@ -28,10 +28,10 @@ public class Civilian : AI
         IdleState = CurrentState;
         IdleAction = CurrentAction;
         AiType = AI_Type.Civilian;
-        sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[8];
-        sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[9];
-        sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
-        sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
+        Sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[8];
+        Sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[9];
+        Sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
+        Sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
 
         fun = UnityEngine.Random.Range(0, ffcMax);
         food = UnityEngine.Random.Range(0, ffcMax);
@@ -167,7 +167,7 @@ public class Civilian : AI
         temp.transform.parent = DeadBodyHolder.transform;
         temp = new GameObject("DeadBody");
         temp.transform.position = transform.position + Vector3.forward * 11f;
-        temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
+        temp.AddComponent<SpriteRenderer>().sprite = Sprites[0];
         temp.transform.parent = DeadBodyHolder.transform;
     }
 
