@@ -14,15 +14,22 @@ public class NodePath
     }
     public class RouteNode
     {
+        public class NodeFunctionInputValue
+        {
+            int inputInt;
+        }
         public Vector2 Position { get; }
         public RouteNodeType Type { get; }
         public int IdleTime { get; }
+
+        public System.Action CallOnAchieved { get; set; }
 
         public RouteNode(Vector2 position, RouteNodeType type,  int idleTime = 0)
         {
             Type = type;
             Position = position;
             IdleTime = idleTime;
+            CallOnAchieved = null;
         }
     }
     public List<RouteNode> Nodes { get; }

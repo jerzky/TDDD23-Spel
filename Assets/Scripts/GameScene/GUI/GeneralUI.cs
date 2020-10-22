@@ -125,7 +125,7 @@ public class GeneralUI : MonoBehaviour
         healthSlider.maxValue = 100;
         healthSlider.minValue = 0;
         Health = 100;
-        Credits = 1000000;
+        Credits = 10000;
         Kills = 0;
 
         _pic = Resources.Load<Sprite>("Textures/Invisible");

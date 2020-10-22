@@ -31,7 +31,11 @@ public class FindPathToRouteNode : Action
             return (uint)ReturnType.NotFinished;
         if (ai.CurrentRoute == null)
             return (uint)ReturnType.NoRoute;
-
+        if(Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.5f)
+        {
+            var act = ai.CurrentRoute.CurrentNode.CallOnAchieved;
+            act?.Invoke();
+        }
         if (!hasWaited && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle && Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.5f)
         {
             hasWaited = true;

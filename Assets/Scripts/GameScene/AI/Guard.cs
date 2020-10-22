@@ -21,10 +21,10 @@ public class Guard : Lawman
         DeadHat = Resources.Load<Sprite>("Textures/guardhat");
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void FixedUpdate()
     {
-        
+        if(CurrentState != State.FollowRoute || Vector2.Distance(PlayerController.Instance.transform.position, transform.position) < 35f)
+            base.FixedUpdate();
     }
 
     protected override void PlayerSeen()

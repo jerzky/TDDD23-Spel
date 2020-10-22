@@ -25,7 +25,7 @@ public class BuildingPart
         return true;
     }
 }
-public enum BuildingType { Bank, Appartment, Bar }
+public enum BuildingType { None, Bank, Apartment, Bar }
 
 public abstract class Building : MonoBehaviour
 {

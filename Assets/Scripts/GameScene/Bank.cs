@@ -40,9 +40,9 @@ public class Bank : Building
             _guards[1].SetRoute(_nodePaths[1]);
         }
 
-        var sizeX = 23 - 0;
+        var sizeX = 28 - 5;
         var sizeY = 99 - 77;
-        var posX = 0 + sizeX / 2;
+        var posX = 5 + sizeX / 2;
         var posY = 77 + sizeY / 2;
         BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         SetUpCivilianRoutes();

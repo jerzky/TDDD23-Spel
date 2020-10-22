@@ -38,14 +38,14 @@ public class ApartmentBuilding : Building
     protected override void Start()
     {
         base.Start();
-        var sizeX = 124 - 45;
+        var sizeX = 129 - 50;
         var sizeY = 67 - 33;
-        var posX = 45 + sizeX / 2;
+        var posX = 50 + sizeX / 2;
         var posY = 33 + sizeY / 2;
 
         BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         NodePath nodePath = NodePath.LoadPathNodesFromHolder(nodeHolder);
-        apartments.Add(new Apartment(nodePath, new Vector2(52, 60)));
+        apartments.Add(new Apartment(nodePath, new Vector2(57, 60)));
 
         float xInc = 15;
         float xIncOver2 = 4;
@@ -65,7 +65,7 @@ public class ApartmentBuilding : Building
             apartments.Add(new Apartment(newPath, apartments[0].Position + offset));
         }
 
-        BuildingType = BuildingType.Appartment;
+        BuildingType = BuildingType.Apartment;
         Transform civParent = new GameObject("CivParent").transform;
     }
 
@@ -102,6 +102,6 @@ public class ApartmentBuilding : Building
         foreach (var v in apartments)
             if (v.IsWithin(pos))
                 return v;
-        return apartments[(int)UnityEngine.Random.Range(0, apartments.Count-1)];
+        return null;
     }
 }

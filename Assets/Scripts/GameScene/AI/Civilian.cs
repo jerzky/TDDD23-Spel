@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.AI;
@@ -12,7 +13,9 @@ public class Civilian : AI
     float cashGainMultiplier = 4f;
     float funGainMultiplier = 4f;
     float ffcMax = 300f;
-    int currentFFC = -1;
+    BuildingType currentFFC = BuildingType.None;
+    SimpleTimer afkTimer = new SimpleTimer(3f);
+    bool afkTimerActive = false;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -30,18 +33,47 @@ public class Civilian : AI
         sprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[10];
         sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
 
-        fun = Random.Range(0, ffcMax);
-        food = Random.Range(0, ffcMax);
-        cash = Random.Range(0, ffcMax);
+        fun = UnityEngine.Random.Range(0, ffcMax);
+        food = UnityEngine.Random.Range(0, ffcMax);
+        cash = UnityEngine.Random.Range(0, ffcMax);
         Debug.Log("Food: " + food + " cash: " + cash);
         ChooseRoute();
+    }
+
+    protected override void FixedUpdate()
+    {
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        var building = CurrentBuilding;
+        if (building == null || CurrentState != State.FollowRoute || ((building.BuildingType != currentFFC)) ||
+            (building.BuildingType == BuildingType.Apartment && (building as ApartmentBuilding).GetApartment(transform.position) == null)
+            || Vector2.Distance(PlayerController.Instance.transform.position, transform.position) < 35f)
+        {
+            afkTimerActive = false;
+        }
+        else
+        {
+            if(!afkTimerActive)
+                afkTimer.Reset();
+            afkTimerActive = true;
+            
+        }
+        
+
+        if(afkTimerActive)
+        {
+            afkTimer.Tick();
+            if (afkTimer.Done)
+                return;
+        }
+
+        base.FixedUpdate();
     }
 
     protected virtual void Update()
     {
         if(CurrentAction == ActionE.None)
         {
-            currentFFC = -1;
+            currentFFC = BuildingType.None;
             ChooseRoute();
             return;
         }
@@ -56,20 +88,20 @@ public class Civilian : AI
             return;
         switch(building.BuildingType)
         {
-            case BuildingType.Appartment:
+            case BuildingType.Apartment:
                 if((building as ApartmentBuilding).GetApartment(transform.position) != null)
                     food += foodGainMultiplier * Time.deltaTime;
-                if (food >= ffcMax && currentFFC == 0)
+                if (food >= ffcMax && currentFFC == BuildingType.Apartment)
                     ChooseRoute();
                 break;
             case BuildingType.Bank:
                 cash += cashGainMultiplier * Time.deltaTime;
-                if (cash >= ffcMax && currentFFC == 1)
+                if (cash >= ffcMax && currentFFC == BuildingType.Bank)
                     ChooseRoute();
                 break;
             case BuildingType.Bar:
                 fun += funGainMultiplier * Time.deltaTime;
-                if (fun >= ffcMax && currentFFC == 2)
+                if (fun >= ffcMax && currentFFC == BuildingType.Bar)
                     ChooseRoute();
                 break;
         }
@@ -78,25 +110,30 @@ public class Civilian : AI
 
     private void ChooseRoute()
     {
-        float val = Mathf.Min(food, cash);
+        float val = Mathf.Min(food, cash, fun);
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
         if (val == food)
         {
-            currentFFC = 0;
-            CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment, this);
-            Path.Clear();
+            currentFFC = BuildingType.Apartment;
+            CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Apartment, this);
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("FOOD");
             
         }
         else if (val == cash)
         {
-            currentFFC = 1;
+            currentFFC = BuildingType.Bank;
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank, this);
-            Path.Clear();
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("CASH");
+        }
+        else if(val == fun)
+        {
+            currentFFC = BuildingType.Bar;
+            CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bar, this);
+            SetPathToPosition(CurrentRoute.CurrentNode.Position);
+            Debug.Log("FUN");
         }
     }
 
