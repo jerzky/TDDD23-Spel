@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 using UnityEngine;
 
-public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police }
+public enum AI_Type { Guard, Civilian, Bank_Worker, Construction_Worker, Police, Medical_Worker }
 public enum ActionE { None, Idle, FollowPath, LookAround, Pursue, HaltAndShoot, FindPathToRouteNode, GotoCoverEntrance, HoldCoverEntrance, Freeze, Flee,
     FindRoomToClear, ClearRoom, WaitingForAllPolice, RemoveBody, Rebuild
 };
@@ -93,7 +93,7 @@ public abstract class AI : MonoBehaviour
         DeadHead = Resources.Load<Sprite>("Textures/deadhead");
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         // Reset velocity to 0, to remove any forces applied from collision. Otherwise characters will glide
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -220,7 +220,7 @@ public abstract class AI : MonoBehaviour
 
     public virtual void OnVisionEnter(Collider2D col)
     {
-        if(CompareTag(col.tag))
+        if(CompareTag(col.tag)) // if tag is humanoid
         {
             if(!InVision.Contains(col) && !JustEnteredVision.ContainsKey(col.gameObject.GetInstanceID()))
                 JustEnteredVision.Add(col.gameObject.GetInstanceID(), 0f);
