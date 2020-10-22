@@ -5,7 +5,6 @@ using UnityEngine.Experimental.AI;
 
 public class Civilian : AI
 {
-    float max = 100f;
     float fun;
     float food;
     float cash;
@@ -13,8 +12,6 @@ public class Civilian : AI
     float cashGainMultiplier = 4f;
     float funGainMultiplier = 4f;
     float ffcMax = 300f;
-
-    SimpleTimer switchCurrentRouteTimer = new SimpleTimer(30f);
     int currentFFC = -1;
     // Start is called before the first frame update
     protected override void Start()
@@ -25,6 +22,8 @@ public class Civilian : AI
         Health = 75;
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
+        IdleState = CurrentState;
+        IdleAction = CurrentAction;
         AiType = AI_Type.Civilian;
         sprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[8];
         sprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[9];
@@ -32,12 +31,13 @@ public class Civilian : AI
         sprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[11];
 
         fun = Random.Range(0, ffcMax);
-        food = 0;//Random.Range(0, ffcMax);
+        food = Random.Range(0, ffcMax);
         cash = Random.Range(0, ffcMax);
+        Debug.Log("Food: " + food + " cash: " + cash);
         ChooseRoute();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if(CurrentAction == ActionE.None)
         {
@@ -81,18 +81,13 @@ public class Civilian : AI
         float val = Mathf.Min(food, cash);
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
-        if(currentFFC == 0 && val != food)
-        {
-            Building building = CurrentBuilding;
-            if (building != null)
-                (building as ApartmentBuilding).GetApartment(transform.position).Resident = null;
-        }
         if (val == food)
         {
             currentFFC = 0;
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Appartment, this);
             Path.Clear();
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
+            Debug.Log("FOOD");
             
         }
         else if (val == cash)
@@ -101,6 +96,7 @@ public class Civilian : AI
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bank, this);
             Path.Clear();
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
+            Debug.Log("CASH");
         }
     }
 
@@ -126,7 +122,16 @@ public class Civilian : AI
 
     protected override void DieAnimation(Vector3 dir)
     {
-        GetComponent<SpriteRenderer>().sprite = null;
+        DeadBodyHolder = new GameObject("deadbodyholder");
+        DeadBodyHolder.transform.position = transform.position;
+        GameObject temp = new GameObject("DeadHead");
+        temp.AddComponent<SpriteRenderer>().sprite = DeadHead;
+        temp.transform.position = transform.position + Vector3.forward * 10f;
+        temp.transform.parent = DeadBodyHolder.transform;
+        temp = new GameObject("DeadBody");
+        temp.transform.position = transform.position + Vector3.forward * 11f;
+        temp.AddComponent<SpriteRenderer>().sprite = sprites[0];
+        temp.transform.parent = DeadBodyHolder.transform;
     }
 
     protected override void IncapacitateFailedReaction()

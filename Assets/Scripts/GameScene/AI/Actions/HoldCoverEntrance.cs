@@ -35,7 +35,7 @@ public class HoldCoverEntrance : Action
     {
         if (lastActionReturnValue == (uint) ReturnType.FoundPlayer)
         {
-            _police.SetCurrentState(State.StormBuilding);
+            _police.CurrentState = State.StormBuilding;
             return ActionE.FindRoomToClear;
         }
         return ActionE.HoldCoverEntrance;

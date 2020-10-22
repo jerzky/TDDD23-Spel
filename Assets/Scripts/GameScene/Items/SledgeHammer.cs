@@ -22,12 +22,6 @@ public class SledgeHammer : MeleeWeapon
     }
     public override bool SwingAnimation()
     {
-        if(!WeaponController.Instance.AnimationActive)
-        {
-            Debug.Log("CHANGING ANIMATION ACTIVE TO TRUE IN SLEDGEHAMMER:");
-        }
-
-
         animationObject.transform.Rotate(new Vector3(-rotationSpeed * Time.deltaTime, 0f, 0f));
         currentRotation += rotationSpeed * Time.deltaTime;
         if (currentRotation > maxRotation)

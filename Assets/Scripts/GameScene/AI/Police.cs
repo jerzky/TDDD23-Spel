@@ -44,7 +44,6 @@ public class Police : Lawman
 
     protected override void PlayerSeen()
     {
-        Debug.Log($"Player seen. Current State {CurrentState}");
 
         if (CurrentAction == ActionE.GotoCoverEntrance || CurrentAction == ActionE.HoldCoverEntrance)
             return;
@@ -73,6 +72,7 @@ public class Police : Lawman
 
     public override void OnDeath()
     {
+        base.OnDeath();
         PoliceController.AllPolice.Remove(this);
         CoverBuilding.RemoveCoveringLawman(this);
         if (Car != null)
@@ -100,8 +100,8 @@ public class Police : Lawman
         var police = Instantiate(_standardPrefab, position, Quaternion.identity,
             WeaponController.Instance.bulletHolder.transform);
 
-        police.GetComponent<Police>().SetCurrentState(state);
-        police.GetComponent<Police>().SetCurrentAction(action);
+        police.GetComponent<Police>().CurrentState = state;
+        police.GetComponent<Police>().CurrentAction = action;
         police.GetComponent<Police>().SetCoverBuilding(building);
 
         PoliceController.AllPolice.Add(police.GetComponent<Police>());

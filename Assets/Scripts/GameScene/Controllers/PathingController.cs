@@ -107,7 +107,7 @@ public class PathingController : MonoBehaviour
 
     public void CreateNodeGrid()
     {
-        grid = new NodeType[(int)MapController.MapSize.x + 1, (int)MapController.MapSize.y + 1];
+        grid = new NodeType[(int)MapController.MapSize.x, (int)MapController.MapSize.y];
         for (int y = 0; y < MapController.MapSize.y; y++)
         {
             for (int x = 0; x < MapController.MapSize.x; x++)
@@ -196,7 +196,7 @@ public class PathingController : MonoBehaviour
         int queuecount = queue.Count;
         queue.RemoveAll(c => c.AI == null);
         queue.Sort((a, b) => Vector2.Distance(a.AI.transform.position, doorPosition).CompareTo(Vector2.Distance(b.AI.transform.position, doorPosition)));
-        Debug.Log("old " + queuecount + " new " + queue.Count);
+
         bool contains = queue.Any(c => c.AI == ai);
         if (contains)
         {
@@ -209,20 +209,20 @@ public class PathingController : MonoBehaviour
             if (queue.Count == 1)
                 return 0f;
         }
-        float distance = 3f;
+        float distance = 0f;
         queue = queue.OrderBy(c => c.Distance).ToList();
         foreach (var v in queue)
         {
+            distance++;
             if (v.AI.gameObject.GetInstanceID() == ai.gameObject.GetInstanceID())
                 break;
-            distance++;
+            
         }
         return distance;
     }
 
     public void DoorPassed(Vector2 doorPosition, AI ai)
     {
-        Debug.Log("DoorPassed");
         for (int i = 0; i < 8; i++)
         {
             Vector2 pos = doorPosition + neighbours[i];

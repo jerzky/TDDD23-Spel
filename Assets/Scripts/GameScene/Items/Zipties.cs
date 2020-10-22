@@ -13,11 +13,11 @@ public class Zipties : UsableItem
 
     public override uint Use(ItemInfo item, Vector3 pos)
     {
-        Debug.Log("USE ZIP");
+
         RaycastHit2D hit = Physics2D.Raycast(pos, PlayerController.Instance.lookDir, 2, LayerMask.GetMask("AI"), -Mathf.Infinity, Mathf.Infinity);
         if (hit.collider == null)
             return 0;
-        Debug.Log("USE ZIP HIT");
+
         hit.collider.GetComponent<AI>().GetZipTied();
         Inventory.Instance.RemoveItem(item.UID, 1);
         AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ziptie3s"), pos);

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8032663438449620241}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: rotateAround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8032663439223897105}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: RightOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8032663439545876512}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: LeftOffsetPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 8032663439774842901}
   - component: {fileID: 8032663439774842906}
   - component: {fileID: 8032663439774842907}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: AIVision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,4 +460,5 @@ MonoBehaviour:
   RightOffsetPoint: {fileID: 8032663439223897105}
   InVision: []
   SpeedMultiplier: 1
+  CurrentState: 0
   AiType: 1

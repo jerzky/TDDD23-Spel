@@ -12,6 +12,9 @@ TagManager:
   - bullet
   - lawmandestroy
   - infobox
+  - body
+  - broken
+  - brokenandreported
   layers:
   - Default
   - TransparentFX
