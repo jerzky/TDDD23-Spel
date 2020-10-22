@@ -41,7 +41,7 @@ public class PathingController : MonoBehaviour
 {
     public static PathingController Instance;
     public readonly Vector2[] neighbours = { Vector2.left, Vector2.right, Vector2.up, Vector2.down, Vector2.up + Vector2.left, Vector2.up + Vector2.right, Vector2.down + Vector2.left, Vector2.down + Vector2.right };
-    float[] actionDistance = { 1f, 1f, 1f, 1f, 1.5f, 1.5f, 1.5f, 1.5f };
+    float[] actionDistance = { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
     NodeType[,] grid;
     Queue<PathFindingQueueItem> waitingQueue = new Queue<PathFindingQueueItem>();
     float delayBetweenPathFindings = 0;

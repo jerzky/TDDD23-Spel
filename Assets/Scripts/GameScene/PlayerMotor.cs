@@ -39,6 +39,9 @@ public class PlayerMotor : MonoBehaviour
 
             if (!Inventory.AddItem(ItemList.ITEM_MAC10.UID, 1))
                 Debug.Log("Failed to add start item");
+
+            if (!Inventory.AddItem(ItemList.ITEM_DRILL.UID, 1))
+                Debug.Log("Failed to add start item");
         }
         
         WeaponController.Instance.ChangeWeaponSprite();

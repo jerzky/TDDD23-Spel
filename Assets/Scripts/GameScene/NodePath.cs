@@ -16,20 +16,29 @@ public class NodePath
     {
         public class NodeFunctionInputValue
         {
-            int inputInt;
+            public int InputInt { get; set; }
+            public RouteNode Self { get; set; }
         }
         public Vector2 Position { get; }
         public RouteNodeType Type { get; }
         public int IdleTime { get; }
 
-        public System.Action CallOnAchieved { get; set; }
-
-        public RouteNode(Vector2 position, RouteNodeType type,  int idleTime = 0)
+        public System.Action<NodeFunctionInputValue> ActionCall { get; set; }
+        public NodeFunctionInputValue Input { get; }
+        public int SetInput { set { Input.InputInt = value; } }
+        public RouteNode(Vector2 position, RouteNodeType type,  int idleTime = 0, Action<NodeFunctionInputValue> act = null)
         {
             Type = type;
             Position = position;
             IdleTime = idleTime;
-            CallOnAchieved = null;
+            ActionCall = act;
+            Input = new NodeFunctionInputValue();
+            Input.Self = this;
+        }
+
+        public void CallOnAchieved()
+        {
+            ActionCall?.Invoke(Input);
         }
     }
     public List<RouteNode> Nodes { get; }
@@ -87,6 +96,16 @@ public class NodePath
     {
         var firstDashIndex = name.IndexOf('-') + 1;
         var secondDash = name.IndexOf('-', firstDashIndex);
+        
+        
+        Action<NodePath.RouteNode.NodeFunctionInputValue> act = null;
+        if(firstDashIndex -1 > 0)
+        {
+            var actionStr = name.Substring(0, firstDashIndex - 1);
+            if (int.TryParse(actionStr, out int actionInt))
+                act = GetAction(actionInt);
+        }
+        
         if (secondDash == -1)
         {
            /* Debug.Log(string.IsNullOrEmpty(parentName)
@@ -101,10 +120,24 @@ public class NodePath
         var enumType = (NodePath.RouteNodeType)type;
         var length = name.Substring(secondDash + 1, name.Length - secondDash - 1);
         var intLength = int.Parse(length);
-
         /*Debug.Log(string.IsNullOrEmpty(parentName)
             ? $"Added a {enumType} with length: {intLength} at position {pos}"
             : $"Added a {enumType} with length: {intLength} at position {pos} to parent: {parentName}");*/
-        return new NodePath.RouteNode(pos, enumType, intLength);
+        return new NodePath.RouteNode(pos, enumType, intLength, act);
+    }
+
+    static Action<NodePath.RouteNode.NodeFunctionInputValue> GetAction(int actionInt)
+    {
+        switch(actionInt)
+        {
+            case 10:
+                return PlayPoolSound;
+        }
+        return null;
+    }
+
+    static void PlayPoolSound(RouteNode.NodeFunctionInputValue value)
+    {
+        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/poolshot"), value.Self.Position);
     }
 }

@@ -11,7 +11,7 @@ using UnityEngine;
 public class Door : Openable
 {
     protected bool timerActive = false;
-    bool moving = false;
+    protected bool moving = false;
     bool open = false;
     Vector3 originalPosition;
     Vector2 openingDir = Vector2.left;

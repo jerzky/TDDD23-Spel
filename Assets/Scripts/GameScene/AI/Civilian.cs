@@ -51,13 +51,11 @@ public class Civilian : AI
             || Vector2.Distance(PlayerController.Instance.transform.position, transform.position) < 35f)
         {
             afkTimerActive = false;
+            afkTimer.Reset();
         }
         else
         {
-            if(!afkTimerActive)
-                afkTimer.Reset();
             afkTimerActive = true;
-            
         }
         
 
@@ -65,7 +63,10 @@ public class Civilian : AI
         {
             afkTimer.Tick();
             if (afkTimer.Done)
+            {
+                Debug.Log("AFK");
                 return;
+            }
         }
 
         base.FixedUpdate();
@@ -103,7 +104,7 @@ public class Civilian : AI
                 break;
             case BuildingType.Bar:
                 fun += funGainMultiplier * Time.deltaTime;
-                if (fun >= ffcMax && currentFFC == BuildingType.Bar;
+                if (fun >= ffcMax && currentFFC == BuildingType.Bar)
                     ChooseRoute();
                 break;
         }
@@ -112,7 +113,7 @@ public class Civilian : AI
 
     private void ChooseRoute()
     {
-        float val = Mathf.Min(food, cash, fun);
+        float val = Mathf.Min(fun, food, cash);
         CurrentState = State.FollowRoute;
         CurrentAction = ActionE.FollowPath;
         if (val == food)
@@ -133,7 +134,9 @@ public class Civilian : AI
         else if(val == fun)
         {
             currentFFC = BuildingType.Bar;
+            Debug.Log(BuildingController.Instance.gameObject.name);
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bar, this);
+            Debug.Log("CHOSEN ROUTE HAS NODECOUNT: " + CurrentRoute.Nodes.Count);
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
             Debug.Log("FUN");
         }

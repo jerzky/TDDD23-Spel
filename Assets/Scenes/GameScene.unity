@@ -320,7 +320,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0.000076293945, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5018,7 +5018,7 @@ GameObject:
   - component: {fileID: 666990689}
   - component: {fileID: 666990690}
   m_Layer: 0
-  m_Name: 3-1-12
+  m_Name: 10-1-12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5036,7 +5036,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 989097584}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &666990690
 SpriteRenderer:
@@ -7111,7 +7111,7 @@ GameObject:
   - component: {fileID: 978060925}
   - component: {fileID: 978060926}
   m_Layer: 0
-  m_Name: 1-1-10
+  m_Name: 10-1-10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7353,7 +7353,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1705155405}
-  - {fileID: 1533551371}
   - {fileID: 1367121014}
   - {fileID: 666990689}
   m_Father: {fileID: 1513385272}
@@ -9017,7 +9016,7 @@ MonoBehaviour:
   - Position: {x: 19, y: 94}
   - Position: {x: 12, y: 96}
   - Position: {x: 18, y: 81}
-  PoliceCarSpawnPoint: {x: -32, y: 70}
+  PoliceCarSpawnPoint: {x: 0, y: 0}
   PoliceSpawnPoint: {x: 13, y: 70}
   PoliceCarAlignment: 1
   _nodeHolder: {fileID: 1294846223}
@@ -10526,7 +10525,7 @@ GameObject:
   - component: {fileID: 1367121014}
   - component: {fileID: 1367121015}
   m_Layer: 0
-  m_Name: 2-1-5
+  m_Name: 10-1-5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10544,7 +10543,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 989097584}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1367121015
 SpriteRenderer:
@@ -11692,7 +11691,7 @@ GameObject:
   - component: {fileID: 1506566978}
   - component: {fileID: 1506566979}
   m_Layer: 0
-  m_Name: 2-1-10
+  m_Name: 10-1-10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11964,7 +11963,7 @@ GameObject:
   - component: {fileID: 1533551371}
   - component: {fileID: 1533551372}
   m_Layer: 0
-  m_Name: 1-1-10
+  m_Name: 10-1-10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11981,8 +11980,8 @@ Transform:
   m_LocalPosition: {x: 2, y: 55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 989097584}
-  m_RootOrder: 1
+  m_Father: {fileID: 2018753967}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1533551372
 SpriteRenderer:
@@ -12986,7 +12985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1650087747
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13506,7 +13505,7 @@ GameObject:
   - component: {fileID: 1705155405}
   - component: {fileID: 1705155406}
   m_Layer: 0
-  m_Name: 0-1-7
+  m_Name: 10-1-7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15260,7 +15259,7 @@ GameObject:
   - component: {fileID: 1913211116}
   - component: {fileID: 1913211117}
   m_Layer: 0
-  m_Name: 0-1-10
+  m_Name: 10-1-10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15654,6 +15653,7 @@ MonoBehaviour:
   _buildings:
   - {fileID: 1149382528}
   - {fileID: 9014608948161648449}
+  - {fileID: 8128400747802239766}
 --- !u!114 &1920875600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16115,6 +16115,7 @@ Transform:
   - {fileID: 1913211116}
   - {fileID: 978060925}
   - {fileID: 1506566978}
+  - {fileID: 1533551371}
   m_Father: {fileID: 1513385272}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16964,6 +16965,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 190d03af219036645b72a64e179ab821, type: 3}
+--- !u!4 &8128400747802239764 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8128400747358590051, guid: 190d03af219036645b72a64e179ab821, type: 3}
+  m_PrefabInstance: {fileID: 8128400747802239763}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8128400747802239765 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7662358228712623357, guid: 190d03af219036645b72a64e179ab821, type: 3}
+  m_PrefabInstance: {fileID: 8128400747802239763}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8128400747802239766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8128400747802239765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a990a74dc63944b4995b63611bd1f57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _securityStation: {fileID: 0}
+  Entrances:
+  - Transform: {fileID: 8128400747802239764}
+    Alignment: 0
+  Rooms: []
+  PoliceCarSpawnPoint: {x: -32, y: 70}
+  PoliceSpawnPoint: {x: 13, y: 70}
+  PoliceCarAlignment: 1
+  _civilianNodeHolder: {fileID: 1513385271}
 --- !u!4 &8641125907301992769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 515261192490232402, guid: 190d03af219036645b72a64e179ab821, type: 3}

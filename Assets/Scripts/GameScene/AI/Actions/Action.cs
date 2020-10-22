@@ -21,6 +21,7 @@ public class FindPathToRouteNode : Action
 {
     public enum ReturnType { NotFinished, NewPathCreated, Idle, NoRoute }
     bool hasWaited = false;
+    NodePath.RouteNode lastAchievedNode = null;
     public FindPathToRouteNode(AI ai) : base(ai)
     {
 
@@ -31,10 +32,10 @@ public class FindPathToRouteNode : Action
             return (uint)ReturnType.NotFinished;
         if (ai.CurrentRoute == null)
             return (uint)ReturnType.NoRoute;
-        if(Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.5f)
+        if(Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.5f && lastAchievedNode != ai.CurrentRoute.CurrentNode)
         {
-            var act = ai.CurrentRoute.CurrentNode.CallOnAchieved;
-            act?.Invoke();
+            lastAchievedNode = ai.CurrentRoute.CurrentNode;
+            ai.CurrentRoute.CurrentNode.CallOnAchieved();
         }
         if (!hasWaited && ai.CurrentRoute.CurrentNode.Type == NodePath.RouteNodeType.Idle && Vector2.Distance(ai.transform.position, ai.CurrentRoute.CurrentNode.Position) < 0.5f)
         {

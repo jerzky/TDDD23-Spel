@@ -55,6 +55,7 @@ public class Drill_Interactable : Interactable
     {
         SoundController.Instance.CancelContinousSound(continousSoundID);
         Inventory.Instance.AddItem(ItemList.ITEM_DRILL.UID, 1);
+        LoadingCircle.Instance.StopLoading();
         Destroy(gameObject);
         return false;
     }

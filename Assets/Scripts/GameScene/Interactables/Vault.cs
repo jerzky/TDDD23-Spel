@@ -5,6 +5,7 @@ using Assets.Items;
 
 public class Vault : Door
 {
+    bool hasPlayedSound = false;
     protected override void Start()
     {
         base.Start();
@@ -13,8 +14,16 @@ public class Vault : Door
 
     public override void MoveDoor()
     {
+        
+        if (!hasPlayedSound)
+        {
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/VaultOpen"), ((Vector2)transform.position));
+            hasPlayedSound = true;
+        }
         base.MoveDoor();
-        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/VaultOpen"), transform.position);
+        if (!moving)
+            hasPlayedSound = false;
+
     }
 
     public override void AssignUnlockItems()
