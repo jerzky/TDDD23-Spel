@@ -64,6 +64,8 @@ public class CashRegister : Interactable
         }
         else
         {
+            if (itemIndex != 0)
+                return false;
             timeLeft = averageRobTime[(int)RobType.Stealthy];
             timerActive = true;
             LoadingCircle.Instance.StartLoading();

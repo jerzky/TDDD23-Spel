@@ -26,6 +26,8 @@ public class CellPhoneJammer_Interactable : Interactable
 
     public override bool Interact(uint itemIndex)
     {
+        if (itemIndex != 0)
+            return false;
         Inventory.Instance.AddItem(ItemList.ITEM_CELLPHONE_JAMMER.UID, 1);
         Destroy(gameObject);
         return false;

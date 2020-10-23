@@ -53,6 +53,8 @@ public class Drill_Interactable : Interactable
 
     public override bool Interact(uint itemIndex)
     {
+        if (itemIndex != 0)
+            return false;
         SoundController.Instance.CancelContinousSound(continousSoundID);
         Inventory.Instance.AddItem(ItemList.ITEM_DRILL.UID, 1);
         LoadingCircle.Instance.StopLoading();

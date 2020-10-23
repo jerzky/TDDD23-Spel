@@ -132,6 +132,10 @@ public class NodePath
         {
             case 10:
                 return PlayPoolSound;
+            case 11:
+                return StartCameras;
+            case 12:
+                return TurnOffCameras;
         }
         return null;
     }
@@ -139,5 +143,31 @@ public class NodePath
     static void PlayPoolSound(RouteNode.NodeFunctionInputValue value)
     {
         AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/poolshot"), value.Self.Position);
+    }
+
+    static void StartCameras(RouteNode.NodeFunctionInputValue value)
+    {
+        SecurityStation closest = null;
+        foreach (var v in GameObject.FindObjectsOfType<SecurityStation>())
+            if (closest == null || Vector2.Distance(v.transform.position, value.Self.Position) < Vector2.Distance(closest.transform.position, value.Self.Position))
+                closest = v;
+
+        if (closest == null)
+            throw new SystemException("NO SECURITYSTATIONS???");
+
+        closest.IsMonitored = true;
+    }
+
+    static void TurnOffCameras(RouteNode.NodeFunctionInputValue value)
+    {
+        SecurityStation closest = null;
+        foreach (var v in GameObject.FindObjectsOfType<SecurityStation>())
+            if (closest == null || Vector2.Distance(v.transform.position, value.Self.Position) < Vector2.Distance(closest.transform.position, value.Self.Position))
+                closest = v;
+
+        if (closest == null)
+            throw new SystemException("NO SECURITYSTATIONS???");
+
+        closest.IsMonitored = false;
     }
 }

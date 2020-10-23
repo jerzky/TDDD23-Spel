@@ -26,12 +26,6 @@ public class CCTV : Interactable
     bool _timerActive = false;
     private SimpleTimer _timer = new SimpleTimer(0.5f);
 
-    [SerializeField]
-    bool _isInEmployeeAreaOnly = false;
-
-    [SerializeField] 
-    private GameObject _rayCastOrigin;
-
     [SerializeField] 
     private Building _building;
 
@@ -111,7 +105,7 @@ public class CCTV : Interactable
             if (_building.IsSomeoneMonitoringCCTV)
                 HostilePlayerNoticed(AlertIntensity.ConfirmedHostile);
         }
-        else if (/*_building.PlayerReportedAsHostile ||*/ _locationType == LocationType.EmployeeOnly)
+        else if (_building.PlayerReportedAsHostile || _locationType == LocationType.EmployeeOnly)
         {
             // if player was previously reported at the same building or if the cctv is in a employee only location
             // start the timer so the player can be noticed after noticeDelay seconds

@@ -63,10 +63,15 @@ public class ApartmentBuilding : Building
                 newPath.Nodes.Add(new NodePath.RouteNode(v.Position + offset, v.Type, v.IdleTime));
             }
             apartments.Add(new Apartment(newPath, apartments[0].Position + offset));
+            var room = new Room();
+            room.Position = apartments.Last().Position;
+            Rooms.Add(room);
         }
 
         BuildingType = BuildingType.Apartment;
         Transform civParent = new GameObject("CivParent").transform;
+
+        
     }
 
     // Update is called once per frame

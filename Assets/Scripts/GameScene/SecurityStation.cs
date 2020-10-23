@@ -10,7 +10,7 @@ public class SecurityStation : Interactable
 
     void Start()
     {
-        IsMonitored = true; // For testing
+        IsMonitored = false; // For testing
     }
 
     // Update is called once per frame
@@ -21,6 +21,8 @@ public class SecurityStation : Interactable
 
     public override bool Interact(uint itemIndex)
     {
+        if (itemIndex != 0)
+            return false;
         IsMonitored = !IsMonitored;
         return true;
     }

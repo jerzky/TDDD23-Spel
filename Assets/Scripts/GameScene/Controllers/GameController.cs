@@ -19,7 +19,13 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         Instance = this;
+        LoadSaveInit();
 
+        
+    }
+
+    void LoadSaveInit()
+    {
         var cams = FindObjectsOfType<Camera>();
         LoadSaveInfo lsi = FindObjectOfType<LoadSaveInfo>();
         if (lsi != null)
@@ -28,11 +34,10 @@ public class GameController : MonoBehaviour
             GeneralUI.Instance.Credits = lsi.LoadedGame.Credits;
             GeneralUI.Instance.Kills = lsi.LoadedGame.Kills;
             Destroy(cams.Where(c => c.transform.parent == null).ToList()[0].gameObject);
-            if(lsi.LoadedGame.Items != null)
+            if (lsi.LoadedGame.Items != null)
                 foreach (var v in lsi.LoadedGame.Items)
                     Inventory.Instance.AddItem(v.Item1, v.Item2);
         }
-        
     }
 
 
