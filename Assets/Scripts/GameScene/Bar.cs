@@ -40,15 +40,15 @@ public class Bar : Building
                 continue;
 
             _civilianNodePaths.Add(NodePath.LoadPathNodesFromHolder(r.gameObject));
-            Debug.Log("nodes in created path: " + _civilianNodePaths.Last().Nodes.Count);
         }
        
     }
 
     public override NodePath GetCivilianPath(AI ai)
     {
-        if (_civilianNodePathIndex >= _civilianNodePaths.Count) _civilianNodePathIndex = _civilianNodePathIndex % _civilianNodePaths.Count;
-        Debug.Log("index: " + _civilianNodePathIndex + " count: " + _civilianNodePaths[_civilianNodePathIndex].Nodes.Count);
+        if (_civilianNodePathIndex >= _civilianNodePaths.Count) 
+            _civilianNodePathIndex = _civilianNodePathIndex % _civilianNodePaths.Count;
+
         return _civilianNodePaths[_civilianNodePathIndex++];
     }
 }

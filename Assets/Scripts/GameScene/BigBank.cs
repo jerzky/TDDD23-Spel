@@ -19,18 +19,17 @@
 
 
             var allGuards = GetComponentsInChildren<AI>();
-
-            if (allGuards.Length > 1)
+            var i = 0;
+            foreach (var guard in allGuards)
             {
-                foreach (var guard in allGuards)
-                {
-                    _guards.Add(guard);
-                }
-
-                _nodePaths[0].Guard = _guards[0];
-
-                _guards[0].SetRoute(_nodePaths[0]);
+                _guards.Add(guard);
+                _guards.Add(guard);
+                _nodePaths[i].Building = this;
+                guard.SetRoute(_nodePaths[i++]);
+                Debug.Log("Gave a guard a path");
             }
+
+
         }
     }
 
