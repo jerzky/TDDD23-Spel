@@ -26,6 +26,12 @@ public class ConstructionWorker : Civilian
         _constructionSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[19];
 
         _timer.Reset();
+        AiType = AI_Type.Construction_Worker;
+        foreach (var v in GameController.Instance.StackedUpBreakables)
+            if (v.CompareTag("body"))
+                AssignObject(v);
+
+        GameController.Instance.StackedUpBreakables.Clear();
     }
 
     // Update is called once per frame
@@ -51,6 +57,13 @@ public class ConstructionWorker : Civilian
             return;
         Sprites = _regularSprites;
         base.Update();
+    }
+
+    public override void OnDeath()
+    {
+        foreach (var v in _rebuildObject.Objects)
+            GameController.Instance.AddBreakable(v);
+        base.OnDeath();
     }
 
     public void AssignObject(GameObject obj)

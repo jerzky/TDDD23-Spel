@@ -20,8 +20,6 @@
 
         public bool PoliceHasSpawned { get; private set; }
 
-
-
         public List<Police> MyPolice { get; private set; } = new List<Police>();
         public bool AllPoliceAreDead => MyPolice.Count == 0;
 

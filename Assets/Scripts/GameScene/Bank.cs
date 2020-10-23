@@ -24,20 +24,17 @@ public class Bank : Building
         Instance = this;
         BuildingType = BuildingType.Bank;
         LoadPathingNodes();
-        var allGuards = GetComponentsInChildren<AI>();
+        var allGuards = GetComponentsInChildren<Guard>();
 
         if (allGuards.Length > 1)
         {
+            int i = 0;
             foreach (var guard in allGuards)
             {
                 _guards.Add(guard);
+                _nodePaths[i].Building = this;
+                guard.SetRoute(_nodePaths[i++]);
             }
-
-            _nodePaths[0].Guard = _guards[0];
-            _nodePaths[1].Guard = _guards[1];
-
-            _guards[0].SetRoute(_nodePaths[0]);
-            _guards[1].SetRoute(_nodePaths[1]);
         }
 
         var sizeX = 28 - 5;
@@ -47,6 +44,12 @@ public class Bank : Building
         BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
         SetUpCivilianRoutes();
         base.Start();
+    }
+
+    public void AddNewGuard(Guard guard)
+    {
+        _guards.RemoveAll(g => g == null);
+        _guards.Add(guard);
     }
 
     // Update is called once per frame

@@ -34,6 +34,7 @@ public class ApartmentBuilding : Building
     [SerializeField]
     GameObject nodeHolder;
     List<Apartment> apartments = new List<Apartment>();
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -56,7 +57,7 @@ public class ApartmentBuilding : Building
             Vector2 offset = Vector2.zero;
             offset.x = ((i > 2 && i < 5) || i > 7) ? xInc * (i % 5) + xIncOver2 : xInc * (i % 5);
             offset.y = i > 4 ? yIncOver4 : 0f;
-            NodePath newPath = new NodePath("Apartment" + i, null);
+            NodePath newPath = new NodePath("Apartment" + i);
             for(int j = 0; j < nodePath.Nodes.Count; j++)
             {
                 var v = nodePath.Nodes[j];
@@ -77,7 +78,7 @@ public class ApartmentBuilding : Building
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public override NodePath GetCivilianPath(AI ai)
@@ -108,5 +109,14 @@ public class ApartmentBuilding : Building
             if (v.IsWithin(pos))
                 return v;
         return null;
+    }
+
+    public Apartment GetEmptyApartment()
+    {
+        Apartment apartment = apartments.Find(c => c.Resident == null);
+        if (apartment == default(Apartment))
+            return apartments[0];
+        else
+            return apartment;
     }
 }

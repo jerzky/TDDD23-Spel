@@ -235,10 +235,9 @@ public abstract class AI : MonoBehaviour
             ConstructionWorker con = FindObjectOfType<ConstructionWorker>();
             if (con == null)
             {
-                // spawn a new construction worker in the old construction workers apartment?
-
+                GameController.Instance.AddBreakable(col.gameObject);
+                return;
             }
-            Debug.Log("found broken object");
             con.AssignObject(col.gameObject);
         }
     }
@@ -290,13 +289,16 @@ public abstract class AI : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        if (AiType != AI_Type.Police)
+            GameController.Instance.AddToRespawnQueue(new GameController.RespawnInfo(AiType, CurrentRoute));
         MedicalWorker med = FindObjectOfType<MedicalWorker>();
-        if(med == null)
+        DeadBodyHolder.tag = "body";
+        if (med == null)
         {
-            // spawn a new medical worker in the old medical workers apartment?
+            GameController.Instance.AddBody(DeadBodyHolder);
             return;
         }
-        DeadBodyHolder.tag = "body";
+        
         med.AssignBody(DeadBodyHolder);
     }
     public void Incapacitate()

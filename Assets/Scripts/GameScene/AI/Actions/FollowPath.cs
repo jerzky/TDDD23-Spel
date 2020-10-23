@@ -275,7 +275,10 @@ public class FollowPath : Action
                 return ActionE.LookAround;
             case State.Panic:
                 var building = ai.CurrentBuilding;
-                return building != null && building.PlayerReportedAsHostile ? ActionE.Flee : ActionE.None;
+                ActionE result = (building != null && building.PlayerReportedAsHostile) ? ActionE.Flee : ActionE.None;
+                if (result == ActionE.None)
+                    PoliceController.Instance.CallPolice(ai.transform.position, null);
+                return result;
             case State.GotoCoverEntrance:
                 return lastActionReturnValue == (uint) ReturnType.StartedWithoutPath
                     ? ActionE.GotoCoverEntrance

@@ -22,8 +22,13 @@ public class MedicalWorker : Civilian
         _medicalSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[1];
         _medicalSprites[2] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[2];
         _medicalSprites[3] = Resources.LoadAll<Sprite>("Textures/AI_Characters")[3];
-        
 
+        AiType = AI_Type.Medical_Worker;
+        foreach (var v in GameController.Instance.StackedUpbodies)
+            if (v.CompareTag("body"))
+                AssignBody(v);
+
+        GameController.Instance.StackedUpbodies.Clear();
     }
 
     // Update is called once per frame
@@ -50,7 +55,18 @@ public class MedicalWorker : Civilian
 
     public void AssignBody(GameObject body)
     {
+        Debug.Log(body.name);
+        Debug.Log("HEELLEOEOEOEOELL");
+        Debug.Log(_removeBody.Bodies.Count);
+        Debug.Log("jahfjhsghsg");
         if (body.CompareTag("body"))
             _removeBody.Bodies.Add(body);
+    }
+
+    public override void OnDeath()
+    {
+        foreach (var v in _removeBody.Bodies)
+            GameController.Instance.AddBody(v);
+        base.OnDeath();
     }
 }

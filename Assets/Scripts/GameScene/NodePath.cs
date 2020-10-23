@@ -46,20 +46,18 @@ public class NodePath
     private int _currentNodeIndex;
 
     public string Name { get; }
-    public AI Guard { get;  set; }
+    public Building Building { get; set; }
 
-    public NodePath(string name, AI guard, params RouteNode[] nodes)
+    public NodePath(string name, params RouteNode[] nodes)
     {
         _currentNodeIndex = 0;
         Name = name;
-        Guard = guard;
         Nodes = new List<RouteNode>(nodes);
     }
-    public NodePath(string name, AI guard, List<RouteNode> nodes)
+    public NodePath(string name, List<RouteNode> nodes)
     {
         _currentNodeIndex = 0;
         Name = name;
-        Guard = guard;
         Nodes = nodes;
     }
 
@@ -81,7 +79,7 @@ public class NodePath
 
     public static NodePath LoadPathNodesFromHolder(GameObject holder)
     {
-        var nodePath = new NodePath(holder.name, null, new List<NodePath.RouteNode>());
+        var nodePath = new NodePath(holder.name, new List<NodePath.RouteNode>());
         var nodes = holder.GetComponentsInChildren<Transform>().ToList();
         foreach (var node in nodes.OrderBy(c => c.name))
         {
