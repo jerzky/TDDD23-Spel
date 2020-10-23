@@ -80,6 +80,7 @@ public abstract class Building : MonoBehaviour
     // Start is called before the first frame update
     protected void GenerateEntrances()
     {
+        Debug.Log($"{this} wants entrances");
         foreach (var entrance in Entrances)
         {
             entrance.GenerateTiles();

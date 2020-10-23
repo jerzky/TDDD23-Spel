@@ -8,8 +8,8 @@ using UnityEngine;
 public class Bank : Building
 {
     public static Bank Instance;
-    private readonly List<NodePath> _nodePaths = new List<NodePath>();
-    private readonly List<AI> _guards = new List<AI>();
+    protected readonly List<NodePath> _nodePaths = new List<NodePath>();
+    protected readonly List<AI> _guards = new List<AI>();
 
     private readonly List<NodePath> _civilianNodePaths = new List<NodePath>();
     private int _civilianNodePathIndex = 0;
