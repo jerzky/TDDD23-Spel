@@ -11,9 +11,8 @@ public class Bar : Building
     private int _civilianNodePathIndex = 0;
 
     // Start is called before the first frame update
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         var sizeX = 34 - 5;
         var sizeY = 59 - 49;
         var posX = 5 + sizeX / 2;
@@ -23,7 +22,7 @@ public class Bar : Building
 
         BuildingType = BuildingType.Bar;
         SetUpCivilianRoutes();
-    
+        GenerateEntrances();
     }
 
     // Update is called once per frame

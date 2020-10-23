@@ -19,7 +19,7 @@ public class Bank : Building
     private GameObject _civilianNodeHolder;
 
     // Start is called before the first frame update
-    protected override void Start()
+    protected void Start()
     {
         Instance = this;
         BuildingType = BuildingType.Bank;
@@ -45,8 +45,9 @@ public class Bank : Building
         var posX = 5 + sizeX / 2;
         var posY = 77 + sizeY / 2;
         BuildingParts.Add(new BuildingPart(new Vector2(posX, posY), new Vector2(sizeX, sizeY)));
+        PoliceController.AddBuilding(this);
         SetUpCivilianRoutes();
-        base.Start();
+        GenerateEntrances();
     }
 
     // Update is called once per frame
@@ -55,7 +56,7 @@ public class Bank : Building
         PoliceSpawnTimer.Tick();
     }
 
-    private void SetUpCivilianRoutes()
+    protected void SetUpCivilianRoutes()
     {
         var rooms = _civilianNodeHolder.GetComponentsInChildren<Transform>();
         foreach (var r in rooms)
@@ -68,7 +69,7 @@ public class Bank : Building
     }
 
 
-    private void LoadPathingNodes()
+    protected void LoadPathingNodes()
     {
 
         var rooms = _nodeHolder.GetComponentsInChildren<Transform>();

@@ -11,7 +11,7 @@ public class PoliceController : MonoBehaviour
     public static List<Police> AllPolice = new List<Police>();
     private int _currentlyWaiting = 0;
 
-
+    private static readonly Dictionary<Building, PoliceCar> CurrentCars = new Dictionary<Building, PoliceCar>();
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +25,10 @@ public class PoliceController : MonoBehaviour
         
     }
 
+    public static void AddBuilding(Building b)
+    {
+        CurrentCars.Add(b, null);
+    }
 
     public void NotifyPolice(Building building)
     {
@@ -45,8 +49,28 @@ public class PoliceController : MonoBehaviour
     {
     //    for(var i = 0; i < 5; i++)
        //     Police.Generate(building.PoliceSpawnPoint + new Vector2(i, 0), state, action, building);
-       PoliceCar.Generate(building);
+
+       if (!CurrentCars.ContainsKey(building))
+       {
+           Debug.LogError("You have not added this building to the policecontroller!");
+           return;
+       }
+       var newCar = PoliceCar.Generate(building).GetComponent<PoliceCar>();
+        if (CurrentCars[building] == null)
+       {
+          
+           CurrentCars[building] = newCar;
+           return;
+
+       }
+        CurrentCars[building].Transfer(newCar);
+        CurrentCars[building] = newCar;
+
     }
+
+
+
+
 
     public void AlertAll(Vector2 pos, Police reporter = null)
     {
