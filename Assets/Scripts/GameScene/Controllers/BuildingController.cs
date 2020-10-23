@@ -7,6 +7,7 @@ public class BuildingController : MonoBehaviour
     public static BuildingController Instance;
     [SerializeField]
     List<Building> _buildings;
+    public List<Building> Buildings { get => _buildings; }
 
     public bool PlayerHostile { 
         get

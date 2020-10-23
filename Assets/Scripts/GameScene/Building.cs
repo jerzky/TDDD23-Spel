@@ -140,7 +140,7 @@ public abstract class Building : MonoBehaviour
         if (alertIntesity == AlertIntensity.ConfirmedHostile)
         {
             ReportPlayerAsHostile();
-            PoliceController.Instance.CallPolice(pos);
+            PoliceController.Instance.CallPolice(pos, this);
         }
     }
 

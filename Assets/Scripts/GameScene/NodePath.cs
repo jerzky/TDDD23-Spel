@@ -46,20 +46,18 @@ public class NodePath
     private int _currentNodeIndex;
 
     public string Name { get; }
-    public AI Guard { get;  set; }
+    public Building Building { get; set; }
 
-    public NodePath(string name, AI guard, params RouteNode[] nodes)
+    public NodePath(string name, params RouteNode[] nodes)
     {
         _currentNodeIndex = 0;
         Name = name;
-        Guard = guard;
         Nodes = new List<RouteNode>(nodes);
     }
-    public NodePath(string name, AI guard, List<RouteNode> nodes)
+    public NodePath(string name, List<RouteNode> nodes)
     {
         _currentNodeIndex = 0;
         Name = name;
-        Guard = guard;
         Nodes = nodes;
     }
 
@@ -81,7 +79,7 @@ public class NodePath
 
     public static NodePath LoadPathNodesFromHolder(GameObject holder)
     {
-        var nodePath = new NodePath(holder.name, null, new List<NodePath.RouteNode>());
+        var nodePath = new NodePath(holder.name, new List<NodePath.RouteNode>());
         var nodes = holder.GetComponentsInChildren<Transform>().ToList();
         foreach (var node in nodes.OrderBy(c => c.name))
         {
@@ -132,6 +130,10 @@ public class NodePath
         {
             case 10:
                 return PlayPoolSound;
+            case 11:
+                return StartCameras;
+            case 12:
+                return TurnOffCameras;
         }
         return null;
     }
@@ -139,5 +141,31 @@ public class NodePath
     static void PlayPoolSound(RouteNode.NodeFunctionInputValue value)
     {
         AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/poolshot"), value.Self.Position);
+    }
+
+    static void StartCameras(RouteNode.NodeFunctionInputValue value)
+    {
+        SecurityStation closest = null;
+        foreach (var v in GameObject.FindObjectsOfType<SecurityStation>())
+            if (closest == null || Vector2.Distance(v.transform.position, value.Self.Position) < Vector2.Distance(closest.transform.position, value.Self.Position))
+                closest = v;
+
+        if (closest == null)
+            throw new SystemException("NO SECURITYSTATIONS???");
+
+        closest.IsMonitored = true;
+    }
+
+    static void TurnOffCameras(RouteNode.NodeFunctionInputValue value)
+    {
+        SecurityStation closest = null;
+        foreach (var v in GameObject.FindObjectsOfType<SecurityStation>())
+            if (closest == null || Vector2.Distance(v.transform.position, value.Self.Position) < Vector2.Distance(closest.transform.position, value.Self.Position))
+                closest = v;
+
+        if (closest == null)
+            throw new SystemException("NO SECURITYSTATIONS???");
+
+        closest.IsMonitored = false;
     }
 }

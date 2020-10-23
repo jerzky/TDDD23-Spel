@@ -16,7 +16,8 @@ public class Civilian : AI
     BuildingType currentFFC = BuildingType.None;
     SimpleTimer afkTimer = new SimpleTimer(3f);
     bool afkTimerActive = false;
-
+    SimpleTimer waitUntilReady = new SimpleTimer(5f);
+    bool firstTime = true;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -63,7 +64,6 @@ public class Civilian : AI
             afkTimer.Tick();
             if (afkTimer.Done)
             {
-                Debug.Log("AFK");
                 return;
             }
         }
@@ -73,6 +73,7 @@ public class Civilian : AI
 
     protected virtual void Update()
     {
+        callTimer.Tick();
         if(CurrentAction == ActionE.None)
         {
             currentFFC = BuildingType.None;
@@ -136,9 +137,7 @@ public class Civilian : AI
             currentFFC = BuildingType.Bar;
             Debug.Log(BuildingController.Instance.gameObject.name);
             CurrentRoute = BuildingController.Instance.GetCivilianNodePath(BuildingType.Bar, this);
-
             SetPathToPosition(CurrentRoute.CurrentNode.Position);
-            Debug.Log("FUN");
         }
     }
 
@@ -184,11 +183,34 @@ public class Civilian : AI
     protected override void PlayerSeen()
     {
         var building = CurrentBuilding;
-        if (PlayerController.Instance.IsHostile || (building != null && building.PlayerReportedAsHostile))
+        if (PlayerController.Instance.IsHostile)
         {
             CurrentState = State.Panic;
             CurrentAction = ActionE.Freeze;
             Path.Clear();
         }
+        else if(building != null && building.PlayerReportedAsHostile)
+        {
+            CurrentState = State.Panic;
+            CurrentAction = ActionE.Flee;
+            CallPolice(building);
+            Path.Clear();
+        }
+        else if(building?.BuildingType == BuildingType.Apartment && (building as ApartmentBuilding).GetApartment(transform.position) != null && (building as ApartmentBuilding).GetApartment(PlayerController.Instance.transform.position) != null)
+        {
+            CurrentState = State.Panic;
+            CurrentAction = ActionE.Flee;
+            CallPolice(building);
+            Path.Clear();
+        }
+    }
+    SimpleTimer callTimer = new SimpleTimer(5f);
+    void CallPolice(Building building)
+    {
+        /*if(callTimer.Done)
+        {
+            PoliceController.Instance.CallPolice(transform.position, building);
+            callTimer.Reset();
+        }*/
     }
 }

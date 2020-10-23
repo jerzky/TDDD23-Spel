@@ -53,6 +53,8 @@ public class Money : Interactable
 
     public override bool Interact(uint itemIndex)
     {
+        if (itemIndex != 0)
+            return false;
         timer.Reset();
         timerActive = true;
         LoadingCircle.Instance.StartLoading();
