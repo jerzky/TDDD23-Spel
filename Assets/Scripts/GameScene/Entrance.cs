@@ -56,13 +56,13 @@ public class Entrance
                         tile = new Vector2(Location.x - SpaceFromEntrance, Location.y + i);
                         break;
                     case Alignment.West:
-                        tile = new Vector2(Location.x + SpaceFromEntrance, Location.y);
+                        tile = new Vector2(Location.x + SpaceFromEntrance, Location.y + i);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-               // Debug.Log($"Adding tile: {tile} to entrance: {Location}");
+              //  Debug.Log($"Count: {_coveringLawmen.Count}. Adding tile: {tile} to entrance: {Location}");
                 _coveringLawmen.Add(tile, null);
             }
         }

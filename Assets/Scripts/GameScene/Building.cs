@@ -25,7 +25,7 @@ public class BuildingPart
         return true;
     }
 }
-public enum BuildingType { None, Bank, Apartment, Bar }
+public enum BuildingType { None, Bank, Apartment, Bar, BigBank }
 
 public enum PoliceCarAlignment
 {
@@ -72,18 +72,19 @@ public abstract class Building : MonoBehaviour
 
     protected List<BuildingPart> BuildingParts = new List<BuildingPart>();
     private readonly SimpleTimer _playerHostileTimer = new SimpleTimer(30);
-    protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(60);
+    protected readonly SimpleTimer PoliceSpawnTimer = new SimpleTimer(10);
 
 
     public bool PlayerReportedAsHostile { get; private set; } = false;
     public BuildingType BuildingType { get; protected set; }
     // Start is called before the first frame update
-    protected virtual void Start()
+    protected void GenerateEntrances()
     {
         foreach (var entrance in Entrances)
         {
             entrance.GenerateTiles();
         }
+
     }
 
     void Update()

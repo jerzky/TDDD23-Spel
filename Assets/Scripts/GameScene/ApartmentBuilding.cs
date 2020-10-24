@@ -36,9 +36,8 @@ public class ApartmentBuilding : Building
     List<Apartment> apartments = new List<Apartment>();
 
     // Start is called before the first frame update
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         var sizeX = 129 - 50;
         var sizeY = 67 - 33;
         var posX = 50 + sizeX / 2;
@@ -71,8 +70,7 @@ public class ApartmentBuilding : Building
 
         BuildingType = BuildingType.Apartment;
         Transform civParent = new GameObject("CivParent").transform;
-
-        
+        GenerateEntrances();
     }
 
     // Update is called once per frame
