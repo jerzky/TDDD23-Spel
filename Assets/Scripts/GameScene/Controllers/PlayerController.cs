@@ -83,10 +83,7 @@ public class PlayerController : MonoBehaviour
             heartbeat.SetActive(false);
             GeneralUI.Instance.Health = 100;
         }
-    }
 
-    private void FixedUpdate()
-    {
         if (MovementDirection != Vector2.zero)
         {
             CancelCurrentInteractable();
@@ -100,6 +97,11 @@ public class PlayerController : MonoBehaviour
             GetComponent<AudioSource>().enabled = false;
 
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 
     bool GetInput(Func<KeyCode, bool> func, ControlAction ca)
