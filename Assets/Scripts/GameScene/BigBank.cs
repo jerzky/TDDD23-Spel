@@ -20,8 +20,10 @@
 
             var allGuards = GetComponentsInChildren<AI>();
             var i = 0;
+            Debug.Log($"Number of guards in bigbank: {allGuards.Length}");
             foreach (var guard in allGuards)
             {
+
                 _guards.Add(guard);
                 _guards.Add(guard);
                 _nodePaths[i].Building = this;
