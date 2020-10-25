@@ -55,7 +55,7 @@ public class PlayerMotor : MonoBehaviour
 
     public void PlayerMove(Vector2 dir, float speed)
     {
-        rb.MovePosition(rb.position + dir.normalized * speed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + dir.normalized * speed * Time.deltaTime);
     }
 
     public void Interact(Vector2 lookDir, uint itemID)
