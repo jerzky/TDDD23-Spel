@@ -52,6 +52,7 @@ public class MainMenu : MenuScreen
                     UnityEditor.EditorApplication.isPlaying = false;
                 }
                 #endif
+                Application.Quit();
                 break;
 
         }

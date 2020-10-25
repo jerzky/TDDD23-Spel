@@ -1,10 +1,5 @@
-﻿
-    using System;
-    using System.Collections.Generic;
+﻿    using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Security.Cryptography;
-    using UnityEditorInternal;
     using UnityEngine;
 
     public class PoliceCar : MonoBehaviour
@@ -112,12 +107,6 @@
             }
 
             var bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
-
-
-
-            Debug.Log(
-                $"right: {(int) Mathf.Ceil(bounds.max.x)}, left: {(int) Mathf.Floor(bounds.min.x)}, up: {(int) Mathf.Ceil(bounds.max.y)}, down: {(int) Mathf.Floor(bounds.min.y)}, size: ({bounds.max.x}, {bounds.max.y})");
-
             for (var x = (int) Mathf.Floor(bounds.min.x); x < (int) Mathf.Ceil(bounds.max.x); x++)
             {
                 for (var y = (int) Mathf.Floor(bounds.min.y); y < (int) Mathf.Ceil(bounds.max.y); y++)

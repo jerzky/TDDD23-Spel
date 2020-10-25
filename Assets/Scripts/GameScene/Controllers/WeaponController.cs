@@ -50,6 +50,9 @@ public class WeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PauseMenuController.IsPaused)
+            return;
+
         if (WeaponEquiped)
             HandleWeaponRotation();
 

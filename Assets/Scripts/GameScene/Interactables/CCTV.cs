@@ -97,7 +97,6 @@ public class CCTV : Interactable
         GetComponent<SpriteRenderer>().sprite = _cameraSprites[3];
         // Check if player is hostile
         // this bool should be kept in some kind of controller
-
         if (PlayerController.Instance.IsHostile || _locationType == LocationType.Hostile)
         {
             // if the player is hostile in camera vision or if the location type is hostile (maybe inside vault?)
