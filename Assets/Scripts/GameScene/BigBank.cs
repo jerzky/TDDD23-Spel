@@ -12,9 +12,9 @@
 
             var bottomleft = new Vector2(50, 77);
             var topright = new Vector2(129, 109);
+            var size = topright - bottomleft;
 
-
-            BuildingParts.Add(new BuildingPart(topright - bottomleft / 2, topright - bottomleft));
+            BuildingParts.Add(new BuildingPart(bottomleft + size / 2, size));
             SetUpCivilianRoutes();
             GenerateEntrances();
 

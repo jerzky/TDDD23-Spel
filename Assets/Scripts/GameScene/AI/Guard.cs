@@ -30,14 +30,20 @@ public class Guard : Lawman
     protected override void PlayerSeen()
     {
         var building = CurrentBuilding;
-        if (building != null)
-            if (PlayerController.Instance.IsHostile || building.PlayerReportedAsHostile)
-            {
-                building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile, this);
-                base.PlayerSeen();
-            }
-                
-        
+
+        if (building == null)
+        {
+            Debug.Log("Building not found");
+            return;
+        }
+
+        if (PlayerController.Instance.IsHostile || building.PlayerReportedAsHostile)
+        {
+            building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile, this);
+            base.PlayerSeen();
+        }
+
+
     }
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)

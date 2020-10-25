@@ -18,14 +18,22 @@ public class HoldCoverEntrance : Action
 
     public override uint PerformAction()
     {
-        if (_police.CoverBuilding.IsWithin(PlayerController.Instance.transform.position))
-            return (uint) ReturnType.FoundPlayer;
+        //   if (!_police.CoverBuilding.IsWithin(PlayerController.Instance.transform.position))
+        //       return (uint) ReturnType.FoundPlayer;
 
-        if (_police.CoverBuilding.Contains(AI_Type.Civilian))
+        var dontStorm = _police.CoverBuilding.Contains(AI_Type.Civilian) &&
+                    _police.CoverBuilding.Contains(AI_Type.Construction_Worker) &&
+                    _police.CoverBuilding.Contains(AI_Type.Medical_Worker);
+
+        if (dontStorm)
+        {
+            Debug.Log($"DONT STORM: {dontStorm}");
             return (uint)ReturnType.NotFinished;
+        }
+            
 
 
-        return (uint)ReturnType.FoundPlayer;
+        return (uint) ReturnType.FoundPlayer;
     }
 
 
@@ -35,6 +43,7 @@ public class HoldCoverEntrance : Action
     {
         if (lastActionReturnValue == (uint) ReturnType.FoundPlayer)
         {
+            Debug.Log($"FOUND PLAYER. STORMING");
             _police.CurrentState = State.StormBuilding;
             return ActionE.FindRoomToClear;
         }
