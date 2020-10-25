@@ -209,7 +209,7 @@ public class PathingController : MonoBehaviour
             if (queue.Count == 1)
                 return 0f;
         }
-        float distance = 0f;
+        float distance = 2f;
         queue = queue.OrderBy(c => c.Distance).ToList();
         foreach (var v in queue)
         {

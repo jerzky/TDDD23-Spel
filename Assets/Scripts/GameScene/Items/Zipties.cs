@@ -21,7 +21,7 @@ public class Zipties : UsableItem
         hit.collider.GetComponent<AI>().GetZipTied();
         Inventory.Instance.RemoveItem(item.UID, 1);
         AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/ziptie3s"), pos);
-        SoundController.Instance.GenerateContinousSound(new Sound(pos, ItemList.ITEM_ZIPTIES.SoundRadius, Sound.SoundType.Construction), ItemList.ITEM_ZIPTIES.AverageUseTime);
+      //  SoundController.Instance.GenerateContinousSound(new Sound(pos, ItemList.ITEM_ZIPTIES.SoundRadius, Sound.SoundType.Construction), ItemList.ITEM_ZIPTIES.AverageUseTime);
         return 0;
     }
 }

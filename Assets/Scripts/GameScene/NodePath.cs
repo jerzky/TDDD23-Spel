@@ -81,11 +81,12 @@ public class NodePath
     {
         var nodePath = new NodePath(holder.name, new List<NodePath.RouteNode>());
         var nodes = holder.GetComponentsInChildren<Transform>().ToList();
-        foreach (var node in nodes.OrderBy(c => c.name))
+        foreach (var node in nodes)
         {
             if (node.gameObject.GetInstanceID() == holder.GetInstanceID())
                 continue;
             nodePath.Nodes.Add(ParseNodeName(node.name, node.transform.position, holder.name));
+            GameObject.Destroy(node.GetComponent<SpriteRenderer>());
         }
         return nodePath;
     }

@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoadSaveScene.unity
     guid: c2f9aefdd07a5ea42a178bfa00dd0a7a
+  - enabled: 1
+    path: Assets/Scenes/DEATH.unity
+    guid: 731884f4e97f7954c8f2b10fba043e46
   m_configObjects: {}

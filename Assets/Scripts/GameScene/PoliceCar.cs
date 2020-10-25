@@ -112,6 +112,7 @@ public class PoliceCar : MonoBehaviour
         }
 
             var bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
+        for (var y = (int)Mathf.Floor(bounds.min.y); y < (int)Mathf.Ceil(bounds.max.y); y++)
             for (var x = (int) Mathf.Floor(bounds.min.x); x < (int) Mathf.Ceil(bounds.max.x); x++)
             {
                 var pos = new Vector2(x, y);
@@ -126,13 +127,7 @@ public class PoliceCar : MonoBehaviour
                     Resources.LoadAll<Sprite>("Textures/x64spritesheet")[20];
                 _blockedGameObjects.Add(go);
             }
-        }
-
-
-
-
         SetPoliceOnTruck(false, PoliceCount);
-
     }
 
     private void SetPoliceOnTruck(bool value, int count)

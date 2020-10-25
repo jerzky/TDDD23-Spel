@@ -8,7 +8,6 @@ public class BackgroundController
 {
     Image image;
     Sprite[] backgroundSprites;
-    bool animationActive = false;
     float timer = 0f;
     uint currentSprite = 0;
     float zoomSpeed = 250f;
@@ -18,13 +17,14 @@ public class BackgroundController
         this.image = image;
         this.backgroundSprites = backgroundSprites;
         this.image.sprite = backgroundSprites[0];
+        this.currentSprite = 0;
     }
 
 
     public bool Animate()
     {
         timer += Time.deltaTime;
-        if(timer > 0.07f)
+        if(timer > 0.035f)
         {
             if (currentSprite >= backgroundSprites.Length-1)
             {

@@ -30,7 +30,7 @@ public class MenuController : MonoBehaviour
     
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Instance = this;
         bc = new BackgroundController(background, Resources.LoadAll<Sprite>("NoSpriteAtlasTextures/bg"));
@@ -38,6 +38,7 @@ public class MenuController : MonoBehaviour
         menuScreens.Add(MenuScreen.Screen.ControlEditor, new ControlMenu(controlEditHolder, MenuScreen.Screen.ControlEditor, controlEditorTextPrefab));
         menuScreens.Add(MenuScreen.Screen.LoadGame, new LoadGamesMenu(loadSaveHolder, MenuScreen.Screen.LoadGame, loadGamesTextPrefab));
         menuScreens[MenuScreen.Screen.MainMenu].Activate();
+        startGameAnimationActive = false;
     }
 
     // Update is called once per frame
@@ -45,7 +46,7 @@ public class MenuController : MonoBehaviour
     {
         if (startGameAnimationActive)
             if(bc.Animate())
-                SceneManager.LoadScene(sceneToBeLoaded);
+                SceneManager.LoadScene(sceneToBeLoaded, LoadSceneMode.Single);
 
         if (menuScreens[currentMenu].SkipFrame)
         {

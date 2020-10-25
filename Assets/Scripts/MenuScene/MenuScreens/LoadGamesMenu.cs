@@ -39,7 +39,11 @@ public class LoadGamesMenu : MenuScreen
         this.textPrefab = textPrefab;
         savedGamesMap = Json.JsonToContainer<SortedDictionary<uint, SavedGame>>("saves.json");
         CreateSavedGameTexts();
-        savedGameTexts[0].color = Color.magenta;
+        if(savedGameTexts.Count > 0)
+        {
+            savedGameTexts[0].color = Color.magenta;
+        }
+        
         limit.x = 0;
         limit.y = savedGameTexts.Count-1;
 

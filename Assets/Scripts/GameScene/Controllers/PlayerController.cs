@@ -6,6 +6,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -238,14 +239,7 @@ public class PlayerController : MonoBehaviour
         GeneralUI.Instance.Health -= damage;
         if (GeneralUI.Instance.Health <= 0)
         {
-            return;
-            // you lost motherfucker
-            #if UNITY_EDITOR
-            if (EditorApplication.isPlaying)
-            {
-                UnityEditor.EditorApplication.isPlaying = false;
-            }
-            #endif
+            SceneManager.LoadScene("DEATH");
         }
         else if(GeneralUI.Instance.Health <= 50)
         {

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour
 {
+    public static PauseMenuController Instance;
     public static bool IsPaused { get; private set; }
 
     [SerializeField] 
@@ -12,6 +13,7 @@ public class PauseMenuController : MonoBehaviour
     private GameObject _pausePanel;
     void Start()
     {
+        Instance = this;
         _pausePanel.SetActive(false);
     }
 
@@ -42,6 +44,7 @@ public class PauseMenuController : MonoBehaviour
     }
     public void ExitToMainMenuButtonClicked()
     {
-        SceneManager.LoadScene("MenuScene");
+        SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+        Application.Quit();
     }
 }
