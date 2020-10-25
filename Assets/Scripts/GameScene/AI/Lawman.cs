@@ -76,7 +76,7 @@ public abstract class Lawman : AI
 
     protected override void IncapacitateFailedReaction()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void OnVisionEnter(Collider2D col)

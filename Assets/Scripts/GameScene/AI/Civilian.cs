@@ -175,7 +175,8 @@ public class Civilian : AI
 
     protected override void IncapacitateFailedReaction()
     {
-        throw new System.NotImplementedException();
+        Building building = CurrentBuilding;
+        Alert(PlayerController.Instance.transform.position, AlertIntensity.ConfirmedHostile);
     }
 
     protected override void PlayerSeen()
@@ -205,10 +206,10 @@ public class Civilian : AI
     SimpleTimer callTimer = new SimpleTimer(5f);
     void CallPolice(Building building)
     {
-        /*if(callTimer.Done)
+        if(callTimer.Done)
         {
             PoliceController.Instance.CallPolice(transform.position, building);
             callTimer.Reset();
-        }*/
+        }
     }
 }

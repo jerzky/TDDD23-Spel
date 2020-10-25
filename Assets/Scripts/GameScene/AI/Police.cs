@@ -78,7 +78,6 @@ public class Police : Lawman
         if (Car != null)
         {
             Car.MyPolice.Remove(this);
-
         }
     }
 
@@ -86,7 +85,7 @@ public class Police : Lawman
 
     protected override void IncapacitateFailedReaction()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     private static GameObject _standardPrefab;

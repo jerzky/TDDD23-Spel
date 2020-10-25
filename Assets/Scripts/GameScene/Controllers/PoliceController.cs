@@ -52,6 +52,7 @@ public class PoliceController : MonoBehaviour
 
     public void CallPolice(Vector2 callPosition, Building building)
     {
+        building = null;
         var cellphoneJammers = FindObjectsOfType<CellPhoneJammer_Interactable>();
         foreach (var v in cellphoneJammers)
         {

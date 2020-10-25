@@ -5,6 +5,17 @@ using UnityEngine;
 
 public class Guard : Lawman
 {
+    public new Building CurrentBuilding 
+    {
+        get 
+        {
+            Building b = base.CurrentBuilding;
+            if (CurrentRoute == null) 
+                return b;
+            return CurrentRoute.Building;
+        }
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -36,8 +47,6 @@ public class Guard : Lawman
                 building.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile, this);
                 base.PlayerSeen();
             }
-                
-        
     }
 
     public override bool Alert(Vector2 position, AlertIntensity alertIntesity)
@@ -70,6 +79,8 @@ public class Guard : Lawman
 
     protected override void IncapacitateFailedReaction()
     {
-        throw new System.NotImplementedException();
+        Building building = CurrentBuilding;
+        building?.OnAlert(PlayerController.Instance.transform.position, AlertType.Guard_Radio, AlertIntensity.ConfirmedHostile);
+        PoliceController.Instance.CallPolice(transform.position, building);
     }
 }

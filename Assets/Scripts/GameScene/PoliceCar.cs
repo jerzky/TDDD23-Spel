@@ -7,201 +7,206 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    public class PoliceCar : MonoBehaviour
-    {
-        public int PoliceCount { get; set; }
-        public Vector2 CarDirection { get; set; }
-        public Building Building { get; set; }
-        private const float CAR_SPEED = 10f;
+public class PoliceCar : MonoBehaviour
+{
+    public int PoliceCount { get; set; }
+    public Vector2 CarDirection { get; set; }
+    public Building Building { get; set; }
+    private const float CAR_SPEED = 10f;
 
-        [SerializeField] public GameObject Holder;
+    [SerializeField] public GameObject Holder;
 
-        private readonly List<GameObject> _policeOnCar = new List<GameObject>();
-        private readonly List<Vector2> _blockedPositions = new List<Vector2>();
-        private readonly List<GameObject> _blockedGameObjects = new List<GameObject>();
+    private readonly List<GameObject> _policeOnCar = new List<GameObject>();
+    private readonly List<Vector2> _blockedPositions = new List<Vector2>();
+    private readonly List<GameObject> _blockedGameObjects = new List<GameObject>();
     public bool PoliceHasSpawned { get; private set; }
 
-        private bool _dontRemoveGrid;
+    private bool _dontRemoveGrid;
 
-        public List<Police> MyPolice { get; private set; } = new List<Police>();
-        public bool AllPoliceAreDead => MyPolice.Count == 0;
+    public List<Police> MyPolice { get; private set; } = new List<Police>();
+    public bool AllPoliceAreDead => MyPolice.Count == 0;
 
 
-        void Start()
+    void Start()
+    {
+        _policeOnCar.AddRange(Holder.GetComponentsInChildren<Transform>().Select(t => t.gameObject));
+        SetPoliceOnTruck(true, PoliceCount);
+    }
+
+    void FixedUpdate()
+    {
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        if (AllPoliceAreDead && PoliceHasSpawned)
         {
-            _policeOnCar.AddRange(Holder.GetComponentsInChildren<Transform>().Select(t => t.gameObject));
-            SetPoliceOnTruck(true, PoliceCount);
+            PoliceController.Instance.NotifyPolice(Building);
         }
 
-        void FixedUpdate()
+        if (Vector2.Distance(transform.position, Building.PoliceSpawnPoint) > 0.25f ||
+            (AllPoliceAreDead && PoliceHasSpawned))
         {
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-            if (Vector2.Distance(transform.position, Building.PoliceSpawnPoint) > 0.25f ||
-                (AllPoliceAreDead && PoliceHasSpawned))
+            GetComponent<Rigidbody2D>().MovePosition(new Vector2(transform.position.x, transform.position.y) +
+                                                     CarDirection.normalized * Time.deltaTime * CAR_SPEED);
+
+
+
+
+            if (Vector2.Distance(transform.position, Building.PoliceSpawnPoint) > 150 && AllPoliceAreDead)
             {
-                GetComponent<Rigidbody2D>().MovePosition(new Vector2(transform.position.x, transform.position.y) +
-                                                         CarDirection.normalized * Time.deltaTime * CAR_SPEED);
+                Destroy(gameObject);
 
-
-
-
-                if (Vector2.Distance(transform.position, Building.PoliceSpawnPoint) > 150 && AllPoliceAreDead)
+                foreach (var o in _blockedGameObjects)
                 {
-                    Destroy(gameObject);
-
-                    foreach (var o in _blockedGameObjects)
-                    {
-                        Destroy(o);
-                    }
-
-                    if (_dontRemoveGrid) 
-                        return;
-
-                    foreach (var position in _blockedPositions)
-                    {
-                        PathingController.Instance.UpdateGrid(position, NodeType.Clear);
-                    }
+                    Destroy(o);
                 }
 
-                return;
-            }
+                if (_dontRemoveGrid)
+                    return;
 
-            if (!PoliceHasSpawned)
-            {
-                SpawnPolice();
-                PoliceHasSpawned = true;
-            }
-        }
-
-
-
-
-
-
-
-        private void SpawnPolice(bool debug = false)
-        {
-
-            var origin = (Vector2) (transform.position);
-            for (var i = 0; i < PoliceCount; i++)
-            {
-                Police p;
-                if (Building.PoliceCarAlignment == PoliceCarAlignment.Horizontal)
+                foreach (var position in _blockedPositions)
                 {
-                    p = Police.Generate(
-                        origin + new Vector2(3f * (i % (PoliceCount / 2) - 1.5f),
-                            (i >= (PoliceCount / 2) ? -1 : 1) * 2),
-                        State.GotoCoverEntrance,
-                        ActionE.GotoCoverEntrance, Building).GetComponent<Police>();
-
-
-                }
-                else
-                {
-                    p = Police.Generate(
-                        origin + new Vector2((i >= (PoliceCount / 2) ? -1 : 1) * 3f,
-                            2f * (i % (PoliceCount / 2) - 1.5f)),
-                        State.GotoCoverEntrance,
-                        ActionE.GotoCoverEntrance, Building).GetComponent<Police>();
-                }
-
-                p.MySpawnPoint = p.transform.position;
-                p.Car = this;
-                MyPolice.Add(p);
-
-            }
-
-            var bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
-
-
-
-            Debug.Log(
-                $"right: {(int) Mathf.Ceil(bounds.max.x)}, left: {(int) Mathf.Floor(bounds.min.x)}, up: {(int) Mathf.Ceil(bounds.max.y)}, down: {(int) Mathf.Floor(bounds.min.y)}, size: ({bounds.max.x}, {bounds.max.y})");
-
-            for (var x = (int) Mathf.Floor(bounds.min.x); x < (int) Mathf.Ceil(bounds.max.x); x++)
-            {
-                for (var y = (int) Mathf.Floor(bounds.min.y); y < (int) Mathf.Ceil(bounds.max.y); y++)
-                {
-                    var pos = new Vector2(x, y);
-                    PathingController.Instance.UpdateGrid(pos, NodeType.Blocked);
-                    _blockedPositions.Add(pos);
-
-                    if (!debug)
-                        continue;
-                    var go = new GameObject();
-                    go.transform.position = new Vector3(pos.x, pos.y, 0);
-                    go.AddComponent<SpriteRenderer>().sprite =
-                        Resources.LoadAll<Sprite>("Textures/x64spritesheet")[20];
-                    _blockedGameObjects.Add(go);
+                    PathingController.Instance.UpdateGrid(position, NodeType.Clear);
                 }
             }
 
+            return;
+        }
+
+        if (!PoliceHasSpawned)
+        {
+            SpawnPolice();
+            PoliceHasSpawned = true;
+        }
+    }
 
 
 
-            SetPoliceOnTruck(false, PoliceCount);
+
+
+
+
+    private void SpawnPolice(bool debug = false)
+    {
+
+        var origin = (Vector2)(transform.position);
+        for (var i = 0; i < PoliceCount; i++)
+        {
+            Police p;
+            if (Building.PoliceCarAlignment == PoliceCarAlignment.Horizontal)
+            {
+                p = Police.Generate(
+                    origin + new Vector2(3f * (i % (PoliceCount / 2) - 1.5f),
+                        (i >= (PoliceCount / 2) ? -1 : 1) * 2),
+                    State.GotoCoverEntrance,
+                    ActionE.GotoCoverEntrance, Building).GetComponent<Police>();
+
+
+            }
+            else
+            {
+                p = Police.Generate(
+                    origin + new Vector2((i >= (PoliceCount / 2) ? -1 : 1) * 3f,
+                        2f * (i % (PoliceCount / 2) - 1.5f)),
+                    State.GotoCoverEntrance,
+                    ActionE.GotoCoverEntrance, Building).GetComponent<Police>();
+            }
+
+            p.MySpawnPoint = p.transform.position;
+            p.Car = this;
+            MyPolice.Add(p);
 
         }
 
-        private void SetPoliceOnTruck(bool value, int count)
+        var bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
+
+
+
+        Debug.Log(
+            $"right: {(int)Mathf.Ceil(bounds.max.x)}, left: {(int)Mathf.Floor(bounds.min.x)}, up: {(int)Mathf.Ceil(bounds.max.y)}, down: {(int)Mathf.Floor(bounds.min.y)}, size: ({bounds.max.x}, {bounds.max.y})");
+
+        for (var x = (int)Mathf.Floor(bounds.min.x); x < (int)Mathf.Ceil(bounds.max.x); x++)
         {
-            for (var i = 0; i < _policeOnCar.Count; i++)
+            for (var y = (int)Mathf.Floor(bounds.min.y); y < (int)Mathf.Ceil(bounds.max.y); y++)
             {
-                _policeOnCar[i].SetActive(i <= count ? value : !value);
+                var pos = new Vector2(x, y);
+                PathingController.Instance.UpdateGrid(pos, NodeType.Blocked);
+                _blockedPositions.Add(pos);
+
+                if (!debug)
+                    continue;
+                var go = new GameObject();
+                go.transform.position = new Vector3(pos.x, pos.y, 0);
+                go.AddComponent<SpriteRenderer>().sprite =
+                    Resources.LoadAll<Sprite>("Textures/x64spritesheet")[20];
+                _blockedGameObjects.Add(go);
             }
         }
 
-        public void ReportWaiting()
-        {
-            if (MyPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != MyPolice.Count)
-                return;
-
-            SetPoliceOnTruck(true, MyPolice.Count);
-            foreach (var police in MyPolice.ToList())
-            {
-                police.OnDeath();
-                Destroy(police.gameObject);
-            }
-
-            MyPolice.Clear();
-        }
 
 
-        public void Transfer(PoliceCar car)
-        {
-            _dontRemoveGrid = true;
-            foreach (var police in MyPolice)
-            {
-                police.Car = car;
-            }
-            car.MyPolice.AddRange(MyPolice);
-            MyPolice.Clear();
-        }
 
-
-        private static GameObject _standardHorPrefab;
-        private static GameObject _standardVertPrefab;
-
-        public static GameObject Generate(Building building, int count = 4)
-        {
-            Debug.Log("Spawning police car");
-            if (_standardVertPrefab == null || _standardHorPrefab == null)
-            {
-                _standardVertPrefab = Resources.Load<GameObject>("Prefabs/PoliceCarVert");
-                _standardHorPrefab = Resources.Load<GameObject>("Prefabs/PoliceCarHor");
-            }
-
-            var prefab = building.PoliceCarAlignment == PoliceCarAlignment.Horizontal
-                ? _standardHorPrefab
-                : _standardVertPrefab;
-
-            var car = Instantiate(prefab, building.PoliceCarSpawnPoint, prefab.transform.rotation,
-                WeaponController.Instance.bulletHolder.transform);
-
-            car.GetComponent<PoliceCar>().CarDirection = building.PoliceSpawnPoint - building.PoliceCarSpawnPoint;
-            car.GetComponent<PoliceCar>().Building = building;
-            car.GetComponent<PoliceCar>().PoliceCount = count;
-            return car;
-        }
+        SetPoliceOnTruck(false, PoliceCount);
 
     }
+
+    private void SetPoliceOnTruck(bool value, int count)
+    {
+        for (var i = 0; i < _policeOnCar.Count; i++)
+        {
+            _policeOnCar[i].SetActive(i <= count ? value : !value);
+        }
+    }
+
+    public void ReportWaiting()
+    {
+        if (MyPolice.Where(p => p.CurrentAction == ActionE.WaitingForAllPolice).ToList().Count != MyPolice.Count)
+            return;
+
+        SetPoliceOnTruck(true, MyPolice.Count);
+        foreach (var police in MyPolice.ToList())
+        {
+            police.OnDeath();
+            Destroy(police.gameObject);
+        }
+
+        MyPolice.Clear();
+    }
+
+
+    public void Transfer(PoliceCar car)
+    {
+        _dontRemoveGrid = true;
+        foreach (var police in MyPolice)
+        {
+            police.Car = car;
+        }
+        car.MyPolice.AddRange(MyPolice);
+        MyPolice.Clear();
+    }
+
+
+    private static GameObject _standardHorPrefab;
+    private static GameObject _standardVertPrefab;
+
+    public static GameObject Generate(Building building, int count = 4)
+    {
+        Debug.Log("Spawning police car");
+        if (_standardVertPrefab == null || _standardHorPrefab == null)
+        {
+            _standardVertPrefab = Resources.Load<GameObject>("Prefabs/PoliceCarVert");
+            _standardHorPrefab = Resources.Load<GameObject>("Prefabs/PoliceCarHor");
+        }
+
+        var prefab = building.PoliceCarAlignment == PoliceCarAlignment.Horizontal
+            ? _standardHorPrefab
+            : _standardVertPrefab;
+
+        var car = Instantiate(prefab, building.PoliceCarSpawnPoint, prefab.transform.rotation,
+            WeaponController.Instance.bulletHolder.transform);
+
+        car.GetComponent<PoliceCar>().CarDirection = building.PoliceSpawnPoint - building.PoliceCarSpawnPoint;
+        car.GetComponent<PoliceCar>().Building = building;
+        car.GetComponent<PoliceCar>().PoliceCount = count;
+        return car;
+    }
+
+}

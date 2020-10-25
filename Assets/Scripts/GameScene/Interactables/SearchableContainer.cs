@@ -8,6 +8,8 @@ public class SearchableContainer : Openable
     LinkedList<int> items = new LinkedList<int>();
     float timeLeft = 0f;
     bool timerActive = false;
+    SimpleTimer openedTimer = new SimpleTimer(300f);
+    bool opened = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +21,8 @@ public class SearchableContainer : Openable
     {
         if (timerActive)
             Timer();
-            
+
+        openedTimer.Tick();
     }
 
     public override void AssignUnlockItems()
@@ -48,6 +51,11 @@ public class SearchableContainer : Openable
     public override void Open()
     {
         // somehow give player the items in the container.
+        if(Random.Range(0, 10) < 1 && openedTimer.Done)
+        {
+            GeneralUI.Instance.Credits += (int)(100f * Random.Range(0.5f, 2f));
+            openedTimer.Reset();
+        }
     }
 
     public override void UnLock()
