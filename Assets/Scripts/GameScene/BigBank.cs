@@ -6,14 +6,15 @@
         protected new void Start()
         {
             BuildingType = BuildingType.BigBank;
+            _securityStation.IsMonitored = true;
             PoliceController.AddBuilding(this);
             LoadPathingNodes();
 
             var bottomleft = new Vector2(50, 77);
             var topright = new Vector2(129, 109);
+            var size = topright - bottomleft;
 
-
-            BuildingParts.Add(new BuildingPart(topright - bottomleft / 2, topright - bottomleft));
+            BuildingParts.Add(new BuildingPart(bottomleft + size / 2, size));
             SetUpCivilianRoutes();
             GenerateEntrances();
 
@@ -29,7 +30,8 @@
                 _nodePaths[i].Building = this;
                 guard.SetRoute(_nodePaths[i++]);
                 Debug.Log("Gave a guard a path");
-            }
+        
+        }
 
 
         }

@@ -49,8 +49,8 @@ public abstract class Building : MonoBehaviour
 
     public bool IsSomeoneMonitoringCCTV => _securityStation.IsMonitored;
 
-    [SerializeField]
-    private SecurityStation _securityStation;
+    [SerializeField] 
+    protected SecurityStation _securityStation;
 
     [SerializeField] 
     public List<Entrance> Entrances;

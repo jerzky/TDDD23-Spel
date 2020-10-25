@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        
         Instance = this;
         playerSprites[0] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[25];
         playerSprites[1] = Resources.LoadAll<Sprite>("Textures/AI_Characters2")[24];
@@ -76,6 +78,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
+
         HandleKeyInputs();
 
         if(healthResetTimer.TickAndReset())
@@ -84,6 +88,14 @@ public class PlayerController : MonoBehaviour
             GeneralUI.Instance.Health = 100;
         }
 
+
+
+     
+    }
+
+    private void FixedUpdate()
+    {
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (MovementDirection != Vector2.zero)
         {
             CancelCurrentInteractable();
@@ -95,13 +107,6 @@ public class PlayerController : MonoBehaviour
         }
         else
             GetComponent<AudioSource>().enabled = false;
-
-        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-    }
-
-    private void FixedUpdate()
-    {
-        
     }
 
     bool GetInput(Func<KeyCode, bool> func, ControlAction ca)
@@ -111,6 +116,9 @@ public class PlayerController : MonoBehaviour
 
     void HandleKeyInputs()
     {
+        if (PauseMenuController.IsPaused)
+            return;
+
         if (GetInput(Input.GetKey, ControlAction.Right))
         {
             MovementDirection += Vector2.right;

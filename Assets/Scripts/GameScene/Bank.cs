@@ -9,6 +9,7 @@ public class Bank : Building
 {
     public static Bank Instance;
     protected readonly List<NodePath> _nodePaths = new List<NodePath>();
+
     protected readonly List<AI> _guards = new List<AI>();
 
     private readonly List<NodePath> _civilianNodePaths = new List<NodePath>();

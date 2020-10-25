@@ -64,6 +64,7 @@ public class PoliceController : MonoBehaviour
         if(closest == null)
         {
             int closestIndex = 0;
+            closest = BuildingController.Instance.Buildings[0];
             foreach (var v in BuildingController.Instance.Buildings)
                 foreach (var e in v.Entrances)
                 {
